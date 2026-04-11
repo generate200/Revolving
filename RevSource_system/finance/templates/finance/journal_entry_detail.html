@@ -1,0 +1,87 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+<section class="section-panel">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Journal entry</p>
+            <h2>JE #{{ entry.id }} - {{ entry.date|date:"M d, Y" }}</h2>
+        </div>
+        <a href="{% url 'finance:journal-list' %}" class="btn btn-outline">Back to list</a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+        <div class="card" style="padding: 1.5rem; border: 1px solid rgba(26, 42, 69, 0.08); border-radius: 16px;">
+            <h4 style="margin-top: 0;">Entry details</h4>
+            <p><strong>Description:</strong> {{ entry.description }}</p>
+            <p><strong>Memo:</strong> {{ entry.memo|default:"—" }}</p>
+            <p><strong>Currency:</strong> {{ entry.currency.code }} ({{ entry.currency.symbol }}) - {{ entry.currency.name }}</p>
+            <p><strong>Exchange Rate:</strong> {{ entry.exchange_rate }}</p>
+            <p><strong>Created:</strong> {{ entry.created_at|date:"M d, Y H:i" }}</p>
+            <p><strong>Status:</strong> 
+                {% if entry.posted %}
+                    <span class="badge badge-success">Posted</span>
+                {% else %}
+                    <span class="badge badge-warning">Draft</span>
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="card" style="padding: 1.5rem; border: 1px solid rgba(20, 184, 166, 0.12); border-radius: 16px; background: rgba(20, 184, 166, 0.04);">
+            <h4 style="margin-top: 0;">Totals ({{ entry.currency.symbol }})</h4>
+            <p><strong>Total Debit:</strong> <span style="font-size: 1.2rem; font-weight: 700; color: var(--navy);">{{ entry.currency.symbol }}{{ entry.get_total_debit|floatformat:2 }}</span></p>
+            <p><strong>Total Credit:</strong> <span style="font-size: 1.2rem; font-weight: 700; color: var(--navy);">{{ entry.currency.symbol }}{{ entry.get_total_credit|floatformat:2 }}</span></p>
+            <p style="margin-bottom: 0;">
+                {% if entry.is_balanced %}
+                    <span class="badge badge-success">✓ Balanced</span>
+                {% else %}
+                    <span class="badge badge-warning">✗ Not balanced</span>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <h3>Journal lines</h3>
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>Account</th>
+                    <th>Account type</th>
+                    <th>Debit</th>
+                    <th>Credit</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for line in entry.lines.all %}
+                <tr>
+                    <td><strong>{{ line.account.code }}</strong> {{ line.account.name }}</td>
+                    <td>{{ line.account.get_type_display }}</td>
+                    <td><span data-amount="{{ line.debit }}" data-currency="{{ entry.currency.code }}">{{ entry.currency.symbol }}{{ line.debit|floatformat:2 }}</span></td>
+                    <td><span data-amount="{{ line.credit }}" data-currency="{{ entry.currency.code }}">{{ entry.currency.symbol }}{{ line.credit|floatformat:2 }}</span></td>
+                    <td>{{ line.comment|default:"—" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-actions" style="margin-top: 2rem;">
+        {% if not entry.posted %}
+            <form method="post" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="post">
+                <button type="submit" class="btn btn-accent" onclick="return confirm('Post this journal entry? This action cannot be undone.');">Post entry</button>
+            </form>
+        {% else %}
+            <form method="post" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="reverse">
+                <button type="submit" class="btn btn-outline" onclick="return confirm('Create a reversal entry for this journal entry?');">Reverse entry</button>
+            </form>
+        {% endif %}
+        <a href="{% url 'finance:journal-list' %}" class="btn btn-outline">Back</a>
+    </div>
+</section>
+{% endblock %}

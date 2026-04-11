@@ -1,0 +1,52 @@
+{% extends 'products/base.html' %}
+
+{% block hero %}
+<section class="hero-panel">
+    <div class="hero-copy">
+        <p class="eyebrow">Welcome to RevSource</p>
+        <h1>ERP product, finance, and reporting in one polished dashboard.</h1>
+        <p class="hero-text">Use the navigation above to explore products, finance insights, and reporting tools for your business.</p>
+    </div>
+    <div class="hero-visual">
+        <div class="hero-logo-card">
+            <div class="logo-mark">R</div>
+            <div class="logo-labels">
+                <span class="logo-rev">Rev</span>
+                <span class="logo-source">Source</span>
+            </div>
+        </div>
+        <div class="palette-panel">
+            <div class="palette-swatch navy"></div>
+            <div class="palette-swatch blue"></div>
+            <div class="palette-swatch teal"></div>
+            <div class="palette-swatch gray"></div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="section-panel">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Dashboard landing</p>
+            <h2>Launch your workflow</h2>
+        </div>
+    </div>
+
+    <div class="home-actions-grid">
+        <a class="home-card" href="{% url 'products:list' %}">
+            <h3>Products</h3>
+            <p>View and manage inventory with pricing, stock alerts, and product details.</p>
+        </a>
+        <a class="home-card" href="{% url 'finance:overview' %}">
+            <h3>Finance</h3>
+            <p>Open the finance workspace for budgets, costs, and revenue tracking.</p>
+        </a>
+        <a class="home-card" href="{% url 'dashboard:report' %}">
+            <h3>Report</h3>
+            <p>Access analytics and summary reports across your ERP system.</p>
+        </a>
+    </div>
+</section>
+{% endblock %}

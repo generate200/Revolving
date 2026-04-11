@@ -1,0 +1,50 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+<section class="section-panel">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Category catalog</p>
+            <h2>Manage product categories</h2>
+        </div>
+        <a href="{% url 'products:category-add' %}" class="btn btn-accent">Add category</a>
+    </div>
+
+    <div class="table-card">
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Parent</th>
+                    <th>Products</th>
+                    <th>Status</th>
+                    <th class="actions-col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                <tr>
+                    <td>{{ category.name }}</td>
+                    <td>{% if category.parent %}{{ category.parent.name }}{% else %}—{% endif %}</td>
+                    <td>{{ category.product_count }}</td>
+                    <td>
+                        {% if category.is_active %}
+                            <span class="badge badge-success">Active</span>
+                        {% else %}
+                            <span class="badge badge-muted">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td class="actions-col">
+                        <a href="{% url 'products:category-delete' category.pk %}" class="btn btn-outline">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="empty-state">No categories have been created yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

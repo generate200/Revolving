@@ -1,0 +1,83 @@
+{% extends 'products/base.html' %}
+
+{% block hero %}
+<section class="hero-panel hero-panel--compact">
+    <div class="hero-copy">
+        <p class="eyebrow">Finance workspace</p>
+        <h1>Double-entry accounting, journal entries, and financial statements.</h1>
+        <p class="hero-text">Manage  chart of accounts, create journal entries, and maintain balance sheet integrity.</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="section-panel">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Finance dashboard</p>
+            <h2>Your financial controls</h2>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+            <a href="{% url 'finance:journal-create' %}" class="btn btn-accent">New journal entry</a>
+            <a href="{% url 'finance:account-create' %}" class="btn btn-outline">New account</a>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <a href="{% url 'finance:journal-list' %}" class="dashboard-card">
+            <h3>Journal entries</h3>
+            <p>Create and post journal entries to update account balances.</p>
+        </a>
+        <a href="{% url 'finance:account-list' %}" class="dashboard-card">
+            <h3>Chart of accounts</h3>
+            <p>View all accounts, balances, and account types.</p>
+        </a>
+        <a href="{% url 'finance:currency-list' %}" class="dashboard-card">
+            <h3>Currencies</h3>
+            <p>Manage currencies and exchange rates for multi-currency transactions.</p>
+        </a>
+        <article class="dashboard-card">
+            <h3>Quick balance check</h3>
+            <p>Total assets, liabilities, and equity are in sync.</p>
+        </article>
+    </div>
+
+    <div class="table-card" style="margin-top: 2rem;">
+        <h3>Recent journal entries</h3>
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Debit</th>
+                    <th>Credit</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in recent_entries %}
+                <tr>
+                    <td><a href="{% url 'finance:journal-detail' entry.id %}">JE #{{ entry.id }}</a></td>
+                    <td>{{ entry.date }}</td>
+                    <td>{{ entry.description|truncatewords:5 }}</td>
+                    <td><span data-amount="{{ entry.get_total_debit }}" data-currency="{{ entry.currency.code }}">${{ entry.get_total_debit|floatformat:2 }}</span></td>
+                    <td><span data-amount="{{ entry.get_total_credit }}" data-currency="{{ entry.currency.code }}">${{ entry.get_total_credit|floatformat:2 }}</span></td>
+                    <td>
+                        {% if entry.posted %}
+                            <span class="badge badge-success">Posted</span>
+                        {% else %}
+                            <span class="badge badge-warning">Draft</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="empty-state">No journal entries yet. <a href="{% url 'finance:journal-create' %}">Create one</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

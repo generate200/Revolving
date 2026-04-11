@@ -1,0 +1,185 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+<section class="section-panel">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Chart of accounts</p>
+            <h2>All accounts</h2>
+            <p style="color: var(--muted); font-size: 0.95rem; margin-top: 0.5rem;">All balances are shown in base currency. Journal entries are automatically posted to update these balances.</p>
+        </div>
+        <a href="{% url 'finance:account-create' %}" class="btn btn-accent">New account</a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+        <div class="stat-card">
+            <span class="stat-title">Total assets</span>
+            <strong class="stat-value">${{ total_assets|floatformat:2 }}</strong>
+        </div>
+        <div class="stat-card">
+            <span class="stat-title">Total liabilities</span>
+            <strong class="stat-value">${{ total_liabilities|floatformat:2 }}</strong>
+        </div>
+        <div class="stat-card">
+            <span class="stat-title">Total equity</span>
+            <strong class="stat-value">${{ total_equity|floatformat:2 }}</strong>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Balance (USD)</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for account in page_obj %}
+                <tr>
+                    <td><strong>{{ account.code }}</strong></td>
+                    <td>
+                        <div>{{ account.name }}</div>
+                        {% if account.description %}
+                        <small style="color: var(--muted); display: block;">{{ account.description }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge badge-muted">{{ account.get_type_display }}</span>
+                    </td>
+                    <td>
+                        <strong style="font-size: 1.05rem;">
+                            {% if account.balance >= 0 %}
+                                <span style="color: var(--teal);" data-amount="{{ account.balance }}" data-currency="USD">${{ account.balance|floatformat:2 }}</span>
+                            {% else %}
+                                <span style="color: #E02D4C;" data-amount="{{ account.balance }}" data-currency="USD">-${{ account.balance|floatformat:2|slice:"1:" }}</span>
+                            {% endif %}
+                        </strong>
+                    </td>
+                    <td>
+                        {% if account.is_active %}
+                            <span class="badge badge-success">Active</span>
+                        {% else %}
+                            <span class="badge badge-muted">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-sm btn-outline">Edit</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="empty-state">
+                        No accounts created yet. 
+                        <a href="{% url 'finance:account-create' %}" style="font-weight: 600;">Create your first account</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-outline">First</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline">Previous</a>
+        {% endif %}
+        
+        <span style="align-self: center;">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline">Next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-outline">Last</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Help Section -->
+    <div style="margin-top: 3rem; padding: 2rem; background: rgba(20, 184, 166, 0.08); border-radius: 16px; border-left: 4px solid var(--teal);">
+        <h3 style="margin-top: 0;">📋 Understanding Account Balances</h3>
+        <p><strong>Key Principle:</strong> In double-entry bookkeeping, every transaction affects TWO different accounts to keep the system balanced.</p>
+        
+        <div style="margin: 1.5rem 0; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div>
+                <h4 style="color: var(--teal); margin-bottom: 0.75rem;">✓ Correct Entry Example</h4>
+                <p style="font-size: 0.9rem; line-height: 1.6;">
+                    <strong>Transaction:</strong> Owner invests $5,000 cash<br>
+                    <strong>DEBIT:</strong> A1000 (Cash) - $5,000<br>
+                    <strong>CREDIT:</strong> E3000 (Owner Capital) - $5,000<br>
+                    <br>
+                    <strong>Result:</strong> Cash ↑ $5,000, Owner Capital ↑ $5,000
+                </p>
+            </div>
+            <div>
+                <h4 style="color: #E02D4C; margin-bottom: 0.75rem;">✗ Common Mistake</h4>
+                <p style="font-size: 0.9rem; line-height: 1.6;">
+                    <strong>Wrong:</strong> Debit A1000 + Credit A1000<br>
+                    <strong>Result:</strong> No change ($5,000 in, $5,000 out)<br>
+                    <br>
+                    Always use TWO DIFFERENT accounts!
+                </p>
+            </div>
+        </div>
+
+        <div style="margin-top: 1.5rem; padding: 1rem; background: white; border-radius: 8px;">
+            <p style="margin: 0; font-size: 0.9rem;">
+                <strong>Next Step:</strong> 
+                <a href="{% url 'finance:journal-create' %}" style="color: var(--teal); font-weight: 600;">Create a journal entry</a> 
+                with two different accounts to see the balances update!
+            </p>
+        </div>
+    </div>
+</section>
+
+<style>
+.stat-card {
+    padding: 1.5rem;
+    background: rgba(20, 184, 166, 0.05);
+    border: 1px solid rgba(20, 184, 166, 0.2);
+    border-radius: 12px;
+}
+
+.stat-title {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.5rem;
+    margin-top: 0.5rem;
+    color: var(--text);
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge-muted {
+    background: rgba(0, 0, 0, 0.08);
+    color: var(--muted);
+}
+
+.badge-success {
+    background: rgba(20, 184, 166, 0.15);
+    color: var(--teal);
+}
+
+.btn-sm {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+}
+</style>
+{% endblock %}

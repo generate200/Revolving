@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RevSource Product Management</title>
+    <link rel="stylesheet" href="{% static 'products/css/product.css' %}" />
+</head>
+<body>
+    <div class="page-shell">
+        <header class="topbar">
+            <div class="brand-mark">
+                <span class="brand-symbol">R</span>
+                <div>
+                    <p class="brand-tagline">RevSource</p>
+                    <p class="brand-subtitle">Modern ERP product controls</p>
+                </div>
+            </div>
+            <nav class="site-nav">
+                <a href="{% url 'index' %}">Home</a>
+                <a href="{% url 'products:list' %}">Products</a>
+                <a href="{% url 'finance:overview' %}">Finance</a>
+                <a href="{% url 'dashboard:report' %}">Report</a>
+                <a href="{% url 'products:add' %}" class="nav-action">Add Product</a>
+            </nav>
+        </header>
+
+        <main class="page-content">
+            {% block hero %}
+            <section class="hero-panel">
+                <div class="hero-copy">
+                    <p class="eyebrow">RevSource core system</p>
+                    <h1>Strong, polished product management.</h1>
+                    <p class="hero-text">Manage inventory with clean workflows, smart alerts, and a modern UI</p>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-logo-card">
+                        <div class="logo-mark">R</div>
+                        <div class="logo-labels">
+                            <span class="logo-rev">Rev</span>
+                            <span class="logo-source">Source</span>
+                        </div>
+                    </div>
+                    <div class="palette-panel">
+                        <div class="palette-swatch navy"></div>
+                        <div class="palette-swatch blue"></div>
+                        <div class="palette-swatch teal"></div>
+                        <div class="palette-swatch gray"></div>
+                    </div>
+                </div>
+            </section>
+            {% endblock %}
+
+            {% block content %}{% endblock %}
+        </main>
+
+        <footer class="site-footer">
+            <span>RevSource ERP · Built for sleek product operations</span>
+        </footer>
+    </div>
+
+    <!-- Currency data for JavaScript -->
+    <script id="currency-data" type="application/json">
+        {
+            "currencies": {
+                {% for currency in currencies %}
+                "{{ currency.code }}": {
+                    "name": "{{ currency.name }}",
+                    "symbol": "{{ currency.symbol }}",
+                    "exchange_rate": {{ currency.exchange_rate }},
+                    "is_base": {{ currency.is_base|yesno:"true,false" }}
+                }{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            },
+            "baseCurrency": "{{ base_currency }}"
+        }
+    </script>
+
+    <!-- Centralized JavaScript -->
+    <script src="{% static 'products/js/main.js' %}"></script>
+</body>
+</html>

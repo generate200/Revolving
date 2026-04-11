@@ -1,0 +1,54 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+<section class="section-panel">
+    <div class="section-header">
+        <div>
+            <p class="section-label">All journal entries</p>
+            <h2>Posted and draft entries</h2>
+        </div>
+        <a href="{% url 'finance:journal-create' %}" class="btn btn-accent">New journal entry</a>
+    </div>
+
+    <div class="table-card">
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Currency</th>
+                    <th>Debit</th>
+                    <th>Credit</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in object_list %}
+                <tr>
+                    <td><strong>JE #{{ entry.id }}</strong></td>
+                    <td>{{ entry.date|date:"M d, Y" }}</td>
+                    <td>{{ entry.description|truncatewords:6 }}</td>
+                    <td>{{ entry.currency.code }} ({{ entry.currency.symbol }})</td>
+                    <td><span data-amount="{{ entry.get_total_debit }}" data-currency="{{ entry.currency.code }}">{{ entry.currency.symbol }}{{ entry.get_total_debit|floatformat:2 }}</span></td>
+                    <td><span data-amount="{{ entry.get_total_credit }}" data-currency="{{ entry.currency.code }}">{{ entry.currency.symbol }}{{ entry.get_total_credit|floatformat:2 }}</span></td>
+                    <td>
+                        {% if entry.posted %}
+                            <span class="badge badge-success">Posted</span>
+                        {% else %}
+                            <span class="badge badge-warning">Draft</span>
+                        {% endif %}
+                    </td>
+                    <td><a href="{% url 'finance:journal-detail' entry.id %}" class="btn btn-outline">View</a></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" class="empty-state">No journal entries yet. <a href="{% url 'finance:journal-create' %}">Create one</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

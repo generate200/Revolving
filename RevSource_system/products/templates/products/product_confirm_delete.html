@@ -1,0 +1,22 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+<section class="section-panel card-card">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Delete product</p>
+            <h2>Confirm removal</h2>
+        </div>
+        <a href="{% url 'products:list' %}" class="btn btn-outline">Cancel</a>
+    </div>
+
+    <div class="confirm-card">
+        <p>Are you sure you want to permanently delete <strong>{{ object.name }}</strong> from inventory?</p>
+        <form method="post" class="confirm-form">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, delete</button>
+            <a href="{% url 'products:list' %}" class="btn btn-outline">No, keep it</a>
+        </form>
+    </div>
+</section>
+{% endblock %}

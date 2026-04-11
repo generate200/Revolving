@@ -1,0 +1,38 @@
+{% extends 'products/base.html' %}
+
+{% block hero %}
+<section class="hero-panel hero-panel--compact">
+    <div class="hero-copy">
+        <p class="eyebrow">Reporting center</p>
+        <h1>Analytics for operations and strategy.</h1>
+        <p class="hero-text">Use this report space to surface inventory trends, finance signals, and executive summaries.</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="section-panel card-card">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Reports</p>
+            <h2>System snapshots</h2>
+        </div>
+        <a href="{% url 'finance:overview' %}" class="btn btn-outline">Go to finance</a>
+    </div>
+
+    <div class="dashboard-grid">
+        <article class="dashboard-card">
+            <h3>Inventory trends</h3>
+            <p>Identify low-stock items, top sellers, and seasonal rhythm.</p>
+        </article>
+        <article class="dashboard-card">
+            <h3>Performance insights</h3>
+            <p>See how product economics and finance metrics align.</p>
+        </article>
+        <article class="dashboard-card">
+            <h3>Operational score</h3>
+            <p>Review the key signals for ERP execution health.</p>
+        </article>
+    </div>
+</section>
+{% endblock %}

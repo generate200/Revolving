@@ -1,0 +1,101 @@
+{% extends 'products/base.html' %}
+
+{% block hero %}
+<section class="hero-panel hero-panel--compact">
+    <div class="hero-copy">
+        <p class="eyebrow">Create product</p>
+        <h1>Add a product to the inventory</h1>
+        <p class="hero-text">Use the fields below to add brand new stock, pricing, and supplier information for product workflows.</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="section-panel card-card">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Product onboarding</p>
+            <h2>Product details</h2>
+        </div>
+        <a href="{% url 'products:list' %}" class="btn btn-outline">Back to list</a>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="product-form">
+        {% csrf_token %}
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="id_name">Name</label>
+                {{ form.name }}
+            </div>
+            <div class="form-group">
+                <label for="id_sku">SKU</label>
+                {{ form.sku }}
+            </div>
+            <div class="form-group">
+                <label for="id_barcode">Barcode</label>
+                {{ form.barcode }}
+            </div>
+            <div class="form-group">
+                <label for="id_category">Category</label>
+                {{ form.category }}
+            </div>
+            <div class="form-group">
+                <label for="id_supplier">Supplier</label>
+                {{ form.supplier }}
+            </div>
+            <div class="form-group">
+                <label for="id_currency">Currency</label>
+                {{ form.currency }}
+            </div>
+            <div class="form-group">
+                <label for="id_cost_price">Cost price</label>
+                {{ form.cost_price }}
+            </div>
+            <div class="form-group">
+                <label for="id_selling_price">Selling price</label>
+                {{ form.selling_price }}
+            </div>
+            <div class="form-group">
+                <label for="id_discount_percentage">Discount %</label>
+                {{ form.discount_percentage }}
+            </div>
+            <div class="form-group">
+                <label for="id_stock_quantity">Stock quantity</label>
+                {{ form.stock_quantity }}
+            </div>
+            <div class="form-group">
+                <label for="id_reorder_point">Reorder point</label>
+                {{ form.reorder_point }}
+            </div>
+            <div class="form-group">
+                <label for="id_unit">Unit</label>
+                {{ form.unit }}
+            </div>
+            <div class="form-group">
+                <label for="id_weight">Weight</label>
+                {{ form.weight }}
+            </div>
+            <div class="form-group">
+                <label for="id_dimensions">Dimensions</label>
+                {{ form.dimensions }}
+            </div>
+            <div class="form-group form-group--full">
+                <label for="id_description">Description</label>
+                {{ form.description }}
+            </div>
+            <div class="form-group">
+                <label for="id_image">Image</label>
+                {{ form.image }}
+            </div>
+            <div class="form-group form-check-field">
+                {{ form.is_active }}
+                <label for="id_is_active">Active</label>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-accent">Save product</button>
+            <a href="{% url 'products:list' %}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

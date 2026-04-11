@@ -1,0 +1,54 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+<section class="section-panel">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Supplier directory</p>
+            <h2>Manage product suppliers</h2>
+        </div>
+        <a href="{% url 'products:supplier-add' %}" class="btn btn-accent">Add supplier</a>
+    </div>
+
+    <div class="table-card">
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Products</th>
+                    <th>Status</th>
+                    <th class="actions-col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for supplier in suppliers %}
+                <tr>
+                    <td>{{ supplier.name }}</td>
+                    <td>{{ supplier.contact_person|default:'—' }}</td>
+                    <td>{{ supplier.email|default:'—' }}</td>
+                    <td>{{ supplier.phone|default:'—' }}</td>
+                    <td>{{ supplier.product_count }}</td>
+                    <td>
+                        {% if supplier.is_active %}
+                            <span class="badge badge-success">Active</span>
+                        {% else %}
+                            <span class="badge badge-muted">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td class="actions-col">
+                        <a href="{% url 'products:supplier-delete' supplier.pk %}" class="btn btn-outline">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="empty-state">No suppliers have been created yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

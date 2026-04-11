@@ -1,0 +1,92 @@
+{% extends 'products/base.html' %}
+
+{% block content %}
+<section class="section-panel">
+    <div class="section-header">
+        <nav class="site-nav" style="background: linear-gradient(to right, blue, teal); padding: 10px; border-radius: 15px;">
+            <a href="{% url 'products:category-list' %}">Categories</a>
+            <a href="{% url 'products:supplier-list' %}">Suppliers</a>
+        </nav>
+        <div>
+            <p class="section-label">Product catalogue</p>
+            <h2>All items in the system</h2>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="{% url 'products:add' %}" class="btn btn-accent">Add new product</a>
+            <!-- Currency selector will be added here by JavaScript -->
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <article class="stat-card">
+            <span class="stat-title">Total items</span>
+            <strong>{{ total_products }}</strong>
+        </article>
+        <article class="stat-card">
+            <span class="stat-title">Low stock</span>
+            <strong>{{ low_stock_count }}</strong>
+        </article>
+        <article class="stat-card">
+            <span class="stat-title">Active products</span>
+            <strong>{{ total_products }}</strong>
+        </article>
+    </div>
+
+    <div class="table-card">
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>
+                        Price
+                        <div class="currency-selector" style="display: inline-block; margin-left: 10px;">
+                            <select id="currency-selector-table" class="currency-select" style="font-size: 12px; padding: 2px 4px;">
+                               {% for currency in currencies %}
+                                <option value="{{ currency.code }}">
+                                    {{ currency.code }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </th>
+                    <th>Stock</th>
+                    <th>Status</th>
+                    <th class="actions-col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.sku }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{% if product.category %}{{ product.category.name }}{% else %}—{% endif %}</td>
+                    <td><span data-amount="{{ product.discounted_price_base_currency }}" data-currency="{{ product.currency.code }}">{{ product.currency.symbol }}{{ product.discounted_price|floatformat:2 }}</span></td>
+                    <td>
+                        {{ product.stock_quantity }}
+                        {% if product.is_low_stock %}
+                        <span class="badge badge-warning">Low</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if product.is_active %}
+                            <span class="badge badge-success">Active</span>
+                        {% else %}
+                            <span class="badge badge-muted">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td class="actions-col">
+                        <a href="{% url 'products:delete' product.pk %}" class="btn btn-outline">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="empty-state">No products have been added yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

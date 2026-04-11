@@ -1,0 +1,117 @@
+{% extends 'products/base.html' %}
+
+{% block hero %}
+<section class="hero-panel hero-panel--compact">
+    <div class="hero-copy">
+        <p class="eyebrow">Create journal entry</p>
+        <h1>Record a double-entry transaction</h1>
+        <p class="hero-text">Add at least two lines (debit and credit) that balance. Total debits must equal total credits. The entry will be posted immediately to update account balances.</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="section-panel card-card">
+    <div class="section-header">
+        <div>
+            <p class="section-label">New entry</p>
+            <h2>Journal entry details</h2>
+        </div>
+        <a href="{% url 'finance:journal-list' %}" class="btn btn-outline">Back</a>
+    </div>
+
+    <form method="post" id="journal-form" class="product-form">
+        {% csrf_token %}
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="id_date">Date</label>
+                {{ form.date }}
+            </div>
+            <div class="form-group">
+                <label for="id_currency">Currency</label>
+                {{ form.currency }}
+            </div>
+            <div class="form-group">
+                <label for="id_exchange_rate">Exchange Rate</label>
+                {{ form.exchange_rate }}
+            </div>
+            <div class="form-group">
+                <label for="id_memo">Memo/Reference</label>
+                {{ form.memo }}
+            </div>
+            <div class="form-group form-group--full">
+                <label for="id_description">Description</label>
+                {{ form.description }}
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(26, 42, 69, 0.08);">
+            <h3 style="margin-bottom: 1.25rem;">Journal lines</h3>
+            {{ formset.management_form }}
+            
+            <div id="journal-lines">
+                {% for line_form in formset %}
+                <div class="journal-line-form" style="background: rgba(20, 184, 166, 0.04); border-radius: 16px; padding: 1.25rem; margin-bottom: 1rem; border: 1px solid rgba(20, 184, 166, 0.12);">
+                    {% if forloop.first %}
+                    <div class="error-messages">
+                        {% if formset.non_form_errors %}
+                            <div class="alert alert-danger">{{ formset.non_form_errors }}</div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Account</label>
+                            {{ line_form.account }}
+                        </div>
+                        <div class="form-group">
+                            <label>Debit</label>
+                            {{ line_form.debit }}
+                        </div>
+                        <div class="form-group">
+                            <label>Credit</label>
+                            {{ line_form.credit }}
+                        </div>
+                        <div class="form-group">
+                            <label>Comment</label>
+                            {{ line_form.comment }}
+                        </div>
+                    </div>
+                    
+                    <div class="form-check-field" style="margin-top: 1rem;">
+                        {{ line_form.DELETE }}
+                        <label for="{{ line_form.DELETE.id_for_label }}">Delete this line</label>
+                    </div>
+                    
+                    {% if line_form.errors %}
+                    <div class="form-errors" style="margin-top: 1rem; padding: 0.75rem; background: rgba(224, 45, 76, 0.1); border-radius: 8px; color: #E02D4C;">
+                        {% for field, errors in line_form.errors.items %}
+                            <p>{{ field }}: {{ errors }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem; padding: 1.25rem; background: rgba(20, 184, 166, 0.08); border-radius: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+                <p style="margin: 0; color: var(--muted); font-size: 0.9rem;">Total Debit</p>
+                <p id="total-debit" style="margin: 0.5rem 0 0; font-size: 1.4rem; font-weight: 700;">$0.00</p>
+            </div>
+            <div>
+                <p style="margin: 0; color: var(--muted); font-size: 0.9rem;">Total Credit</p>
+                <p id="total-credit" style="margin: 0.5rem 0 0; font-size: 1.4rem; font-weight: 700;">$0.00</p>
+            </div>
+        </div>
+        <div id="balance-status" style="margin-top: 1rem; padding: 1rem; border-radius: 12px; text-align: center; display: none;"></div>
+
+        <div class="form-actions" style="margin-top: 2rem;">
+            <button type="submit" class="btn btn-accent">Create & Post Entry</button>
+            <a href="{% url 'finance:journal-list' %}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

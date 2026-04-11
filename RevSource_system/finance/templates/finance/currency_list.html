@@ -1,0 +1,95 @@
+{% extends 'products/base.html' %}
+
+{% block hero %}
+<section class="hero-panel hero-panel--compact">
+    <div class="hero-copy">
+        <p class="eyebrow">Finance</p>
+        <h1>Currency Management</h1>
+        <p class="hero-text">Manage currencies and exchange rates for multi-currency transactions.</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="section-panel card-card">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Currencies</p>
+            <h2>All currencies</h2>
+        </div>
+        <a href="{% url 'finance:currency-create' %}" class="btn btn-accent">Add Currency</a>
+    </div>
+
+    {% if currencies %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Symbol</th>
+                    <th>Exchange Rate</th>
+                    <th>Decimal Places</th>
+                    <th>Base Currency</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for currency in currencies %}
+                <tr>
+                    <td><strong>{{ currency.code }}</strong></td>
+                    <td>{{ currency.name }}</td>
+                    <td>{{ currency.symbol }}</td>
+                    <td>{{ currency.exchange_rate }}</td>
+                    <td>{{ currency.decimal_places }}</td>
+                    <td>
+                        {% if currency.is_base %}
+                        <span class="badge badge-success">Base</span>
+                        {% else %}
+                        <span class="badge badge-secondary">Secondary</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if currency.is_active %}
+                        <span class="badge badge-success">Active</span>
+                        {% else %}
+                        <span class="badge badge-secondary">Inactive</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'finance:currency-update' currency.pk %}" class="btn btn-sm btn-outline">Edit</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if is_paginated %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="empty-state">
+        <p>No currencies found. <a href="{% url 'finance:currency-create' %}">Add the first currency</a>.</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

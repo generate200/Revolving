@@ -1,0 +1,84 @@
+{% extends 'products/base.html' %}
+
+{% block hero %}
+<section class="hero-panel hero-panel--compact">
+    <div class="hero-copy">
+        <p class="eyebrow">Finance</p>
+        <h1>{% if object %}Edit{% else %}Add{% endif %} Currency</h1>
+        <p class="hero-text">Configure currency settings and exchange rates.</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="section-panel card-card">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Currency details</p>
+            <h2>{% if object %}Update {{ object.code }}{% else %}New currency{% endif %}</h2>
+        </div>
+        <a href="{% url 'finance:currency-list' %}" class="btn btn-outline">Back</a>
+    </div>
+
+    <form method="post" class="product-form">
+        {% csrf_token %}
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="id_code">Currency Code</label>
+                {{ form.code }}
+                <small class="form-help">ISO 3-letter currency code (e.g., USD, EUR, QAR)</small>
+            </div>
+            <div class="form-group">
+                <label for="id_name">Currency Name</label>
+                {{ form.name }}
+                <small class="form-help">Full name of the currency</small>
+            </div>
+            <div class="form-group">
+                <label for="id_symbol">Symbol</label>
+                {{ form.symbol }}
+                <small class="form-help">Currency symbol (e.g., $, €, ر.ق)</small>
+            </div>
+            <div class="form-group">
+                <label for="id_decimal_places">Decimal Places</label>
+                {{ form.decimal_places }}
+                <small class="form-help">Number of decimal places for this currency</small>
+            </div>
+            <div class="form-group">
+                <label for="id_exchange_rate">Exchange Rate</label>
+                {{ form.exchange_rate }}
+                <small class="form-help">Rate to base currency (1.0 = base currency)</small>
+            </div>
+            <div class="form-group">
+                <label for="id_is_base">Base Currency</label>
+                {{ form.is_base }}
+                <small class="form-help">Check if this is the system's base currency</small>
+            </div>
+            <div class="form-group">
+                <label for="id_is_active">Active</label>
+                {{ form.is_active }}
+                <small class="form-help">Whether this currency can be used in transactions</small>
+            </div>
+        </div>
+
+        {% if form.errors %}
+        <div class="alert alert-danger" style="margin-top: 1rem;">
+            <h4>Please correct the following errors:</h4>
+            <ul>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                    <li>{{ field }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <div class="form-actions" style="margin-top: 2rem;">
+            <button type="submit" class="btn btn-accent">
+                {% if object %}Update{% else %}Create{% endif %} Currency
+            </button>
+            <a href="{% url 'finance:currency-list' %}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

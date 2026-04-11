@@ -1,0 +1,57 @@
+{% extends 'products/base.html' %}
+
+{% block hero %}
+<section class="hero-panel hero-panel--compact">
+    <div class="hero-copy">
+        <p class="eyebrow">Create supplier</p>
+        <h1>Add a new supplier</h1>
+        <p class="hero-text">Capture supplier contact details and enable product sourcing workflows.</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="section-panel card-card">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Supplier management</p>
+            <h2>New supplier</h2>
+        </div>
+        <a href="{% url 'products:supplier-list' %}" class="btn btn-outline">Back to suppliers</a>
+    </div>
+
+    <form method="post" class="product-form">
+        {% csrf_token %}
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="id_name">Name</label>
+                {{ form.name }}
+            </div>
+            <div class="form-group">
+                <label for="id_contact_person">Contact person</label>
+                {{ form.contact_person }}
+            </div>
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                {{ form.email }}
+            </div>
+            <div class="form-group">
+                <label for="id_phone">Phone</label>
+                {{ form.phone }}
+            </div>
+            <div class="form-group form-group--full">
+                <label for="id_address">Address</label>
+                {{ form.address }}
+            </div>
+            <div class="form-group form-check-field">
+                {{ form.is_active }}
+                <label for="id_is_active">Active</label>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-accent">Save supplier</button>
+            <a href="{% url 'products:supplier-list' %}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

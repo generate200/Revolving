@@ -1,0 +1,110 @@
+{% extends 'products/base.html' %}
+
+{% block hero %}
+<section class="hero-panel hero-panel--compact">
+    <div class="hero-copy">
+        <p class="eyebrow">Create account</p>
+        <h1>Add a new account to  chart of accounts</h1>
+        <p class="hero-text">Choose the account type and assign a unique code for reference.</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="section-panel card-card">
+    <div class="section-header">
+        <div>
+            <p class="section-label">New account</p>
+            <h2>Account details</h2>
+        </div>
+        <a href="{% url 'finance:account-list' %}" class="btn btn-outline">Back to list</a>
+    </div>
+
+    {% if duplicates %}
+    <div style="padding: 1.25rem; background: rgba(255, 180, 0, 0.12); border: 1px solid rgba(255, 180, 0, 0.3); border-radius: 16px; margin-bottom: 1.5rem;">
+        <p style="margin: 0 0 1rem; font-weight: 700; color: #B46F00;">⚠ Duplicate account detected</p>
+        {% for dup in duplicates %}
+        <div style="padding: 0.75rem; background: white; border-radius: 8px; margin-bottom: 0.75rem; border-left: 4px solid #B46F00;">
+            <p style="margin: 0.25rem 0;"><strong>{{ dup.message }}</strong></p>
+            <p style="margin: 0.25rem 0; color: var(--muted); font-size: 0.9rem;">
+                Code: <strong>{{ dup.account.code }}</strong> | 
+                Name: <strong>{{ dup.account.name }}</strong> | 
+                Type: {{ dup.account.get_type_display }}
+            </p>
+            <p style="margin: 0.5rem 0 0; font-size: 0.85rem;">
+                <a href="{% url 'finance:account-list' %}" style="color: var(--teal); text-decoration: none; font-weight: 600;">View this account →</a>
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" class="product-form">
+        {% csrf_token %}
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="id_code">Account code</label>
+                {{ form.code }}
+                <small style="color: var(--muted);">e.g., A01000, L02000, X00300</small>
+                {% if form.code.errors %}
+                <div style="color: #E02D4C; font-size: 0.9rem; margin-top: 0.35rem;">
+                    {% for error in form.code.errors %}✗ {{ error }}{% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="id_name">Account name</label>
+                {{ form.name }}
+                {% if form.name.errors %}
+                <div style="color: #E02D4C; font-size: 0.9rem; margin-top: 0.35rem;">
+                    {% for error in form.name.errors %}✗ {{ error }}{% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="id_type">Account type</label>
+                {{ form.type }}
+                {% if form.type.errors %}
+                <div style="color: #E02D4C; font-size: 0.9rem; margin-top: 0.35rem;">
+                    {% for error in form.type.errors %}✗ {{ error }}{% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="form-group form-group--full">
+                <label for="id_description">Description</label>
+                {{ form.description }}
+            </div>
+            <div class="form-group form-check-field">
+                {{ form.is_active }}
+                <label for="id_is_active">Active</label>
+            </div>
+        </div>
+        
+        {% if form.non_field_errors %}
+            <div style="padding: 1rem; background: rgba(224, 45, 76, 0.1); border-radius: 12px; color: #E02D4C; margin-bottom: 1rem; border-left: 4px solid #E02D4C;">
+                <strong>✗ Cannot create account:</strong>
+                <ul style="margin: 0.5rem 0 0; padding-left: 1.5rem;">
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-accent">Create account</button>
+            <a href="{% url 'finance:account-list' %}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+
+    <div style="margin-top: 2rem; padding: 1.25rem; background: rgba(20, 184, 166, 0.06); border-radius: 16px; border: 1px solid rgba(20, 184, 166, 0.12);">
+        <p style="margin: 0 0 0.75rem; font-weight: 700; color: var(--teal);">💡 Account Code Guidelines</p>
+        <ul style="margin: 0; padding-left: 1.5rem; color: var(--muted); font-size: 0.9rem;">
+            <li>Use a unique 2-20 character code (e.g., A01000, A02000, L01000)</li>
+            <li>Codes are case-insensitive but will be stored as uppercase</li>
+            <li>Each account code must be unique in the system</li>
+            <li>Account names must also be unique (case-insensitive)</li>
+        </ul>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'products/base.html' %}
+
+{% block hero %}
+<section class="hero-panel hero-panel--compact">
+    <div class="hero-copy">
+        <p class="eyebrow">Create category</p>
+        <h1>Add a new product category</h1>
+        <p class="hero-text">Use this form to create a category and organize your inventory.</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="section-panel card-card">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Category management</p>
+            <h2>New category</h2>
+        </div>
+        <a href="{% url 'products:category-list' %}" class="btn btn-outline">Back to categories</a>
+    </div>
+
+    <form method="post" class="product-form">
+        {% csrf_token %}
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="id_name">Name</label>
+                {{ form.name }}
+            </div>
+            <div class="form-group">
+                <label for="id_parent">Parent category</label>
+                {{ form.parent }}
+                <p class="field-note">Choose an existing parent category or leave this blank for a top-level category.</p>
+                <p class="field-note">
+                    <a href="{% url 'products:category-add' %}">Create a new parent category</a> before selecting it here.
+                </p>
+            </div>
+            <div class="form-group form-group--full">
+                <label for="id_description">Description</label>
+                {{ form.description }}
+            </div>
+            <div class="form-group form-check-field">
+                {{ form.is_active }}
+                <label for="id_is_active">Active</label>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-accent">Save category</button>
+            <a href="{% url 'products:category-list' %}" class="btn btn-outline">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
