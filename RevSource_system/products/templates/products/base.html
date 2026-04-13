@@ -59,24 +59,6 @@
             <span>RevSource ERP · Built for sleek product operations</span>
         </footer>
     </div>
-
-    <!-- Currency data for JavaScript -->
-    <script id="currency-data" type="application/json">
-        {
-            "currencies": {
-                {% for currency in currencies %}
-                "{{ currency.code }}": {
-                    "name": "{{ currency.name }}",
-                    "symbol": "{{ currency.symbol }}",
-                    "exchange_rate": {{ currency.exchange_rate }},
-                    "is_base": {{ currency.is_base|yesno:"true,false" }}
-                }{% if not forloop.last %},{% endif %}
-                {% endfor %}
-            },
-            "baseCurrency": "{{ base_currency }}"
-        }
-    </script>
-
     <!-- Centralized JavaScript -->
     <script src="{% static 'products/js/main.js' %}"></script>
 </body>

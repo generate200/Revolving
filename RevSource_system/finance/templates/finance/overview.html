@@ -1,5 +1,5 @@
 {% extends 'products/base.html' %}
-
+{% load static %}
 {% block hero %}
 <section class="hero-panel hero-panel--compact">
     <div class="hero-copy">
@@ -41,6 +41,16 @@
             <p>Total assets, liabilities, and equity are in sync.</p>
         </article>
     </div>
+     <div class="form-group">
+    <label for="currency-selector-table">Currency</label>
+    <select id="currency-selector-table" class="form-control">
+    {% for currency in currencies %}
+        <option value="{{ currency.code }}" {% if currency.code == request.GET.currency %}selected{% endif %}>
+            {{ currency.code }} ({{ currency.symbol }})
+        </option>
+    {% endfor %}
+</select>
+</div>
 
     <div class="table-card" style="margin-top: 2rem;">
         <h3>Recent journal entries</h3>
@@ -61,8 +71,8 @@
                     <td><a href="{% url 'finance:journal-detail' entry.id %}">JE #{{ entry.id }}</a></td>
                     <td>{{ entry.date }}</td>
                     <td>{{ entry.description|truncatewords:5 }}</td>
-                    <td><span data-amount="{{ entry.get_total_debit }}" data-currency="{{ entry.currency.code }}">${{ entry.get_total_debit|floatformat:2 }}</span></td>
-                    <td><span data-amount="{{ entry.get_total_credit }}" data-currency="{{ entry.currency.code }}">${{ entry.get_total_credit|floatformat:2 }}</span></td>
+                    <td><span data-amount="{{ entry.get_total_debit }}" data-currency="{{ entry.currency.code }}">{{ currency_symbol }}{{  entry.converted_debit|floatformat:2 }}</span></td>
+                    <td><span data-amount="{{ entry.get_total_credit }}" data-currency="{{ entry.currency.code }}">{{ currency_symbol }}{{ entry.converted_credit|floatformat:2 }}</span></td>
                     <td>
                         {% if entry.posted %}
                             <span class="badge badge-success">Posted</span>

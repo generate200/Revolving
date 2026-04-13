@@ -6,6 +6,7 @@ from django.db.models import Sum, Q
 from decimal import Decimal 
 from .models import Account, JournalEntry, JournalLine  ,Currency
 from .forms import JournalEntryForm, JournalLineFormSet, AccountForm, CurrencyForm
+from finance.utils.currency import CurrencyService
 
 
 def check_duplicate_account(code=None, name=None):
@@ -42,14 +43,34 @@ class FinanceOverviewView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        # ✅ Initialize service INSIDE method
+        currency = CurrencyService(self.request)
+
+        # Assets
+        total_assets = Account.objects.filter(type='asset').aggregate(
+            total=Sum('balance')
+        )['total'] or Decimal('0.00')
+
+        context['total_assets'] = currency.convert(total_assets)
+
+        # Recent entries
+        recent_entries = JournalEntry.objects.all()[:10]
+
+        for entry in recent_entries:
+            entry.converted_debit = currency.convert(entry.get_total_debit())
+            entry.converted_credit = currency.convert(entry.get_total_credit())
+
+        context['recent_entries'] = recent_entries
+
+        # Assets list (optional conversion if needed)
         context['assets'] = Account.objects.filter(type='asset')
-        context['total_assets'] = Account.objects.filter(type='asset').aggregate(
-            Sum('balance')
-        )['balance__sum'] or Decimal('0.00')
-        context['recent_entries'] = JournalEntry.objects.all()[:10]
+
+        # ✅ Add currency context
+        context.update(currency.context())
+
         return context
-
-
+    
 class AccountListView(ListView):
     model = Account
     template_name = 'finance/account_list.html'
@@ -61,17 +82,69 @@ class AccountListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['total_assets'] = Account.objects.filter(type='asset').aggregate(
-            total=Sum('balance')
-        )['total'] or Decimal('0.00')
-        context['total_liabilities'] = Account.objects.filter(type='liability').aggregate(
-            total=Sum('balance')
-        )['total'] or Decimal('0.00')
-        context['total_equity'] = Account.objects.filter(type='equity').aggregate(
-            total=Sum('balance')
-        )['total'] or Decimal('0.00')
-        return context
 
+        # ✅ Get selected currency from URL
+        currency_code = self.request.GET.get('currency')
+
+        if currency_code:
+            selected_currency = Currency.objects.filter(code=currency_code).first()
+        else:
+            selected_currency = Currency.objects.filter(is_base=True).first()
+
+        # ✅ Safety fallback
+        if not selected_currency:
+            selected_currency = Currency.objects.filter(is_base=True).first()
+
+        base_currency = Currency.objects.filter(is_base=True).first()
+
+        # ✅ Conversion function (FIXED)
+        def convert(amount):
+            if not amount:
+                return Decimal('0.00')
+
+            if not base_currency or base_currency.exchange_rate == 0:
+                return amount
+
+            rate = selected_currency.exchange_rate / base_currency.exchange_rate
+            return (amount * rate).quantize(Decimal('0.01'))
+
+        # ✅ Totals (converted properly)
+        total_assets = Account.objects.filter(type='asset').aggregate(
+            total=Sum('balance')
+        )['total'] or Decimal('0.00')
+
+        total_liabilities = Account.objects.filter(type='liability').aggregate(
+            total=Sum('balance')
+        )['total'] or Decimal('0.00')
+        total_equity_accounts= Account.objects.filter(type='equity',).aggregate(
+            total=Sum('balance')
+        )['total'] or Decimal('0.00')
+        total_revenue_accounts = Account.objects.filter(type='revenue',).aggregate(
+            total=Sum('balance')
+        )['total'] or Decimal('0.00')
+        total_expense_accounts = Account.objects.filter(type='expense',).aggregate(
+            total=Sum('balance')
+        )['total'] or Decimal('0.00')
+        total_equity = total_equity_accounts + total_revenue_accounts - total_expense_accounts
+
+        context['total_assets'] = convert(total_assets)
+        context['total_liabilities'] = convert(total_liabilities)
+        context['total_equity'] = convert(total_equity)
+
+        # ✅ Convert each account balance (FIXED)
+        accounts = context['accounts']
+        for acc in accounts:
+            acc.converted_balance = convert(acc.balance)
+
+        context['accounts'] = accounts
+
+        # ✅ Currency data
+        context['currencies'] = Currency.objects.filter(is_active=True)
+        context['selected_currency'] = selected_currency
+        context['base_currency'] = base_currency
+        context['currency_symbol'] = selected_currency.symbol
+
+        return context
 
 class AccountCreateView(CreateView):
     """Create a new account with duplicate prevention."""
