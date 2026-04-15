@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, ListView, CreateView, DetailView, FormView
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DetailView, FormView
 from django.contrib import messages
 from django.db.models import Sum, Q
 from decimal import Decimal 
@@ -102,7 +102,7 @@ class AccountListView(ListView):
             if not amount:
                 return Decimal('0.00')
 
-            if not base_currency or base_currency.exchange_rate == 0:
+            if not base_currency or base_currency.exchange_rate > 0:
                 return amount
 
             rate = selected_currency.exchange_rate / base_currency.exchange_rate
@@ -220,7 +220,7 @@ class CurrencyCreateView(CreateView):
         return super().form_valid(form)
 
 
-class CurrencyUpdateView(CreateView):
+class CurrencyUpdateView(UpdateView):
     model = Currency
     form_class = CurrencyForm
     template_name = 'finance/currency_form.html'

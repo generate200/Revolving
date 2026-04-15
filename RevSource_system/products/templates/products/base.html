@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>RevSource ERP</title>
     <link rel="stylesheet" href="{% static 'products/css/product.css' %}" />
+    <link rel="stylesheet"href="{% static 'dashboard/css/dashboard.css' %}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <script src="{% static 'products/js/main.js' %}"></script>
@@ -25,7 +26,7 @@
         </div>
 
         <nav class="sidebar-nav">
-            <a href="#" class="active"><i class="fa fa-dashboard"></i>Dashboard</a>
+            <a href="{% url 'dashboard:report' %}" class="active"><i class="fa fa-dashboard"></i>Dashboard</a>
             <a href="{% url 'products:list' %}"><i class="fa fa-box"></i>Products</a>
             <a href="{% url 'finance:account-list' %}"><i class="fa fa-user"></i>Accounts</a>
             <a href="#"><i class="fa fa-warehouse"></i>Inventory</a>

@@ -1,0 +1,480 @@
+    /* KPI Grid */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .kpi-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(248,250,252,0.8));
+        border: 1px solid rgba(26, 42, 69, 0.08);
+        border-radius: 20px;
+        padding: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        align-items: space-between;
+        box-shadow: 0 10px 30px rgba(9, 22, 55, 0.04);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .kpi-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 40px rgba(9, 22, 55, 0.08);
+    }
+
+    .kpi-card.alert-card {
+        background: linear-gradient(135deg, rgba(255, 193, 7, 0.08), rgba(255, 152, 0, 0.08));
+        border-color: rgba(255, 152, 0, 0.2);
+    }
+
+    .kpi-card.success-card {
+        background: linear-gradient(135deg, rgba(76, 175, 80, 0.08), rgba(56, 142, 60, 0.08));
+        border-color: rgba(76, 175, 80, 0.2);
+    }
+
+    .kpi-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        flex-shrink: 0;
+    }
+
+    .kpi-icon.products-icon {
+        background: rgba(20, 184, 166, 0.15);
+        color: #14B8A6;
+    }
+
+    .kpi-icon.suppliers-icon {
+        background: rgba(40, 106, 191, 0.15);
+        color: #286ABF;
+    }
+
+    .kpi-icon.currency-icon {
+        background: rgba(76, 175, 80, 0.15);
+        color: #4CAF50;
+    }
+
+    .kpi-icon.alert-icon {
+        background: rgba(255, 152, 0, 0.15);
+        color: #FF9800;
+    }
+
+    .kpi-icon.inventory-icon {
+        background: rgba(156, 39, 176, 0.15);
+        color: #9C27B0;
+    }
+
+    .kpi-icon.revenue-icon {
+        background: rgba(76, 175, 80, 0.15);
+        color: #4CAF50;
+    }
+
+    .kpi-content h3.kpi-value {
+        margin: 0.5rem 0 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .kpi-label {
+        margin: 0;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--muted);
+        font-weight: 600;
+    }
+
+    .kpi-detail {
+        margin: 0.5rem 0 0;
+        font-size: 0.82rem;
+        color: var(--muted);
+    }
+
+    /* Financial Metrics Grid */
+    .financial-metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .metric-card {
+        background: white;
+        border: 1px solid rgba(26, 42, 69, 0.08);
+        border-radius: 20px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(9, 22, 55, 0.04);
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .metric-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(20, 184, 166, 0.3);
+    }
+
+    .metric-card.warning {
+        border-left: 4px solid #FF9800;
+    }
+
+    .metric-card.success {
+        border-left: 4px solid #4CAF50;
+    }
+
+    .metric-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .metric-header h4 {
+        margin: 0;
+        font-size: 1rem;
+        color: var(--text);
+    }
+
+    .metric-badge {
+        font-size: 0.7rem;
+        background: rgba(20, 184, 166, 0.15);
+        color: #14B8A6;
+        padding: 0.35rem 0.65rem;
+        border-radius: 8px;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+    }
+
+    .metric-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--navy);
+        margin: 0.5rem 0;
+    }
+
+    .metric-meta {
+        margin: 0.5rem 0 0;
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+
+    /* Inventory Section Grid */
+    .inventory-section-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .list-card {
+        background: white;
+        border: 1px solid rgba(26, 42, 69, 0.08);
+        border-radius: 20px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(9, 22, 55, 0.04);
+    }
+
+    .list-title {
+        margin: 0 0 1.25rem;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text);
+    }
+
+    /* Data Table */
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+
+    .data-table thead {
+        background: rgba(26, 42, 69, 0.03);
+        border: 1px solid rgba(26, 42, 69, 0.08);
+    }
+
+    .data-table th {
+        padding: 0.9rem;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .data-table td {
+        padding: 0.9rem;
+        border-bottom: 1px solid rgba(26, 42, 69, 0.04);
+        font-size: 0.95rem;
+    }
+
+    .data-table tbody tr:hover {
+        background: rgba(20, 184, 166, 0.03);
+    }
+
+    .stock-badge {
+        display: inline-block;
+        padding: 0.35rem 0.65rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .stock-badge.low {
+        background: rgba(255, 152, 0, 0.15);
+        color: #FF9800;
+    }
+
+    /* Item List */
+    .item-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .item-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.9rem;
+        border-radius: 12px;
+        background: rgba(245, 247, 250, 0.8);
+        transition: background 0.2s ease;
+    }
+
+    .item-row:hover {
+        background: rgba(20, 184, 166, 0.08);
+    }
+
+    .item-info {
+        flex: 1;
+    }
+
+    .item-name {
+        margin: 0;
+        font-weight: 600;
+        color: var(--text);
+        font-size: 0.95rem;
+    }
+
+    .item-meta {
+        margin: 0.25rem 0 0;
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+
+    .item-metrics {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.2rem;
+    }
+
+    .stock-count {
+        font-size: 0.85rem;
+        color: var(--muted);
+        font-weight: 600;
+    }
+
+    .price {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #14B8A6;
+    }
+
+    /* Balance Sheet Grid */
+    .balance-sheet-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .balance-card {
+        background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(248,250,252,0.9));
+        border: 1px solid rgba(26, 42, 69, 0.08);
+        border-radius: 20px;
+        padding: 1.75rem;
+        box-shadow: 0 10px 30px rgba(9, 22, 55, 0.04);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .balance-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 40px rgba(9, 22, 55, 0.08);
+    }
+
+    .balance-card.warning {
+        border-left: 4px solid #FF9800;
+    }
+
+    .balance-card.success {
+        border-left: 4px solid #4CAF50;
+    }
+
+    .balance-title {
+        margin: 0 0 1rem;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        color: var(--text);
+    }
+
+    .balance-value {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1;
+        color: var(--navy);
+        margin-bottom: 0.5rem;
+    }
+
+    .balance-detail {
+        margin: 0;
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+
+    /* Transactions Table */
+    .transactions-table {
+        margin-top: 1.5rem;
+    }
+
+    .type-badge,
+    .status-badge {
+        display: inline-block;
+        padding: 0.35rem 0.65rem;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .badge-normal {
+        background: rgba(20, 184, 166, 0.15);
+        color: #14B8A6;
+    }
+
+    .badge-opening {
+        background: rgba(40, 106, 191, 0.15);
+        color: #286ABF;
+    }
+
+    .badge-reversal {
+        background: rgba(255, 152, 0, 0.15);
+        color: #FF9800;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .status-badge.posted {
+        background: rgba(76, 175, 80, 0.15);
+        color: #4CAF50;
+    }
+
+    .status-badge.draft {
+        background: rgba(153, 153, 153, 0.15);
+        color: #666;
+    }
+
+    /* Category Grid */
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.25rem;
+        margin-top: 1.5rem;
+    }
+
+    .category-card {
+        background: linear-gradient(135deg, rgba(20, 184, 166, 0.08), rgba(40, 106, 191, 0.08));
+        border: 1px solid rgba(26, 42, 69, 0.08);
+        border-radius: 16px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .category-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(20, 184, 166, 0.12);
+    }
+
+    .category-name {
+        margin: 0 0 0.75rem;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .category-count {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .count-number {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #14B8A6;
+    }
+
+    .count-label {
+        font-size: 0.85rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+    }
+
+    .category-desc {
+        margin: 0;
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 2rem;
+        color: var(--muted);
+        font-size: 0.95rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .kpi-grid {
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        }
+
+        .financial-metrics-grid,
+        .balance-sheet-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .inventory-section-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .data-table {
+            font-size: 0.85rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 0.6rem;
+        }
+    }

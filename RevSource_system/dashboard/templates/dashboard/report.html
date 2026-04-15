@@ -3,36 +3,389 @@
 {% block hero %}
 <section class="hero-panel hero-panel--compact">
     <div class="hero-copy">
-        <p class="eyebrow">Reporting center</p>
-        <h1>Analytics for operations and strategy.</h1>
-        <p class="hero-text">Use this report space to surface inventory trends, finance signals, and executive summaries.</p>
+        <p class="eyebrow">Executive Dashboard</p>
+        <h1>Real-time operations overview.</h1>
+        <p class="hero-text">Monitor inventory, financial performance, and business metrics in one unified view.</p>
     </div>
 </section>
 {% endblock %}
 
 {% block content %}
-<section class="section-panel card-card">
+
+<!-- CURRENCY SELECTOR -->
+<section class="section-panel">
     <div class="section-header">
         <div>
-            <p class="section-label">Reports</p>
-            <h2>System snapshots</h2>
+            <p class="section-label">Select Currency</p>
+            <label for="currency-selector" style="display: inline-block; margin-right: 10px;">Choose Currency:</label>
+            <select id="currency-selector" class="form-control" style="display: inline-block; width: auto;" onchange="window.location.href='?currency=' + this.value">
+                {% for currency in all_currencies %}
+                    <option value="{{ currency.code }}" {% if currency.code == selected_currency.code %}selected{% endif %}>
+                        {{ currency.code }} - {{ currency.symbol }} (Rate: {{ currency.exchange_rate }})
+                    </option>
+                {% endfor %}
+            </select>
         </div>
-        <a href="{% url 'finance:overview' %}" class="btn btn-outline">Go to finance</a>
-    </div>
-
-    <div class="dashboard-grid">
-        <article class="dashboard-card">
-            <h3>Inventory trends</h3>
-            <p>Identify low-stock items, top sellers, and seasonal rhythm.</p>
-        </article>
-        <article class="dashboard-card">
-            <h3>Performance insights</h3>
-            <p>See how product economics and finance metrics align.</p>
-        </article>
-        <article class="dashboard-card">
-            <h3>Operational score</h3>
-            <p>Review the key signals for ERP execution health.</p>
-        </article>
     </div>
 </section>
+
+<!-- KPI CARDS SECTION -->
+<section class="section-panel">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Key Performance Indicators</p>
+            <h2>Overview metrics</h2>
+        </div>
+    </div>
+    
+    <div class="kpi-grid">
+        <!-- Total Products Card -->
+        <div class="kpi-card">
+            <div class="kpi-icon products-icon">
+                <i class="fa fa-box"></i>
+            </div>
+            <div class="kpi-content">
+                <p class="kpi-label">Total Products</p>
+                <h3 class="kpi-value">{{ total_products }}</h3>
+                <p class="kpi-detail">Active SKUs in inventory</p>
+            </div>
+        </div>
+
+        <!-- Total Suppliers Card -->
+        <div class="kpi-card">
+            <div class="kpi-icon suppliers-icon">
+                <i class="fa fa-truck"></i>
+            </div>
+            <div class="kpi-content">
+                <p class="kpi-label">Total Suppliers</p>
+                <h3 class="kpi-value">{{ total_suppliers }}</h3>
+                <p class="kpi-detail">Active supplier network</p>
+            </div>
+        </div>
+
+        <!-- Total Currencies Card -->
+        <div class="kpi-card">
+            <div class="kpi-icon currency-icon">
+                <i class="fa fa-money-bill"></i>
+            </div>
+            <div class="kpi-content">
+                <p class="kpi-label">Currencies</p>
+                <h3 class="kpi-value">{{ total_currencies }}</h3>
+                <p class="kpi-detail">Multi-currency support</p>
+            </div>
+        </div>
+
+        <!-- Low Stock Alerts Card -->
+        <div class="kpi-card alert-card">
+            <div class="kpi-icon alert-icon">
+                <i class="fa fa-exclamation-triangle"></i>
+            </div>
+            <div class="kpi-content">
+                <p class="kpi-label">Low Stock Alerts</p>
+                <h3 class="kpi-value">{{ low_stock_count }}</h3>
+                <p class="kpi-detail">Items below reorder point</p>
+            </div>
+        </div>
+
+        <!-- Inventory Value Card -->
+        <div class="kpi-card">
+            <div class="kpi-icon inventory-icon">
+                <i class="fa fa-warehouse"></i>
+            </div>
+            <div class="kpi-content">
+                <p class="kpi-label">Inventory Value</p>
+                <h3 class="kpi-value">{{ currency_symbol }}{{ converted_total_inventory_value|floatformat:2 }}</h3>
+                <p class="kpi-detail">Total stock value (cost)</p>
+            </div>
+        </div>
+
+        <!-- Monthly Revenue Card -->
+        <div class="kpi-card success-card">
+            <div class="kpi-icon revenue-icon">
+                <i class="fa fa-chart-line"></i>
+            </div>
+            <div class="kpi-content">
+                <p class="kpi-label">Month Revenue</p>
+                <h3 class="kpi-value">{{ currency_symbol }}{{ converted_monthly_revenue|floatformat:2 }}</h3>
+                <p class="kpi-detail">Current month total</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SALES & REVENUE SECTION -->
+<section class="section-panel">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Financial Performance</p>
+            <h2>Revenue & expenses</h2>
+        </div>
+    </div>
+
+    <div class="financial-metrics-grid">
+        <!-- Today's Revenue -->
+        <div class="metric-card">
+            <div class="metric-header">
+                <h4>Today's Revenue</h4>
+                <span class="metric-badge">Live</span>
+            </div>
+            <div class="metric-body">
+                <div class="metric-value">{{ currency_symbol }}{{ converted_today_revenue|floatformat:2 }}</div>
+                <p class="metric-meta">Daily total transactions</p>
+            </div>
+        </div>
+
+        <!-- Last 30 Days Revenue -->
+        <div class="metric-card">
+            <div class="metric-header">
+                <h4>30-Day Revenue</h4>
+                <span class="metric-badge">Trending</span>
+            </div>
+            <div class="metric-body">
+                <div class="metric-value">{{ currency_symbol }}{{ converted_last_30_revenue|floatformat:2 }}</div>
+                <p class="metric-meta">Rolling 30-day total</p>
+            </div>
+        </div>
+
+        <!-- Monthly Expenses -->
+        <div class="metric-card warning">
+            <div class="metric-header">
+                <h4>Monthly Expenses</h4>
+                <span class="metric-badge">Tracked</span>
+            </div>
+            <div class="metric-body">
+                <div class="metric-value">{{ currency_symbol }}{{ converted_monthly_expenses|floatformat:2 }}</div>
+                <p class="metric-meta">Operating costs this month</p>
+            </div>
+        </div>
+
+        <!-- Net Income -->
+        <div class="metric-card success">
+            <div class="metric-header">
+                <h4>Net Income</h4>
+                <span class="metric-badge">{% if converted_net_income >= 0 %}Positive{% else %}Negative{% endif %}</span>
+            </div>
+            <div class="metric-body">
+                <div class="metric-value">{{ currency_symbol }}{{ converted_net_income|floatformat:2 }}</div>
+                <p class="metric-meta">Revenue minus expenses</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- INVENTORY MANAGEMENT SECTION -->
+<section class="section-panel">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Inventory Management</p>
+            <h2>Stock analysis</h2>
+        </div>
+        <a href="{% url 'products:list' %}" class="btn btn-outline">View all products</a>
+    </div>
+
+    <div class="inventory-section-grid">
+        <!-- Low Stock Products -->
+        <div class="list-card">
+            <h4 class="list-title">
+                <i class="fa fa-exclamation-circle"></i>
+                Low Stock Items ({{ low_stock_count }})
+            </h4>
+            {% if low_stock_products %}
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th>Current Stock</th>
+                        <th>Reorder Point</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in low_stock_products %}
+                    <tr>
+                        <td><strong>{{ product.name }}</strong></td>
+                        <td><code>{{ product.sku }}</code></td>
+                        <td><span class="stock-badge low">{{ product.stock_quantity }}</span></td>
+                        <td>{{ product.reorder_point }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="empty-state">All items are well-stocked. Great inventory health!</p>
+            {% endif %}
+        </div>
+
+        <!-- Fast Moving Items -->
+        <div class="list-card">
+            <h4 class="list-title">
+                <i class="fa fa-bolt"></i>
+                Fast-Moving Items
+            </h4>
+            {% if fast_moving_items %}
+            <div class="item-list">
+                {% for item in fast_moving_items %}
+                <div class="item-row">
+                    <div class="item-info">
+                        <p class="item-name">{{ item.name }}</p>
+                        <p class="item-meta">SKU: {{ item.sku }}</p>
+                    </div>
+                    <div class="item-metrics">
+                        <span class="stock-count">{{ item.stock_quantity }} units</span>
+                        <span class="price">{{ currency_symbol }}{{ item.selling_price|floatformat:2 }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="empty-state">No fast-moving items identified yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Top Selling Products (by value) -->
+        <div class="list-card">
+            <h4 class="list-title">
+                <i class="fa fa-star"></i>
+                Top Products by Value
+            </h4>
+            {% if top_products %}
+            <div class="item-list">
+                {% for product in top_products %}
+                <div class="item-row">
+                    <div class="item-info">
+                        <p class="item-name">{{ product.name }}</p>
+                        <p class="item-meta">Category: {% if product.category %}{{ product.category.name }}{% else %}Uncategorized{% endif %}</p>
+                    </div>
+                    <div class="item-metrics">
+                        <span class="stock-count">{{ product.stock_quantity }} units</span>
+                        <span class="price">{{ currency_symbol }}{{ product.selling_price|floatformat:2 }} each</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="empty-state">No products in inventory yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- FINANCIAL POSITION SECTION -->
+<section class="section-panel">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Balance Sheet</p>
+            <h2>Cash flow & position</h2>
+        </div>
+        <a href="{% url 'finance:account-list' %}" class="btn btn-outline">Go to accounts</a>
+    </div>
+
+    <div class="balance-sheet-grid">
+        <!-- Assets -->
+        <div class="balance-card">
+            <h4 class="balance-title">
+                <i class="fa fa-piggy-bank"></i>
+                Total Assets
+            </h4>
+            <div class="balance-value">{{ currency_symbol }}{{ converted_asset_balance|floatformat:2 }}</div>
+            <p class="balance-detail">Current asset position</p>
+        </div>
+
+        <!-- Liabilities -->
+        <div class="balance-card warning">
+            <h4 class="balance-title">
+                <i class="fa fa-credit-card"></i>
+                Total Liabilities
+            </h4>
+            <div class="balance-value">{{ currency_symbol }}{{ converted_liability_balance|floatformat:2 }}</div>
+            <p class="balance-detail">Current obligations</p>
+        </div>
+
+        <!-- Equity (Assets - Liabilities) -->
+        <div class="balance-card success">
+            <h4 class="balance-title">
+                <i class="fa fa-chart-pie"></i>
+                Net Equity
+            </h4>
+            <div class="balance-value">{{ currency_symbol }}{{ converted_equity|floatformat:2 }}</div>
+            <p class="balance-detail">Assets minus liabilities</p>
+        </div>
+    </div>
+</section>
+
+<!-- RECENT TRANSACTIONS SECTION -->
+<section class="section-panel">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Activity</p>
+            <h2>Recent transactions</h2>
+        </div>
+        <a href="{% url 'finance:overview' %}" class="btn btn-outline">View all</a>
+    </div>
+
+    {% if recent_transactions %}
+    <table class="data-table transactions-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Currency</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in recent_transactions %}
+            <tr>
+                <td>{{ transaction.date|date:"M d, Y" }}</td>
+                <td><code>#{{ transaction.id }}</code></td>
+                <td>{{ transaction.description|truncatewords:8 }}</td>
+                <td><span class="type-badge {% if transaction.entry_type == 'normal' %}badge-normal{% elif transaction.entry_type == 'opening' %}badge-opening{% else %}badge-reversal{% endif %}">{{ transaction.get_entry_type_display }}</span></td>
+                <td>{{ transaction.currency.code }}</td>
+                <td>
+                    {% if transaction.posted %}
+                        <span class="status-badge posted"><i class="fa fa-check"></i> Posted</span>
+                    {% else %}
+                        <span class="status-badge draft"><i class="fa fa-circle"></i> Draft</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="empty-state">No transactions recorded yet.</p>
+    {% endif %}
+</section>
+
+<!-- CATEGORIES SECTION -->
+<section class="section-panel">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Organization</p>
+            <h2>Product categories</h2>
+        </div>
+    </div>
+
+    {% if categories %}
+    <div class="category-grid">
+        {% for category in categories %}
+        <div class="category-card">
+            <h5 class="category-name">{{ category.name }}</h5>
+            <div class="category-count">
+                <span class="count-number">{{ category.product_count }}</span>
+                <span class="count-label">products</span>
+            </div>
+            {% if category.description %}
+            <p class="category-desc">{{ category.description|truncatewords:10 }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty-state">No categories defined yet.</p>
+    {% endif %}
+</section>
+
 {% endblock %}
