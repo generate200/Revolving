@@ -45,10 +45,11 @@ class Account(models.Model):
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=20, choices=ACCOUNT_TYPES)
     description = models.TextField(blank=True)
-    balance = models.DecimalField(max_digits=14, decimal_places=2, default=Decimal('0.00'))
+    balance = models.DecimalField(max_digits=14, decimal_places=2, default=Decimal('0.00'),editable=False )
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
 
     class Meta:
         ordering = ['code']
@@ -59,7 +60,12 @@ class Account(models.Model):
 
 class JournalEntry(models.Model):
     """Double-entry journal entry with balanced debit/credit lines."""
-    
+    ENTRY_TYPES = [
+        ('normal','Normal'),
+        ('opening','OpeningBalance'),
+        ('reversal','Reversal'),
+        ]
+    entry_type=models.CharField(max_length=20,choices=ENTRY_TYPES,default='normal')
     date = models.DateField()
     description = models.TextField()
     memo = models.CharField(max_length=255, blank=True)
@@ -123,13 +129,16 @@ class JournalEntry(models.Model):
         """Create a reversal entry with debits and credits flipped."""
         if not self.posted:
             raise Exception("Only posted entries can be reversed")
-
+        if self.entry_type == 'opening':
+            raise Exception("Opening balance entries cannot be reversed")
+        
         reversal = JournalEntry.objects.create(
             date=timezone.now().date(),
             description=f"Reversal of JE {self.id}",
             memo=f"Reversal of: {self.description}",
             currency=self.currency,
-            exchange_rate=self.exchange_rate
+            exchange_rate=self.exchange_rate,
+            entry_type='reversal'
         )
 
         for line in self.lines.all():
@@ -138,7 +147,7 @@ class JournalEntry(models.Model):
                 account=line.account,
                 debit=line.credit,
                 credit=line.debit,
-                comment="Reversal entry"
+                comment=f"Reversal of line {line.id} from JE {self.id}"
             )
 
         reversal.post()

@@ -5,6 +5,9 @@
 document.addEventListener('DOMContentLoaded', function() {  
 // Currency Management System
 const selector = document.getElementById('currency-selector-table');
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("sidebar");
+const overlay = document.getElementById("overlay");
 
     if (selector) {
         selector.addEventListener('change', function() {
@@ -88,4 +91,14 @@ const selector = document.getElementById('currency-selector-table');
     // 🔥 Initialize on load
     currencySelect.dispatchEvent(new Event('change'));
 
+// Mobile Menu Toggle
+menuToggle.addEventListener("click", function() {
+    sidebar.classList.toggle("active");
+    overlay.classList.toggle("active");
+});
+
+overlay.addEventListener("click", function() {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+});
 });
