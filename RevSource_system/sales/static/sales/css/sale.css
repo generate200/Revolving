@@ -112,6 +112,14 @@
     padding: 12px;
     margin-bottom: 8px;
     font-size: 1rem;
+    text-align: left;
+}
+
+.payment-method-btn.active,
+.payment-method-btn.active:hover {
+    background-color: #0d6efd;
+    color: #fff;
+    border-color: #0d6efd;
 }
 
 /* Currency Selector */

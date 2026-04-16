@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{% static 'products/css/product.css' %}" />
     <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}" />
     <link rel="stylesheet" href="{% static 'sales/css/sale.css' %}" />
-    <script src="{% static 'sales/js/pos_cart.js' %}"></script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -58,7 +58,7 @@
                 <a href="#" data-label="Online">
                     <i class="fa fa-globe"></i><span>Online Orders</span>
                 </a>
-                <a href="#" data-label="Customers">
+                <a href="{% url 'crm:customer_add' %}" data-label="Customers">
                     <i class="fa fa-users"></i><span>Customers</span>
                 </a>
                 <a href="#" data-label="Suppliers">

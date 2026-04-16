@@ -12,7 +12,22 @@ const config = {
 function initializeConfig(invoiceId, totalPrice, paymentMethods, csrfToken, selectedCurrency) {
     config.invoiceId = invoiceId;
     config.totalPrice = totalPrice;
-    config.paymentMethods = paymentMethods;
+    
+    if (typeof paymentMethods === 'string') {
+        try {
+            config.paymentMethods = JSON.parse(paymentMethods);
+        } catch (err) {
+            console.error('Invalid paymentMethods JSON:', err);
+            config.paymentMethods = [];
+        }
+    } else {
+        config.paymentMethods = paymentMethods;
+    }
+
+    if (!Array.isArray(config.paymentMethods)) {
+        config.paymentMethods = [];
+    }
+
     config.csrfToken = csrfToken;
     config.selectedCurrency = selectedCurrency;
 }
@@ -23,6 +38,15 @@ let searchTimeout;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
+    const subtotal= document.getElementById('subtotalDisplay');
+    const tax= document.getElementById('taxDisplay');
+    const discount= document.getElementById('discountDisplay');
+    const total= document.getElementById('totalDisplay');
+
+    if (!subtotal || !tax || !discount || !total) {
+        console.error('One or more cart total elements not found on page.');
+        return;
+    }
     // Initialize cart object after config is set
     cart = {
         invoiceId: config.invoiceId,
@@ -42,10 +66,19 @@ document.addEventListener('DOMContentLoaded', function() {
  */
 function initializePaymentMethods() {
     const methodsDiv = document.getElementById('paymentMethods');
-    config.paymentMethods.forEach(([value, label]) => {
+    methodsDiv.innerHTML = '';
+
+    if (!Array.isArray(config.paymentMethods) || config.paymentMethods.length === 0) {
+        methodsDiv.innerHTML = '<div class="text-muted">No payment methods available.</div>';
+        return;
+    }
+
+    config.paymentMethods.forEach(methodPair => {
+        const [value, label] = methodPair;
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'btn btn-outline-primary payment-method-btn';
+        btn.dataset.method = value;
         btn.textContent = label;
         btn.onclick = () => selectPaymentMethod(value);
         methodsDiv.appendChild(btn);
@@ -57,7 +90,12 @@ function initializePaymentMethods() {
  */
 function initializeEventListeners() {
     // Product search
-    document.getElementById('productSearch').addEventListener('input', debounceSearch);
+    const productSearchInput = document.getElementById('productSearch');
+    if (productSearchInput) {
+        productSearchInput.addEventListener('input', debounceSearch);
+    } else {
+        console.warn('Product search input not found on page.');
+    }
     
     // Quantity changes
     document.addEventListener('change', function(e) {
@@ -140,11 +178,24 @@ function debounceSearch(e) {
  */
 function performSearch(query) {
     fetch(`/sales/api/products/search/?q=${encodeURIComponent(query)}`)
-        .then(r => r.json())
+        .then(r => {
+            if (!r.ok) {
+                throw new Error(`Search request failed: ${r.status} ${r.statusText}`);
+            }
+            return r.json();
+        })
         .then(data => {
+            if (!data || !Array.isArray(data.products)) {
+                console.warn('Search response did not contain products array:', data);
+                displaySearchResults([]);
+                return;
+            }
             displaySearchResults(data.products);
         })
-        .catch(err => console.error('Search error:', err));
+        .catch(err => {
+            console.error('Search error:', err);
+            displaySearchResults([]);
+        });
 }
 
 /**
@@ -152,15 +203,26 @@ function performSearch(query) {
  */
 function searchProduct(query) {
     fetch(`/sales/api/products/search/?q=${encodeURIComponent(query)}`)
-        .then(r => r.json())
+        .then(r => {
+            if (!r.ok) {
+                throw new Error(`Search request failed: ${r.status} ${r.statusText}`);
+            }
+            return r.json();
+        })
         .then(data => {
+            if (!data || !Array.isArray(data.products)) {
+                console.warn('Search response invalid for direct search:', data);
+                showAlert('Product search failed', 'warning');
+                return;
+            }
+
             if (data.products.length === 1) {
                 // Auto-add if single result
                 addProductToCart(data.products[0]);
             } else if (data.products.length > 1) {
                 displaySearchResults(data.products);
             } else {
-                showAlert('Product not found', 'warning');
+                displaySearchResults([]);
             }
         })
         .catch(err => {
@@ -174,11 +236,19 @@ function searchProduct(query) {
  */
 function displaySearchResults(products) {
     const resultsList = document.getElementById('productsList');
+    if (!resultsList) {
+        console.error('Products list container not found.');
+        return;
+    }
+
     resultsList.innerHTML = '';
 
-    if (!products.length) {
+    if (!Array.isArray(products) || products.length === 0) {
         resultsList.innerHTML = '<div class="list-group-item disabled">No products found</div>';
-        document.getElementById('searchResults').style.display = 'block';
+        const searchResults = document.getElementById('searchResults');
+        if (searchResults) {
+            searchResults.style.display = 'block';
+        }
         return;
     }
 

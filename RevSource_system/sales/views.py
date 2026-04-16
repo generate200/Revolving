@@ -79,7 +79,7 @@ def pos_cart(request, invoice_id):
         'search_form': search_form,
         'currencies': Currency.objects.filter(is_active=True),
         'selected_currency': currency_service.selected_currency,
-        'payment_methods': Payment.PAYMENT_METHODS,
+        'payment_methods': json.dumps(Payment.PAYMENT_METHODS),
     }
     return render(request, 'sales/pos_cart.html', context)
 
@@ -123,7 +123,7 @@ def add_to_cart(request, invoice_id):
                 product=product,
                 variant=variant,
                 quantity=quantity,
-                unit_price=Decimal(str(data.get('unit_price', product.price)))
+                unit_price=Decimal(str(data.get('unit_price', product.selling_price)))
             )
         
         line.save()
@@ -205,31 +205,26 @@ def remove_line_item(request, invoice_id, line_id):
 @login_required
 @require_http_methods(["GET"])
 @csrf_exempt
-def search_products(request, invoice_id):
-    """AJAX endpoint for quick product search"""
+def search_products(request):
     query = request.GET.get('q', '').strip()
-    
-    if not query or len(query) < 2:
-        return JsonResponse({'products': []})
-    
+    print("QUERY:", query)
+
     products = Product.objects.filter(
         Q(name__icontains=query) |
         Q(sku__icontains=query) |
         Q(barcode__icontains=query),
         is_active=True
-    )[:20]
-    
+    )
     data = [{
         'id': p.id,
         'name': p.name,
         'sku': p.sku,
         'barcode': p.barcode,
-        'price': str(p.price),
-    } for p in products]
-    
+        'price': str(p.selling_price),
+    } for p in products[:20]]
+
     return JsonResponse({'products': data})
-
-
+    
 @login_required
 @require_http_methods(["POST"])
 def process_payment(request, invoice_id):
