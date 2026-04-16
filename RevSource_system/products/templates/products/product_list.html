@@ -44,7 +44,7 @@
                         <div class="currency-selector" style="display: inline-block; margin-left: 10px;">
                             <select id="currency-selector-table" class="currency-select" style="font-size: 12px; padding: 2px 4px;">
                                {% for currency in currencies %}
-                                <option value="{{ currency.code }}" {% if currency.code == selected_currency %}selected{% endif %} data-symbol="{{ currency.symbol }}" >
+                                <option value="{{currency.code }}" {% if currency.code == selected_currency %}selected{% endif %} data-symbol="{{currency_symbol}}" >
                                     {{ currency.code }}
                                 </option>
                                 {% endfor %}
@@ -62,7 +62,7 @@
                     <td>{{ product.sku }}</td>
                     <td>{{ product.name }}</td>
                     <td>{% if product.category %}{{ product.category.name }}{% else %}—{% endif %}</td>
-                    <td><span data-amount="{{ product.discounted_price_base_currency }}" data-currency="{{ product.currency.code }}">{{ product.conc }}{{ product.discounted_price|floatformat:2 }}</span></td>
+                    <td>{{currency_symbol}}{{ product.converted_price }}</td>
                     <td>
                         {{ product.stock_quantity }}
                         {% if product.is_low_stock %}

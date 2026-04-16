@@ -1,0 +1,87 @@
+{% extends 'products/base.html' %}
+{% load static %}
+
+{% block title %}POS Dashboard - Sales{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1 class="display-4">Point of Sale</h1>
+            <p class="lead">Quick access to POS functions</p>
+        </div>
+    </div>
+
+    <!-- Quick Action Cards -->
+    <div class="pos-dashboard-cards mt-5">
+        <!-- New Invoice Card -->
+        <div class="pos-card">
+            <div class="pos-card-icon">
+                <i class="fas fa-receipt"></i>
+            </div>
+            <h5 class="pos-card-title">New Invoice</h5>
+            <p class="pos-card-desc">Start a new sales invoice and add products</p>
+            <a href="{% url 'sales:create_invoice' %}" class="pos-card-btn">
+                <i class="fas fa-arrow-right"></i> START SALE
+            </a>
+        </div>
+
+        <!-- View Invoices Card -->
+        <div class="pos-card">
+            <div class="pos-card-icon">
+                <i class="fas fa-list"></i>
+            </div>
+            <h5 class="pos-card-title">View Invoices</h5>
+            <p class="pos-card-desc">{{ total_sales_today }} sales today</p>
+            <a href="{% url 'sales:invoice_list' %}" class="pos-card-btn">
+                <i class="fas fa-arrow-right"></i> VIEW ALL
+            </a>
+        </div>
+
+        <!-- Daily Summary Card -->
+        <div class="pos-card">
+            <div class="pos-card-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h5 class="pos-card-title">Today's Revenue</h5>
+            <p class="pos-card-desc" style="font-size: 1.5rem; font-weight: bold; color: #28a745;">{{ revenue_today|default:"0.00" }}</p>
+            <span class="pos-card-desc" style="text-align: center; width: 100%; display: block;">Active Drafts: {{ active_invoices }}</span>
+        </div>
+    </div>
+
+    <!-- Additional Info Section -->
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-history"></i> Recent Transactions</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted"><i class="fas fa-info-circle"></i> Recent sales will appear here</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-bolt"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'sales:pos_dashboard' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-home"></i> Dashboard
+                        </a>
+                        <a href="{% url 'sales:invoice_list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-list"></i> All Invoices
+                        </a>
+                        <a href="{% url 'sales:create_invoice' %}" class="btn btn-outline-success">
+                            <i class="fas fa-plus"></i> New Sale
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

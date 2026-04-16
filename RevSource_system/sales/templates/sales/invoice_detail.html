@@ -1,0 +1,197 @@
+{% extends 'products/base.html' %}
+{% load static %}
+
+{% block title %}Invoice {{ invoice.invoice_number }} - Sales{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>Invoice #{{ invoice.invoice_number }}</h2>
+            <p class="text-muted">
+                Created: {{ invoice.created_at|date:"M d, Y H:i" }}
+                {% if invoice.posted_at %}
+                    | Completed: {{ invoice.posted_at|date:"M d, Y H:i" }}
+                {% endif %}
+            </p>
+        </div>
+        <div class="col-md-4 text-end">
+            {% if invoice.status == 'draft' %}
+                <span class="badge bg-warning fs-6">Draft</span>
+            {% elif invoice.status == 'completed' %}
+                <span class="badge bg-success fs-6">Completed</span>
+            {% elif invoice.status == 'cancelled' %}
+                <span class="badge bg-danger fs-6">Cancelled</span>
+            {% endif %}
+            
+            {% if invoice.status == 'draft' %}
+                <a href="{% url 'sales:pos_cart' invoice.id %}" class="btn btn-warning ms-2">
+                    <i class="fas fa-edit"></i> Continue
+                </a>
+            {% endif %}
+            
+            {% if invoice.status == 'completed' %}
+                <a href="{% url 'sales:print_receipt' invoice.id %}" class="btn btn-secondary ms-2">
+                    <i class="fas fa-print"></i> Print
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Column: Invoice Details -->
+        <div class="col-md-8">
+            <!-- Customer Info -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Customer</h5>
+                </div>
+                <div class="card-body">
+                    {% if invoice.customer %}
+                        <p class="mb-1"><strong>{{ invoice.customer.name }}</strong></p>
+                        {% if invoice.customer.email %}
+                            <p class="mb-1">{{ invoice.customer.email }}</p>
+                        {% endif %}
+                        {% if invoice.customer.phone %}
+                            <p class="mb-0">{{ invoice.customer.phone }}</p>
+                        {% endif %}
+                    {% else %}
+                        <p class="text-muted">Walk-in Customer</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Line Items -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Items</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Product</th>
+                                <th>SKU</th>
+                                <th class="text-end">Qty</th>
+                                <th class="text-end">Unit Price</th>
+                                <th class="text-end">Discount</th>
+                                <th class="text-end">Tax</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for line in lines %}
+                            <tr>
+                                <td>{{ line.product.name }}</td>
+                                <td><small class="text-muted">{{ line.product.sku }}</small></td>
+                                <td class="text-end">{{ line.quantity|floatformat:2 }}</td>
+                                <td class="text-end">{{ line.unit_price|floatformat:2 }}</td>
+                                <td class="text-end">
+                                    {% if line.discount > 0 %}
+                                        -{{ line.discount|floatformat:2 }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {% if line.tax > 0 %}
+                                        +{{ line.tax|floatformat:2 }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td class="text-end"><strong>{{ line.total_price|floatformat:2 }}</strong></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Summary -->
+        <div class="col-md-4">
+            <!-- Order Summary -->
+            <div class="card mb-4 border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col">Subtotal:</div>
+                        <div class="col text-end">{{ invoice.subtotal|floatformat:2 }}</div>
+                    </div>
+                    {% if invoice.discount_total > 0 %}
+                    <div class="row mb-3" style="color: #28a745;">
+                        <div class="col">Discount:</div>
+                        <div class="col text-end">-{{ invoice.discount_total|floatformat:2 }}</div>
+                    </div>
+                    {% endif %}
+                    {% if invoice.tax_total > 0 %}
+                    <div class="row mb-3">
+                        <div class="col">Tax:</div>
+                        <div class="col text-end">+{{ invoice.tax_total|floatformat:2 }}</div>
+                    </div>
+                    {% endif %}
+                    <div class="row" style="border-top: 2px solid #dee2e6; padding-top: 10px; font-size: 1.2rem; font-weight: bold;">
+                        <div class="col">Total Amount:</div>
+                        <div class="col text-end">{{ invoice.currency.code }} {{ invoice.total_amount|floatformat:2 }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payments -->
+            {% if payments %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Payments</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Method</th>
+                                <th class="text-end">Amount</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for payment in payments %}
+                            <tr>
+                                <td>{{ payment.get_method_display }}</td>
+                                <td class="text-end">{{ payment.amount|floatformat:2 }}</td>
+                                <td><small>{{ payment.created_at|date:"H:i" }}</small></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row mb-2">
+                        <div class="col">Total Paid:</div>
+                        <div class="col text-end"><strong>{{ invoice.paid_amount|floatformat:2 }}</strong></div>
+                    </div>
+                    {% if invoice.change_amount > 0 %}
+                    <div class="row" style="color: #28a745;">
+                        <div class="col">Change:</div>
+                        <div class="col text-end"><strong>{{ invoice.change_amount|floatformat:2 }}</strong></div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Actions -->
+            <div class="d-grid gap-2">
+                <a href="{% url 'sales:invoice_list' %}" class="btn btn-secondary">
+                    <i class="fas fa-list"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

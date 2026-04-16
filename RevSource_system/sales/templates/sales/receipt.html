@@ -1,0 +1,111 @@
+{% extends 'products/base.html' %}
+{% load static %}
+
+{% block title %}Receipt - {{ invoice.invoice_number }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="no-print" style="margin-bottom: 20px;">
+        <a href="javascript:window.print()" class="btn btn-primary">
+            <i class="fas fa-print"></i> Print Receipt
+        </a>
+        <a href="{% url 'sales:invoice_detail' invoice.id %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back
+        </a>
+    </div>
+
+    <div class="receipt">
+        <!-- Header -->
+        <div class="receipt-header">
+            <h3 style="margin: 0;">RECEIPT</h3>
+            <p style="margin: 5px 0;">{{ invoice.invoice_number }}</p>
+            <p style="margin: 0; font-size: 0.85rem;">{{ invoice.created_at|date:"Y-m-d H:i:s" }}</p>
+        </div>
+
+        <!-- Customer Info -->
+        {% if invoice.customer %}
+        <div style="margin-bottom: 10px; font-size: 0.9rem;">
+            <strong>Customer:</strong> {{ invoice.customer.name }}
+            {% if invoice.customer.phone %}
+            <br><strong>Phone:</strong> {{ invoice.customer.phone }}
+            {% endif %}
+        </div>
+        <div class="receipt-divider"></div>
+        {% endif %}
+
+        <!-- Items -->
+        <div style="margin: 10px 0; font-size: 0.9rem;">
+            {% for line in lines %}
+            <div class="receipt-item">
+                <div style="display: flex; justify-content: space-between;">
+                    <span>{{ line.product.name }}</span>
+                    <span>{{ line.total_price|floatformat:2 }}</span>
+                </div>
+                <div style="font-size: 0.85rem; color: #666;">
+                    {{ line.quantity|floatformat:2 }} x {{ line.unit_price|floatformat:2 }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="receipt-divider"></div>
+
+        <!-- Totals -->
+        <div style="font-size: 0.9rem;">
+            <div class="receipt-line">
+                <span>Subtotal:</span>
+                <span>{{ invoice.subtotal|floatformat:2 }}</span>
+            </div>
+            {% if invoice.discount_total > 0 %}
+            <div class="receipt-line" style="color: #28a745;">
+                <span>Discount:</span>
+                <span>-{{ invoice.discount_total|floatformat:2 }}</span>
+            </div>
+            {% endif %}
+            {% if invoice.tax_total > 0 %}
+            <div class="receipt-line">
+                <span>Tax:</span>
+                <span>+{{ invoice.tax_total|floatformat:2 }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="receipt-divider"></div>
+
+        <div style="font-size: 1.1rem; font-weight: bold;">
+            <div class="receipt-line">
+                <span>TOTAL:</span>
+                <span>{{ invoice.currency.code }} {{ invoice.total_amount|floatformat:2 }}</span>
+            </div>
+        </div>
+
+        <div class="receipt-divider"></div>
+
+        <!-- Payment Info -->
+        {% if payments %}
+        <div style="font-size: 0.9rem;">
+            {% for payment in payments %}
+            <div class="receipt-line">
+                <span>{{ payment.get_method_display }}:</span>
+                <span>{{ payment.amount|floatformat:2 }}</span>
+            </div>
+            {% endfor %}
+            {% if invoice.change_amount > 0 %}
+            <div class="receipt-line" style="color: #28a745; font-weight: bold;">
+                <span>Change:</span>
+                <span>{{ invoice.change_amount|floatformat:2 }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="receipt-divider"></div>
+        {% endif %}
+
+        <!-- Footer -->
+        <div class="text-center" style="font-size: 0.85rem; color: #666;">
+            <p style="margin: 10px 0;">Thank you for your purchase!</p>
+            <p style="margin: 0;">{{ invoice.posted_at|date:"M d, Y H:i" }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

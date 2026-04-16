@@ -10,6 +10,11 @@ const sidebar = document.getElementById("sidebar");
 const overlay = document.getElementById("overlay");
 
     if (selector) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const currencyFromUrl = urlParams.get('currency');
+        if (currencyFromUrl) {
+        selector.value = currencyFromUrl;
+    }
         selector.addEventListener('change', function() {
             const currency = this.value;
             const url = new URL(window.location.href);

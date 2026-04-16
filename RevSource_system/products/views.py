@@ -5,6 +5,7 @@ from django.views.generic import ListView, CreateView, DeleteView, TemplateView
 from .models import Product, Category, Supplier
 from .forms import ProductForm, CategoryForm, SupplierForm
 from finance.models import Currency
+from finance.utils.currency import CurrencyService
 
 
 class IndexView(TemplateView):
@@ -17,27 +18,45 @@ class ProductListView(ListView):
     context_object_name = 'products'
     paginate_by = 25
 
+    def get_currency_service(self):
+        if not hasattr(self, '_currency_service'):
+            self._currency_service = CurrencyService(self.request)
+        return self._currency_service
+
     def get_queryset(self):
-        return Product.objects.select_related('category', 'currency').order_by('name')
+        queryset = Product.objects.select_related('category', 'currency').order_by('name')
+        currency_service = self.get_currency_service()
+
+        for product in queryset:
+            product.converted_price = currency_service.convert(
+                product.discounted_price_base_currency
+            )
+
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        currency_service = self.get_currency_service()
 
-        all_products = self.get_queryset()
+        queryset = self.object_list  # ✅ use already-evaluated queryset
 
-        context['total_products'] = all_products.count()
-        context['low_stock_count'] = all_products.filter(
+        context['total_products'] = queryset.count()
+        context['low_stock_count'] = queryset.filter(
             stock_quantity__lte=F('reorder_point')
         ).count()
 
-        # ✅ Get currencies
         currencies = Currency.objects.filter(is_active=True)
         base_currency = currencies.filter(is_base=True).first()
+        selected_currency = self.request.GET.get('currency')
 
-        # ✅ For dropdown (simple)
+        if selected_currency:
+            selected_obj = currencies.filter(code=selected_currency).first()
+        else:
+            selected_obj = base_currency
+
+        context['currency_symbol']=selected_obj.symbol if selected_obj else '$'
         context['currencies'] = currencies
 
-        # ✅ For JavaScript (CRITICAL)
         context['currency_data'] = {
             "baseCurrency": base_currency.code if base_currency else "USD",
             "currencies": {

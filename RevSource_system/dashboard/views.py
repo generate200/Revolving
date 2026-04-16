@@ -1,4 +1,5 @@
 from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Sum, Count, Q, F, DecimalField
 from django.db.models.functions import Coalesce, TruncDate
 from django.utils import timezone
@@ -10,7 +11,7 @@ from finance.models import Currency, Account, JournalEntry, JournalLine
 from accounts.models import User
 
 
-class DashboardReportView(TemplateView):
+class DashboardReportView(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard/report.html'
     
     def convert_currency(self, amount, selected_currency=None, base_currency=None):

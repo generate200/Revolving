@@ -34,7 +34,9 @@ INSTALLED_APPS = [
     'accounts',
     'products',
     'finance',
+    'crm',
     'dashboard',
+    'sales',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -71,6 +73,8 @@ TEMPLATES = [
     },
 ]
 AUTH_USER_MODEL = 'accounts.User'
+LOGIN_URL = 'accounts:login'
+LOGIN_REDIRECT_URL = 'dashboard:report'
 
 WSGI_APPLICATION = "RevSource_system.wsgi.application"
 
