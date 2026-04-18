@@ -128,3 +128,109 @@
         .demo-credentials strong {
             color: #333;
         }
+
+.profile-container {
+    display: flex;
+    gap: 25px;
+    padding: 25px;
+    flex-wrap: wrap;
+}
+
+/* LEFT CARD */
+.profile-card {
+    flex: 1;
+    max-width: 350px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* Avatar */
+.profile-avatar img {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #f1f1f1;
+    margin-bottom: 15px;
+}
+
+/* Name */
+.profile-card h2 {
+    margin: 10px 0 5px;
+}
+
+.profile-username {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+/* Info */
+.profile-info {
+    text-align: left;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.profile-info div {
+    margin-bottom: 8px;
+}
+
+/* Button */
+.edit-btn {
+    margin-top: 20px;
+    padding: 10px 18px;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    border: none;
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.edit-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* RIGHT FORM CARD */
+.profile-form-card {
+    flex: 2;
+    background: #fff;
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    min-width: 300px;
+}
+
+/* Form styling */
+.profileform p {
+    margin-bottom: 15px;
+}
+
+.profileform input,
+.profileform textarea,
+.profileform select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-top: 5px;
+}
+
+/* Save button */
+.save-btn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.save-btn:hover {
+    background: #218838;
+}

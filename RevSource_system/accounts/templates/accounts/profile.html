@@ -1,0 +1,69 @@
+{% extends 'accounts/baseauth.html' %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const showBtn = document.getElementById("show-form-button");
+    const formCard = document.getElementById("profile-form-card");
+    const cancelBtn = document.getElementById("cancel-btn");
+    console.log(showBtn, formCard, cancelBtn); // debug
+
+    if (showBtn && formCard && cancelBtn) {
+        showBtn.addEventListener("click", () => {
+            formCard.style.display = "block";
+            showBtn.style.display = "none";
+        });
+
+        cancelBtn.addEventListener("click", () => {
+            formCard.style.display = "none";
+            showBtn.style.display = "block";
+        });
+    }
+
+});
+</script>
+{% block content %}
+
+<div class="profile-container">
+
+    <!-- LEFT: Profile Card -->
+    <div class="profile-card">
+        <div class="profile-avatar">
+            <img src="{{ profile.profile_pic.url }}" alt="Profile Picture">
+        </div>
+
+        <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+        <p class="profile-username">@{{ user.username }}</p>
+
+        <div class="profile-info">
+            <div><strong>Email:</strong> {{ user.email }}</div>
+            <div><strong>Phone:</strong> {{ profile.phone }}</div>
+            <div><strong>Address:</strong> {{ profile.address }}</div>
+            <div><strong>City:</strong> {{ profile.city }}</div>
+        </div>
+
+        <button id="show-form-button" class="edit-btn">
+            <i class="fa fa-edit"></i> Edit Profile
+        </button>
+    </div>
+
+    <!-- RIGHT: Update Form -->
+    <div class="profile-form-card"id="profile-form-card" style="display: none;">
+         <button id="cancel-btn" class="cancel-btn">
+            <i class="fa fa-times"></i> Cancel
+        </button>
+        <h3>Update Profile</h3>
+
+        <form method="POST" enctype="multipart/form-data" class="profileform">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit" class="save-btn">
+                <i class="fa fa-save"></i> Save Changes
+            </button>
+        </form>
+    </div>
+
+</div>
+
+
+{% endblock %}

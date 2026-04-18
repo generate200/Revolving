@@ -58,7 +58,7 @@ class Product(models.Model):
     unit = models.CharField(max_length=20, choices=UNIT_CHOICES, default='piece')
     weight = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, validators=[MinValueValidator(Decimal('0.00'))])
     dimensions = models.CharField(max_length=100, blank=True, help_text="e.g., 10x20x30 cm")
-    image = models.ImageField(upload_to='products/', blank=True, null=True)
+    image = models.ImageField(upload_to='products/static/images/', blank=True, null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'products/css/product.css' %}" />
     <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}" />
     <link rel="stylesheet" href="{% static 'sales/css/sale.css' %}" />
+    <script src="{% static 'products/js/main.js' %}"></script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
@@ -19,7 +20,6 @@
 
 <body>
 <div class="app-layout">
-
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -113,6 +113,19 @@
                     <i class="fa fa-sign-out-alt"></i>Logout
                 </a>
             </nav>
+              <a href="{% url 'accounts:profile' %}" class="profile-link">
+     <div class="profile-box">
+            <div class="css-border">
+                <img src="{% if profile.profile_pic %}{{profile.profile_pic.url }}{% else %}{% static 'images/cs50duck.jpg' %}{% endif %}" alt="Profile Picture">
+                {% if user.is_authenticated %}
+                <p>Signed in as, {{ user.username }}!</p>
+                <div class="profile-details">
+                    <div>Name: {{ user.first_name }} {{ user.last_name }}</div>
+                </div>
+            </div>
+            </div>
+               </a>
+                {% endif %}
         </header>
 
         <main class="page-content">

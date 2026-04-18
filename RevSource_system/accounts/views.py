@@ -7,6 +7,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from .models import User
 from django.db import IntegrityError
+from accounts.forms import profileForm
 
 @require_http_methods(["GET", "POST"])
 def login_view(request):
@@ -62,3 +63,26 @@ def register(request):
         return redirect("index")
 
     return render(request, "accounts/register.html")
+
+def profile_view(request):
+    user_instance=request.user
+    try:
+        profile_instance=user_instance.profile
+    except:
+        profile_instance=None
+    if request.method == "POST":
+        form=profileForm(request.POST,request.FILES,instance=profile_instance)
+        if form.is_valid():
+            new_profile=form.save(commit=False)
+            new_profile.user=user_instance
+            new_profile.save()
+            messages.success(request,"Profile updated successfully")
+            return redirect('accounts:profile')
+    else:
+        form=profileForm(instance=profile_instance)
+    context={
+        'form':form,
+        'profile':profile_instance
+    }
+            
+    return render(request,'accounts/profile.html',context)
