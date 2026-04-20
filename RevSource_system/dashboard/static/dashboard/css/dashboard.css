@@ -13,9 +13,11 @@
         padding: 1.5rem;
         display: flex;
         gap: 1rem;
-        align-items: space-between;
+        align-items: center;
+        justify-content: space-between;
         box-shadow: 0 10px 30px rgba(9, 22, 55, 0.04);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
+        
     }
 
     .kpi-card:hover {
@@ -79,6 +81,7 @@
         font-size: 1.8rem;
         font-weight: 700;
         line-height: 1;
+        white-space: normal;
     }
 
     .kpi-label {
@@ -93,6 +96,7 @@
     .kpi-detail {
         margin: 0.5rem 0 0;
         font-size: 0.82rem;
+        flex: 1;
         color: var(--muted);
     }
 

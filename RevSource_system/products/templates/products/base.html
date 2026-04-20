@@ -116,7 +116,7 @@
               <a href="{% url 'accounts:profile' %}" class="profile-link">
      <div class="profile-box">
             <div class="css-border">
-                <img src="{% if profile.profile_pic %}{{profile.profile_pic.url }}{% else %}{% static 'images/cs50duck.jpg' %}{% endif %}" alt="Profile Picture">
+                <img src="{% if profile.profile_pic %}{{profile.profile_pic.url }}{% else %}{% static 'accounts/profile_pics/cs50duck.jpg' %}{% endif %}" alt="Profile Picture">
                 {% if user.is_authenticated %}
                 <p>Signed in as, {{ user.username }}!</p>
                 <div class="profile-details">

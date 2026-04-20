@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import F
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, DeleteView, TemplateView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from .models import Product, Category, Supplier
 from .forms import ProductForm, CategoryForm, SupplierForm
 from finance.models import Currency
@@ -72,6 +72,13 @@ class ProductListView(ListView):
 
 
 class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'products/product_form.html'
+    success_url = reverse_lazy('products:list')
+
+
+class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'products/product_form.html'

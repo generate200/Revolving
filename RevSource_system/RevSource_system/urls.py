@@ -18,6 +18,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from products.views import IndexView
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,4 +31,4 @@ urlpatterns = [
     path('crm/', include('crm.urls', namespace='crm')),
     path('report/', include('dashboard.urls', namespace='dashboard')),
     path('sales/', include('sales.urls', namespace='sales')),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

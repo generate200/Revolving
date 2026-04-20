@@ -1,5 +1,8 @@
 {% extends 'products/base.html' %}
 {% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'products/css/gallery.css' %}" />
+{% endblock %}
 {% block content %}
 <section class="section-panel">
     <div class="section-header">
@@ -13,7 +16,16 @@
         </div>
         <div style="display: flex; gap: 10px; align-items: center;">
             <a href="{% url 'products:add' %}" class="btn btn-accent">Add new product</a>
-            <!-- Currency selector will be added here by JavaScript -->
+            
+            <!-- View Toggle -->
+            <div class="view-toggle">
+                <button class="toggle-btn active" id="list-view-btn" title="List View">
+                    <i class="fas fa-list"></i> List
+                </button>
+                <button class="toggle-btn" id="gallery-view-btn" title="Gallery View">
+                    <i class="fas fa-th"></i> Gallery
+                </button>
+            </div>
         </div>
     </div>
 
@@ -32,7 +44,8 @@
         </article>
     </div>
 
-    <div class="table-card">
+    <!-- LIST VIEW -->
+    <div class="table-card" id="list-view-container">
         <table class="product-table">
             <thead>
                 <tr>
@@ -58,9 +71,9 @@
             </thead>
             <tbody>
                 {% for product in products %}
-                <tr>
+                <tr class="product-row" data-product-id="{{ product.pk }}">
                     <td>{{ product.sku }}</td>
-                    <td>{{ product.name }}</td>
+                    <td><a href="#" class="product-link" data-product-id="{{ product.pk }}">{{ product.name }}</a></td>
                     <td>{% if product.category %}{{ product.category.name }}{% else %}—{% endif %}</td>
                     <td>{{currency_symbol}}{{ product.converted_price }}</td>
                     <td>
@@ -88,5 +101,63 @@
             </tbody>
         </table>
     </div>
+
+    <!-- GALLERY VIEW -->
+    <div class="gallery-container" id="gallery-view-container" style="display: none;">
+        <div class="gallery-grid">
+            {% for product in products %}
+            <div class="gallery-card" data-product-id="{{ product.pk }}" data-edit-url="{% url 'products:edit' product.pk %}" data-delete-url="{% url 'products:delete' product.pk %}">
+                <div class="gallery-card-image">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-img">
+                    {% else %}
+                        <div class="placeholder-image">
+                            <i class="fas fa-image"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="gallery-card-content">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p class="product-sku">SKU: {{ product.sku }}</p>
+                    <p class="product-price">{{currency_symbol}}{{ product.converted_price }}</p>
+                    <div class="product-stock">
+                        <span class="stock-label">Stock:</span>
+                        <span class="stock-value">{{ product.stock_quantity }}</span>
+                        {% if product.is_low_stock %}
+                        <span class="badge badge-warning">Low</span>
+                        {% endif %}
+                    </div>
+                    <div class="product-status">
+                        {% if product.is_active %}
+                            <span class="badge badge-success">Active</span>
+                        {% else %}
+                            <span class="badge badge-muted">Inactive</span>
+                        {% endif %}
+                    </div>
+                    <button class="view-details-btn" data-product-id="{{ product.pk }}">
+                        <i class="fas fa-eye"></i> View Details
+                    </button>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-gallery">
+                <i class="fas fa-inbox"></i>
+                <p>No products have been added yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </section>
+
+<!-- PRODUCT DETAILS MODAL -->
+<div class="modal" id="product-modal">
+    <div class="modal-content">
+        <button class="modal-close" id="modal-close">&times;</button>
+        <div class="modal-body" id="modal-body">
+            <!-- Content will be populated by JavaScript -->
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'products/js/product_gallery.js' %}"></script>
 {% endblock %}

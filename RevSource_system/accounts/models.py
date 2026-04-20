@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from core.utils import profile_upload_path
 
 # Create your models here.
 class User(AbstractUser):
@@ -24,7 +25,7 @@ class User(AbstractUser):
 class profile(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE,related_name="profile")
     phone=models.CharField(max_length=20,blank=True,null=True)
-    profile_pic = models.ImageField(upload_to='accounts/static/profile_pics', blank=True, null=True)
+    profile_pic = models.ImageField(upload_to=profile_upload_path, blank=True, null=True)
     address=models.CharField(max_length=255,blank=True,null=True)
     city=models.CharField(max_length=100,blank=True,null=True)
 
