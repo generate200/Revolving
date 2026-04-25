@@ -29,19 +29,13 @@ const overlay = document.getElementById("overlay");
     const totalCreditEl = document.getElementById('total-credit');
     const balanceStatus = document.getElementById('balance-status');
 
-    if (!currencySelect) return; // stop if not on journal page
+    if (!totalDebitEl || !totalCreditEl || !balanceStatus) return;
 
-    let currentSymbol = '$';
-
-    function getSelectedCurrencyData() {
-        const selected = currencySelect.options[currencySelect.selectedIndex];
-
-        return {
-            symbol: selected.dataset.symbol || '$',
-            rate: parseFloat(selected.dataset.rate) || 1.0
-        };
-    }
-
+      
+       
+    function round2(value) {
+        return Math.round(value * 100) / 100;
+    }``
     function calculateTotals() {
         let totalDebit = 0;
         let totalCredit = 0;
@@ -54,34 +48,38 @@ const overlay = document.getElementById("overlay");
             totalCredit += parseFloat(input.value) || 0;
         });
 
-        totalDebitEl.innerText = `${currentSymbol}${totalDebit.toFixed(2)}`;
-        totalCreditEl.innerText = `${currentSymbol}${totalCredit.toFixed(2)}`;
+        totalDebitEl.innerText = totalDebit.toFixed(2);
+        totalCreditEl.innerText = totalCredit.toFixed(2);
+
+        const difference = round2(totalDebit - totalCredit);
+        balanceStatus.style.display = 'block';
 
         // Balance check
-        if (totalDebit === totalCredit && totalDebit > 0) {
-            balanceStatus.style.display = 'block';
+        if (difference === 0 && totalDebit > 0) {
             balanceStatus.style.background = 'rgba(20,184,166,0.1)';
             balanceStatus.innerText = '✓ Balanced';
         } else {
-            balanceStatus.style.display = 'block';
             balanceStatus.style.background = 'rgba(224,45,76,0.1)';
             balanceStatus.innerText = `✗ Not Balanced (Diff: ${(totalDebit - totalCredit).toFixed(2)})`;
         }
     }
-
+      
     // 🔥 Currency change
+   
+if (currencySelect) {
     currencySelect.addEventListener('change', function () {
         const data = getSelectedCurrencyData();
 
         currentSymbol = data.symbol;
 
-        // Auto-fill exchange rate
         if (exchangeRateInput) {
             exchangeRateInput.value = data.rate.toFixed(6);
         }
 
         calculateTotals();
     });
+}
+
 
     // 🔥 Real-time typing
     document.addEventListener('input', function (e) {
@@ -94,7 +92,10 @@ const overlay = document.getElementById("overlay");
     });
 
     // 🔥 Initialize on load
+     
+if (currencySelect) {
     currencySelect.dispatchEvent(new Event('change'));
+}
 
 // Mobile Menu Toggle
 menuToggle.addEventListener("click", function() {

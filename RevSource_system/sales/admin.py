@@ -77,7 +77,30 @@ class PaymentAdmin(admin.ModelAdmin):
 
 @admin.register(StockMovement)
 class StockMovementAdmin(admin.ModelAdmin):
-    list_display = ['product', 'movement_type', 'quantity', 'reference', 'created_at']
-    list_filter = ['movement_type', 'created_at']
+    list_display = ['reference', 'product', 'variant', 'movement_type_badge', 'quantity', 'created_at']
+    list_filter = ['movement_type', 'created_at', 'product']
     search_fields = ['product__name', 'reference']
-    readonly_fields = ['created_at']
+    readonly_fields = ['created_at', 'product_available_stock']
+    
+    def variant(self, obj):
+        return obj.variant if obj.variant else "—"
+    variant.short_description = 'Variant'
+    
+    def movement_type_badge(self, obj):
+        colors = {
+            'sale': '#DC3545',
+            'purchase': '#28A745',
+            'adjustment': '#FFC107',
+            'return': '#17A2B8',
+        }
+        color = colors.get(obj.movement_type, '#6C757D')
+        return format_html(
+            '<span style="background-color: {}; color: white; padding: 3px 8px; border-radius: 3px;">{}</span>',
+            color,
+            obj.get_movement_type_display()
+        )
+    movement_type_badge.short_description = 'Type'
+    
+    def product_available_stock(self, obj):
+        return f"{obj.product.available_stock} units"
+    product_available_stock.short_description = 'Current Available Stock'

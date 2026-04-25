@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, Category, Supplier
+from .models import Product, Category, Supplier,ProductVariant
 from finance.models import Currency
 
 
@@ -24,6 +24,7 @@ class ProductForm(forms.ModelForm):
             'description',
             'image',
             'is_active',
+            'has_variants',
         ]
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Product name'}),
@@ -43,6 +44,7 @@ class ProductForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Product description and notes'}),
             'image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'has_variants': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
     def clean_discount_percentage(self):
@@ -90,3 +92,94 @@ class SupplierForm(forms.ModelForm):
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Address or notes'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
+ATTRIBUTE_CHOICES = [
+    ("Color", "Color"),
+    ("Size", "Size"),
+    ("Material", "Material"),
+    ("Brand", "Brand"),
+    ("Custom", "Custom"),
+]
+
+
+class ProductVariantForm(forms.ModelForm):
+
+    color = forms.CharField(required=False)
+    size = forms.CharField(required=False)
+    material = forms.CharField(required=False)
+    brand = forms.CharField(required=False)
+    custom = forms.CharField(required=False)
+
+    class Meta:
+        model = ProductVariant
+        fields = [
+            "sku",
+            "additional_cost",
+            "stock_quantity",
+            "is_active",
+        ]
+
+    def clean(self):
+        cleaned = super().clean()
+
+        attributes = {}
+
+        if cleaned.get("color"):
+            attributes["Color"] = cleaned["color"]
+
+        if cleaned.get("size"):
+            attributes["Size"] = cleaned["size"]
+
+        if cleaned.get("material"):
+            attributes["Material"] = cleaned["material"]
+
+        if cleaned.get("brand"):
+            attributes["Brand"] = cleaned["brand"]
+
+        if cleaned.get("custom"):
+            attributes["Custom"] = cleaned["custom"]
+
+        cleaned["attributes"] = attributes
+        return cleaned
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        instance.attributes = self.cleaned_data["attributes"]
+
+        if commit:
+            instance.save()
+
+        return instance
+
+
+class StockAdjustmentForm(forms.Form):
+    """Form for manual stock adjustments"""
+    ADJUSTMENT_TYPE_CHOICES = [
+        ('adjustment', 'Inventory Adjustment'),
+        ('purchase', 'Purchase/Restock'),
+        ('return', 'Product Return'),
+        ('damage', 'Damaged/Loss'),
+    ]
+    
+    adjustment_type = forms.ChoiceField(
+        choices=ADJUSTMENT_TYPE_CHOICES,
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Adjustment Type'
+    )
+    quantity = forms.IntegerField(
+        min_value=1,
+        help_text='Number of units to adjust',
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Enter quantity',
+            'min': '1'
+        })
+    )
+    notes = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'rows': 3,
+            'placeholder': 'Reason for adjustment (optional)'
+        })
+    )

@@ -9,6 +9,8 @@ from .views import (
     JournalEntryListView,
     JournalEntryCreateView,
     JournalEntryDetailView,
+    ExportjournalentriesView, 
+    ExportAccountsView
 )
 
 app_name = 'finance'
@@ -23,4 +25,6 @@ urlpatterns = [
     path('journal/', JournalEntryListView.as_view(), name='journal-list'),
     path('journal/add/', JournalEntryCreateView.as_view(), name='journal-create'),
     path('journal/<int:pk>/', JournalEntryDetailView.as_view(), name='journal-detail'),
+    path('export/', ExportjournalentriesView.as_view(), name='export-journal'),
+    path('export/accounts/', ExportAccountsView.as_view(), name='account-export'),
 ]

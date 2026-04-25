@@ -52,6 +52,9 @@
                                 <th>Date</th>
                                 <th>Actions</th>
                             </tr>
+                            <a href="{% url 'sales:export_invoices' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-download"></i> Export Invoices
+                            </a>
                         </thead>
                         <tbody>
                             {% for invoice in invoices %}

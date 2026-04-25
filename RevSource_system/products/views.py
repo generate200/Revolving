@@ -1,11 +1,17 @@
 from django.db import models
 from django.db.models import F
-from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
-from .models import Product, Category, Supplier
-from .forms import ProductForm, CategoryForm, SupplierForm
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy, reverse
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView, View
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from .models import Product, Category, Supplier, ProductVariant
+from .forms import ProductForm, CategoryForm, SupplierForm, ProductVariantForm, StockAdjustmentForm
 from finance.models import Currency
 from finance.utils.currency import CurrencyService
+from sales.models import StockMovement
+from core.exporters import DataExporter
 
 
 class IndexView(TemplateView):
@@ -69,8 +75,29 @@ class ProductListView(ListView):
         }
 
         return context
+class ProductDetailView(TemplateView):
+    template_name = 'products/product_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
+        product = get_object_or_404(
+            Product.objects.select_related(
+                'category',
+                'supplier',
+                'currency'
+            ).prefetch_related('variants'),
+            pk=self.kwargs['pk']
+        )
+
+        context["product"] = product
+
+        currency_service = CurrencyService(self.request)
+        context["converted_price"] = currency_service.convert(
+            product.discounted_price_base_currency
+        )
+
+        return context
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
@@ -130,3 +157,156 @@ class supplier_deleteview(DeleteView):
     model = Supplier
     template_name = 'products/supplier_confirm_delete.html'
     success_url = reverse_lazy('products:supplier-list') 
+
+class ProductVariantCreateView(CreateView):
+    model = ProductVariant
+    form_class = ProductVariantForm
+    template_name = "products/variant_form.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        self.product = get_object_or_404(
+            Product,
+            pk=self.kwargs["product_pk"]
+        )
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.product = self.product
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["product"] = self.product
+        context["page_title"] = "Add Product Variant"
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "products:detail",
+            kwargs={"pk": self.product.pk}
+        )
+
+
+@method_decorator(login_required, name='dispatch')
+class StockAdjustmentView(View):
+    """Handle manual stock adjustments and create StockMovement records"""
+    
+    def get(self, request, product_id):
+        product = get_object_or_404(Product, pk=product_id)
+        form = StockAdjustmentForm()
+        
+        # Get recent stock movements
+        stock_movements = product.stock_movements.all()[:10]
+        
+        context = {
+            'product': product,
+            'form': form,
+            'recent_movements': stock_movements,
+        }
+        return redirect(reverse('products:detail', args=[product.pk]))
+    
+    def post(self, request, product_id):
+        product = get_object_or_404(Product, pk=product_id)
+        form = StockAdjustmentForm(request.POST)
+        
+        if form.is_valid():
+            adjustment_type = form.cleaned_data['adjustment_type']
+            quantity = form.cleaned_data['quantity']
+            notes = form.cleaned_data['notes']
+            
+            # Map adjustment types to stock movement types
+            movement_type_map = {
+                'adjustment': 'adjustment',
+                'purchase': 'purchase',
+                'return': 'return',
+                'damage': 'adjustment',  # damage treated as adjustment
+            }
+            
+            # For purchases, returns, and damage - quantity is positive
+            # For adjustments with negative qty, that means we're reducing stock
+            movement_quantity = quantity if adjustment_type in ['purchase', 'return'] else quantity
+            
+            # Create stock movement
+            StockMovement.objects.create(
+                product=product,
+                quantity=movement_quantity,
+                movement_type=movement_type_map[adjustment_type],
+                reference=f'Manual {adjustment_type}: {notes}' if notes else f'Manual {adjustment_type}'
+            )
+            
+            messages.success(request, f'Stock adjusted successfully. Available stock: {product.available_stock}')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+        
+        return redirect(reverse('products:detail', args=[product.pk]))
+
+
+@method_decorator(login_required, name='dispatch')
+class ExportProductsView(View):
+    """Export products list to CSV or Excel"""
+    
+    def get(self, request):
+        format_type = request.GET.get('format', 'csv')
+        
+        # Get queryset
+        queryset = Product.objects.select_related('category', 'supplier', 'currency').order_by('name')
+        
+        # Define fields to export
+        fields = [
+            'sku',
+            'name',
+            'category__name',
+            'supplier__name',
+            'cost_price',
+            'selling_price',
+            'discount_percentage',
+            'stock_quantity',
+            'reorder_point',
+            'unit',
+            'is_active',
+        ]
+        
+        # Generate filename
+        filename = DataExporter.get_timestamp_filename('products_list')
+        
+        # Export based on format
+        if format_type == 'excel':
+            return DataExporter.export_to_excel(queryset, fields, filename, 'Products')
+        else:
+            return DataExporter.export_to_csv(queryset, fields, filename)
+
+
+@method_decorator(login_required, name='dispatch')
+class ExportCategoriesView(View):
+    """Export categories list to CSV or Excel"""
+    
+    def get(self, request):
+        format_type = request.GET.get('format', 'csv')
+        
+        queryset = Category.objects.all().order_by('name')
+        fields = ['name', 'description', 'is_active', 'created_at']
+        
+        filename = DataExporter.get_timestamp_filename('categories_list')
+        
+        if format_type == 'excel':
+            return DataExporter.export_to_excel(queryset, fields, filename, 'Categories')
+        else:
+            return DataExporter.export_to_csv(queryset, fields, filename)
+
+
+@method_decorator(login_required, name='dispatch')
+class ExportSuppliersView(View):
+    """Export suppliers list to CSV or Excel"""
+    
+    def get(self, request):
+        format_type = request.GET.get('format', 'csv')
+        
+        queryset = Supplier.objects.all().order_by('name')
+        fields = ['name', 'contact_person', 'email', 'phone', 'address', 'is_active']
+        
+        filename = DataExporter.get_timestamp_filename('suppliers_list')
+        
+        if format_type == 'excel':
+            return DataExporter.export_to_excel(queryset, fields, filename, 'Suppliers')
+        else:
+            return DataExporter.export_to_csv(queryset, fields, filename)

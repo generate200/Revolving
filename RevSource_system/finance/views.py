@@ -1,12 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DetailView, FormView
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DetailView, FormView, View
 from django.contrib import messages
 from django.db.models import Sum, Q
 from decimal import Decimal 
 from .models import Account, JournalEntry, JournalLine  ,Currency
 from .forms import JournalEntryForm, JournalLineFormSet, AccountForm, CurrencyForm
 from finance.utils.currency import CurrencyService
+from django.utils.decorators import method_decorator
+from core.exporters import DataExporter
+from django.contrib.auth.decorators import login_required
+
 
 
 def check_duplicate_account(code=None, name=None):
@@ -71,6 +75,7 @@ class FinanceOverviewView(TemplateView):
 
         return context
     
+
 class AccountListView(ListView):
     model = Account
     template_name = 'finance/account_list.html'
@@ -83,32 +88,29 @@ class AccountListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # ✅ Get selected currency from URL
+        # --- Currency selection ---
         currency_code = self.request.GET.get('currency')
 
-        if currency_code:
-            selected_currency = Currency.objects.filter(code=currency_code).first()
-        else:
-            selected_currency = Currency.objects.filter(is_base=True).first()
-
-        # ✅ Safety fallback
-        if not selected_currency:
-            selected_currency = Currency.objects.filter(is_base=True).first()
+        selected_currency = (
+            Currency.objects.filter(code=currency_code).first()
+            if currency_code
+            else Currency.objects.filter(is_base=True).first()
+        )
 
         base_currency = Currency.objects.filter(is_base=True).first()
 
-        # ✅ Conversion function (FIXED)
-        def convert(amount):
-            if not amount:
-                return Decimal('0.00')
+        if not selected_currency:
+            selected_currency = base_currency
 
-            if not base_currency or base_currency.exchange_rate > 0:
-                return amount
+        # --- Conversion helper ---
+        def convert(amount):
+            if not amount or not base_currency or not selected_currency:
+                return Decimal('0.00')
 
             rate = selected_currency.exchange_rate / base_currency.exchange_rate
             return (amount * rate).quantize(Decimal('0.01'))
 
-        # ✅ Totals (converted properly)
+        # --- Totals ---
         total_assets = Account.objects.filter(type='asset').aggregate(
             total=Sum('balance')
         )['total'] or Decimal('0.00')
@@ -116,35 +118,36 @@ class AccountListView(ListView):
         total_liabilities = Account.objects.filter(type='liability').aggregate(
             total=Sum('balance')
         )['total'] or Decimal('0.00')
-        total_equity_accounts= Account.objects.filter(type='equity',).aggregate(
+
+        equity_accounts = Account.objects.filter(type='equity').aggregate(
             total=Sum('balance')
         )['total'] or Decimal('0.00')
-        total_revenue_accounts = Account.objects.filter(type='revenue',).aggregate(
+
+        revenue_accounts = Account.objects.filter(type='revenue').aggregate(
             total=Sum('balance')
         )['total'] or Decimal('0.00')
-        total_expense_accounts = Account.objects.filter(type='expense',).aggregate(
+
+        expense_accounts = Account.objects.filter(type='expense').aggregate(
             total=Sum('balance')
         )['total'] or Decimal('0.00')
-        total_equity = total_equity_accounts + total_revenue_accounts - total_expense_accounts
+
+        total_equity = equity_accounts + revenue_accounts - expense_accounts
 
         context['total_assets'] = convert(total_assets)
         context['total_liabilities'] = convert(total_liabilities)
         context['total_equity'] = convert(total_equity)
 
-        # ✅ Convert each account balance (FIXED)
-        accounts = context['accounts']
-        for acc in accounts:
+        # --- Convert account balances ---
+        for acc in context['accounts']:
             acc.converted_balance = convert(acc.balance)
 
-        context['accounts'] = accounts
-
-        # ✅ Currency data
+        # --- Currency UI context ---
         context['currencies'] = Currency.objects.filter(is_active=True)
         context['selected_currency'] = selected_currency
-        context['base_currency'] = base_currency
         context['currency_symbol'] = selected_currency.symbol
 
         return context
+
 
 class AccountCreateView(CreateView):
     """Create a new account with duplicate prevention."""
@@ -325,3 +328,50 @@ class JournalEntryDetailView(DetailView):
             return redirect('finance:journal-detail', pk=entry.id)
         
         return self.get(request, *args, **kwargs)
+    
+@method_decorator(login_required, name='dispatch') 
+class ExportjournalentriesView(View):
+    """Export journal entries to CSV or Excel"""
+
+    def get(self, request):
+        format_type = request.GET.get('format', 'csv')
+
+        queryset = JournalLine.objects.select_related('journal', 'account').order_by('-journal__date')
+        fields = [
+            'journal__id',
+            'journal__date',
+            'journal__description',
+            'account__code',
+            'account__name',
+            'debit',
+            'credit',
+        ]
+
+        filename = DataExporter.get_timestamp_filename('journal_entries')
+
+        if format_type == 'excel':
+            return DataExporter.export_to_excel(queryset, fields, filename, 'Journal Entries')
+        else:
+            return DataExporter.export_to_csv(queryset, fields, filename)
+        
+@method_decorator(login_required, name='dispatch')    
+class ExportAccountsView(View):
+    """Export accounts to CSV or Excel"""
+
+    def get(self, request):
+        format_type = request.GET.get('format', 'csv')
+
+        queryset = Account.objects.order_by('code')
+        fields = [
+            'code',
+            'name',
+            'type',
+            'balance',
+        ]
+
+        filename = DataExporter.get_timestamp_filename('accounts')
+
+        if format_type == 'excel':
+            return DataExporter.export_to_excel(queryset, fields, filename, 'Accounts')
+        else:
+            return DataExporter.export_to_csv(queryset, fields, filename)

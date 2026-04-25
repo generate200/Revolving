@@ -18,6 +18,7 @@ from products.models import Product, ProductVariant
 from crm.models import Customer
 from finance.models import Currency
 from finance.utils.currency import CurrencyService
+from core.exporters import DataExporter
 
 
 @login_required
@@ -38,6 +39,15 @@ def pos_dashboard(request):
     }
     return render(request, 'sales/pos_dashboard.html', context)
 
+@login_required
+def sale_history(request):
+    """List of all sales records"""
+    sales = Sale.objects.select_related('product').order_by('-date')
+    
+    context = {
+        'sales': sales,
+    }
+    return render(request, 'sales/sales_list.html', context)
 
 @login_required
 def create_invoice(request):
@@ -260,8 +270,9 @@ def process_payment(request, invoice_id):
             invoice.posted_at = timezone.now()
             invoice.save()
             
-            # Create stock movements
+            # Create stock movements and update product stock
             for line in invoice.lines.all():
+                # Create stock movement record
                 StockMovement.objects.create(
                     product=line.product,
                     variant=line.variant,
@@ -269,6 +280,15 @@ def process_payment(request, invoice_id):
                     movement_type='sale',
                     reference=invoice.invoice_number
                 )
+                
+                # Automatically reduce product stock
+                line.product.stock_quantity = max(0, float(line.product.stock_quantity) - float(line.quantity))
+                line.product.save(update_fields=['stock_quantity'])
+                
+                # If variant, also reduce variant stock
+                if line.variant:
+                    line.variant.stock_quantity = max(0, float(line.variant.stock_quantity) - float(line.quantity))
+                    line.variant.save(update_fields=['stock_quantity'])
                 
                 # Update legacy Sale model
                 Sale.objects.create(
@@ -340,3 +360,55 @@ def generate_invoice_number():
     sequence = (last_invoice.id + 1) if last_invoice else 1
     
     return f"INV-{date_prefix}-{sequence:05d}"
+
+
+@method_decorator(login_required, name='dispatch')
+class ExportInvoicesView(View):
+    """Export invoices list to CSV or Excel"""
+    
+    def get(self, request):
+        format_type = request.GET.get('format', 'csv')
+        
+        queryset = SalesInvoice.objects.select_related('customer', 'currency').order_by('-created_at')
+        fields = [
+            'invoice_number',
+            'customer__name',
+            'status',
+            'subtotal',
+            'discount_total',
+            'tax_total',
+            'total_amount',
+            'paid_amount',
+            'created_at',
+        ]
+        
+        filename = DataExporter.get_timestamp_filename('invoices')
+        
+        if format_type == 'excel':
+            return DataExporter.export_to_excel(queryset, fields, filename, 'Invoices')
+        else:
+            return DataExporter.export_to_csv(queryset, fields, filename)
+
+
+@method_decorator(login_required, name='dispatch')
+class ExportSalesView(View):
+    """Export sales records to CSV or Excel"""
+    
+    def get(self, request):
+        format_type = request.GET.get('format', 'csv')
+        
+        queryset = Sale.objects.select_related('product').order_by('-date')
+        fields = [
+            'product__name',
+            'product__sku',
+            'quantity',
+            'total_price',
+            'date',
+        ]
+        
+        filename = DataExporter.get_timestamp_filename('sales_records')
+        
+        if format_type == 'excel':
+            return DataExporter.export_to_excel(queryset, fields, filename, 'Sales')
+        else:
+            return DataExporter.export_to_csv(queryset, fields, filename)

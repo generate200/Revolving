@@ -159,6 +159,19 @@ document.addEventListener('DOMContentLoaded', function() {
             closeProductModal();
         }
     });
+    document.querySelectorAll('.product-row').forEach(row => {
+
+    row.addEventListener('dblclick', function(e) {
+
+        // prevent double-click on delete/actions from redirecting
+        if (e.target.closest('.btn-outline, a[href]')) {
+            return;
+        }
+
+        window.location = this.dataset.href;
+    });
+
+});
 
     // Initialize
     extractProductData();

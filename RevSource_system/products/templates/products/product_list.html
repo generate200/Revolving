@@ -64,23 +64,26 @@
                             </select>
                         </div>
                     </th>
-                    <th>Stock</th>
+                    <th>Available Stock</th>
                     <th>Status</th>
                     <th class="actions-col">Actions</th>
                 </tr>
+                <a href="{% url 'products:export' %}" class="btn btn-outline">Export List</a>
             </thead>
             <tbody>
                 {% for product in products %}
-                <tr class="product-row" data-product-id="{{ product.pk }}">
+                <tr class="product-row" data-product-id="{{ product.pk }}" data-href="{% url 'products:detail' product.pk %}">
                     <td>{{ product.sku }}</td>
-                    <td><a href="#" class="product-link" data-product-id="{{ product.pk }}">{{ product.name }}</a></td>
+                    <td><a href="" class="product-link" data-product-id="{{ product.pk }}">{{ product.name }}</a></td>
                     <td>{% if product.category %}{{ product.category.name }}{% else %}—{% endif %}</td>
                     <td>{{currency_symbol}}{{ product.converted_price }}</td>
                     <td>
-                        {{ product.stock_quantity }}
-                        {% if product.is_low_stock %}
-                        <span class="badge badge-warning">Low</span>
-                        {% endif %}
+                        <span title="Available: {{ product.available_stock }} / Added: {{ product.stock_quantity }}">
+                            {{ product.available_stock }}
+                            {% if product.is_low_stock %}
+                            <span class="badge badge-warning">Low</span>
+                            {% endif %}
+                        </span>
                     </td>
                     <td>
                         {% if product.is_active %}

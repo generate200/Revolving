@@ -62,6 +62,7 @@ class Product(models.Model):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    has_variants = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.name} ({self.sku})"
@@ -95,7 +96,23 @@ class Product(models.Model):
 
     @property
     def is_low_stock(self):
-        return self.stock_quantity <= self.reorder_point
+        """Check if available stock is at or below reorder point"""
+        return self.available_stock <= self.reorder_point
+
+    @property
+    def available_stock(self):
+        """Calculate available stock from all movements"""
+        from sales.models import StockMovement
+        from django.db.models import Sum
+        
+        # Sum all movements (already signed: negative for sales, positive for returns)
+        total_movements = StockMovement.objects.filter(
+            product=self
+        ).aggregate(total=Sum('quantity'))['total'] or 0
+        
+        # Available = Initial stock + all movements
+        available = float(self.stock_quantity) + float(total_movements)
+        return max(0, int(available))  # Never go below 0
 
     class Meta:
         ordering = ['name']
@@ -113,6 +130,21 @@ class ProductVariant(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - {self.name}"
+
+    @property
+    def available_stock(self):
+        """Calculate available stock from all movements"""
+        from sales.models import StockMovement
+        from django.db.models import Sum
+        
+        # Sum all movements (already signed: negative for sales, positive for returns)
+        total_movements = StockMovement.objects.filter(
+            variant=self
+        ).aggregate(total=Sum('quantity'))['total'] or 0
+        
+        # Available = Initial stock + all movements
+        available = float(self.stock_quantity) + float(total_movements)
+        return max(0, int(available))  # Never go below 0
 
     class Meta:
         unique_together = ('product', 'attributes')

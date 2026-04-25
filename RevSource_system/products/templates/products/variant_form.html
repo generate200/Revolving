@@ -1,0 +1,97 @@
+{% extends "products/base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'products/css/productdetail.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="form-wrapper">
+
+    <div class="form-card">
+        <div class="form-header">
+            <h2>{{ page_title }}</h2>
+            <p class="product-name"><strong>{{ product.name }}</strong></p>
+        </div>
+
+        <form method="post" class="form-body">
+            {% csrf_token %}
+
+            <!-- Basic Info -->
+            <div class="form-section">
+                <h3>Basic Information</h3>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="id_sku">SKU</label>
+                        {{ form.sku }}
+                    </div>
+
+                    <div class="form-field">
+                        <label for="id_additional_cost">Additional Cost</label>
+                        {{ form.additional_cost }}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="id_stock_quantity">Stock Quantity</label>
+                        {{ form.stock_quantity }}
+                    </div>
+
+                    <div class="form-field checkbox-field">
+                        <label>
+                            {{ form.is_active }}
+                            <span>Active</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Attributes -->
+            <div class="form-section">
+                <h3>Attributes</h3>
+
+                <div class="grid">
+                    <div class="form-field">
+                        <label for="id_color">Color</label>
+                        {{ form.color }}
+                    </div>
+
+                    <div class="form-field">
+                        <label for="id_size">Size</label>
+                        {{ form.size }}
+                    </div>
+
+                    <div class="form-field">
+                        <label for="id_material">Material</label>
+                        {{ form.material }}
+                    </div>
+
+                    <div class="form-field">
+                        <label for="id_brand">Brand</label>
+                        {{ form.brand }}
+                    </div>
+
+                    <div class="form-field full-width">
+                        <label for="id_custom">Custom Attribute</label>
+                        {{ form.custom }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-accent">
+                    Save Variant
+                </button>
+
+                <a href="{% url 'products:detail' product.pk %}" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+{% endblock %}
