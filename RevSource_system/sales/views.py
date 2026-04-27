@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.db.models import Q
 from django.db import transaction
 from django.contrib import messages
-
+from datetime import datetime
 from .models import SalesInvoice, SalesLine, Payment, StockMovement, Sale
 from .forms import SalesInvoiceForm, PaymentForm, QuickProductSearchForm
 from products.models import Product, ProductVariant
@@ -353,7 +353,6 @@ def print_receipt(request, invoice_id):
 
 def generate_invoice_number():
     """Generate unique invoice number"""
-    from datetime import datetime
     last_invoice = SalesInvoice.objects.order_by('-id').first()
     
     date_prefix = datetime.now().strftime('%Y%m%d')
