@@ -104,6 +104,10 @@ class ProductCreateView(CreateView):
     template_name = 'products/product_form.html'
     success_url = reverse_lazy('products:list')
 
+    def form_invalid(self, form):
+        print(form.errors)  # 👈 check terminal
+        return super().form_invalid(form)
+
 
 class ProductUpdateView(UpdateView):
     model = Product

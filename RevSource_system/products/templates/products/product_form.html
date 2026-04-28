@@ -99,6 +99,11 @@
         <div class="form-actions">
             <button type="submit" class="btn btn-accent">Save product</button>
             <a href="{% url 'products:list' %}" class="btn btn-outline">Cancel</a>
+            {% if form.errors %}
+    <div class="alert alert-danger">
+        {{ form.errors }}
+    </div>
+{% endif %}
         </div>
     </form>
 </section>

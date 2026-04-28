@@ -46,7 +46,7 @@ class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     sku = models.CharField(max_length=100, unique=True, help_text="Stock Keeping Unit")
-    barcode = models.CharField(max_length=100, blank=True, unique=True)
+    barcode = models.CharField(max_length=100, blank=True,null=True, unique=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True)
     currency = models.ForeignKey('finance.Currency', on_delete=models.SET_NULL, null=True, blank=True, default=1)
