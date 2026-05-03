@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models import F
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView, View
 from django.contrib import messages
@@ -53,15 +53,18 @@ class ProductListView(ListView):
 
         currencies = Currency.objects.filter(is_active=True)
         base_currency = currencies.filter(is_base=True).first()
-        selected_currency = self.request.GET.get('currency')
-
-        if selected_currency:
-            selected_obj = currencies.filter(code=selected_currency).first()
-        else:
+    
+        currency_code = self.request.GET.get('currency')
+        if currency_code:
+            self.request.session['currency'] = currency_code
+        currency_code = self.request.session.get('currency', 'QAR')
+        selected_obj = currencies.filter(code=currency_code).first()
+        if not selected_obj:
             selected_obj = base_currency
 
         context['currency_symbol']=selected_obj.symbol if selected_obj else '$'
         context['currencies'] = currencies
+        context['selected_currency'] = selected_obj
 
         context['currency_data'] = {
             "baseCurrency": base_currency.code if base_currency else "USD",
@@ -105,7 +108,7 @@ class ProductCreateView(CreateView):
     success_url = reverse_lazy('products:list')
 
     def form_invalid(self, form):
-        print(form.errors)  # 👈 check terminal
+        print(form.errors)  
         return super().form_invalid(form)
 
 
@@ -190,7 +193,18 @@ class ProductVariantCreateView(CreateView):
             kwargs={"pk": self.product.pk}
         )
 
-
+def supplier_update_view(request, pk):
+    supplier = get_object_or_404(Supplier, pk=pk)
+    if request.method == 'POST':
+        form = SupplierForm(request.POST, instance=supplier)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Supplier updated successfully.')
+            return redirect('products:supplier-list')
+    else:
+        form = SupplierForm(instance=supplier)
+    
+    return render(request, 'products/supplier_form.html', {'form': form, 'supplier': supplier})
 @method_decorator(login_required, name='dispatch')
 class StockAdjustmentView(View):
     """Handle manual stock adjustments and create StockMovement records"""

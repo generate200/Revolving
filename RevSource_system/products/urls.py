@@ -19,6 +19,7 @@ urlpatterns = [
     path('categories/export/', views.ExportCategoriesView.as_view(), name='category-export'),
     path('suppliers/add/', views.create_supplierView.as_view(), name='supplier-add'),
     path('suppliers/', views.ProductSupplierListView.as_view(), name='supplier-list'),
+    path('suppliers/<int:pk>/edit/', views.supplier_update_view, name='supplier-edit'),
     path('suppliers/export/', views.ExportSuppliersView.as_view(), name='supplier-export'),
     path('categories/<int:pk>/delete/', views.category_deleteview.as_view(), name='category-delete'),
     path('suppliers/<int:pk>/delete/', views.supplier_deleteview.as_view(), name='supplier-delete'),

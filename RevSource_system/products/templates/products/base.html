@@ -61,7 +61,7 @@
                 <a href="{% url 'crm:customer_add' %}" data-label="Customers">
                     <i class="fa fa-users"></i><span>Customers</span>
                 </a>
-                <a href="#" data-label="Suppliers">
+                <a href="{% url 'products:supplier-list' %}" data-label="Suppliers">
                     <i class="fa fa-truck"></i><span>Suppliers</span>
                 </a>
             </nav>
@@ -119,6 +119,10 @@
                 <img src="{% if profile.profile_pic %}{{profile.profile_pic.url }}{% else %}{% static 'accounts/profile_pics/cs50duck.jpg' %}{% endif %}" alt="Profile Picture">
                 {% if user.is_authenticated %}
                 <p>Signed in as, {{ user.username }}!</p>
+                    <div class="status-indicator">
+        <span class="status-dot"></span>
+        <span class="status-text">Online</span>
+    </div>
                 <div class="profile-details">
                     <div>Name: {{ user.first_name }} {{ user.last_name }}</div>
                 </div>

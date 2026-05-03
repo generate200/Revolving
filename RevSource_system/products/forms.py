@@ -83,10 +83,11 @@ class CategoryForm(forms.ModelForm):
 class SupplierForm(forms.ModelForm):
     class Meta:
         model = Supplier
-        fields = ['name', 'contact_person', 'email', 'phone', 'address', 'is_active']
+        fields = ['name', 'contact_person', 'Company_name', 'email', 'phone', 'address', 'is_active']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Supplier name'}),
             'contact_person': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Contact person'}),
+            'Company_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Company name'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Supplier email'}),
             'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone number'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Address or notes'}),

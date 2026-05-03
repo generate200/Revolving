@@ -1,26 +1,5 @@
 {% extends 'accounts/baseauth.html' %}
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-
-    const showBtn = document.getElementById("show-form-button");
-    const formCard = document.getElementById("profile-form-card");
-    const cancelBtn = document.getElementById("cancel-btn");
-    console.log(showBtn, formCard, cancelBtn); // debug
-
-    if (showBtn && formCard && cancelBtn) {
-        showBtn.addEventListener("click", () => {
-            formCard.style.display = "block";
-            showBtn.style.display = "none";
-        });
-
-        cancelBtn.addEventListener("click", () => {
-            formCard.style.display = "none";
-            showBtn.style.display = "block";
-        });
-    }
-
-});
-</script>
+{%load static %}
 {% block content %}
 
 <div class="profile-container">
@@ -28,7 +7,11 @@ document.addEventListener("DOMContentLoaded", function () {
     <!-- LEFT: Profile Card -->
     <div class="profile-card">
         <div class="profile-avatar">
+           {% if profile.profile_pic %}
             <img src="{{ profile.profile_pic.url }}" alt="Profile Picture">
+            {% else %}
+            <img src="{% static 'accounts/profile_pics/cs50duck.jpg' %}" alt="Default Profile Picture">
+            {% endif %}
         </div>
 
         <h2>{{ user.first_name }} {{ user.last_name }}</h2>
@@ -61,8 +44,34 @@ document.addEventListener("DOMContentLoaded", function () {
                 <i class="fa fa-save"></i> Save Changes
             </button>
         </form>
+        
     </div>
+        <div class="back-link">
+            <a href="{% url 'index' %}">Back</a>
+        </div>
+    </div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
+    const showBtn = document.getElementById("show-form-button");
+    const formCard = document.getElementById("profile-form-card");
+    const cancelBtn = document.getElementById("cancel-btn");
+    console.log(showBtn, formCard, cancelBtn); // debug
+
+    if (showBtn && formCard && cancelBtn) {
+        showBtn.addEventListener("click", () => {
+            formCard.style.display = "block";
+            showBtn.style.display = "none";
+        });
+
+        cancelBtn.addEventListener("click", () => {
+            formCard.style.display = "none";
+            showBtn.style.display = "block";
+        });
+    }
+
+});
+</script>
 </div>
 
 

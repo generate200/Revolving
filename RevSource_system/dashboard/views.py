@@ -29,9 +29,9 @@ class DashboardReportView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         currency_code = self.request.GET.get('currency')
         if currency_code:
-            selected_currency = Currency.objects.filter(code=currency_code, is_active=True).first()
-        else:
-            selected_currency = Currency.objects.filter(is_active=True).first()
+            self.request.session['currency'] = currency_code
+        currency_code = self.request.session.get('currency', 'QAR')
+        selected_currency = Currency.objects.filter(code=currency_code, is_active=True).first()
         
         if not selected_currency:
             selected_currency = Currency.objects.filter(is_base=True).first()

@@ -91,6 +91,10 @@ class AccountListView(ListView):
         # --- Currency selection ---
         currency_code = self.request.GET.get('currency')
 
+        if currency_code:
+            self.request.session['currency'] = currency_code
+        currency_code = self.request.session.get('currency', 'QAR')
+
         selected_currency = (
             Currency.objects.filter(code=currency_code).first()
             if currency_code

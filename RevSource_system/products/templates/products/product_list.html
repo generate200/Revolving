@@ -50,6 +50,7 @@
             <thead>
                 <tr>
                     <th>SKU</th>
+                    <th>Image</th>
                     <th>Name</th>
                     <th>Category</th>
                     <th>
@@ -57,7 +58,7 @@
                         <div class="currency-selector" style="display: inline-block; margin-left: 10px;">
                             <select id="currency-selector-table" class="currency-select" style="font-size: 12px; padding: 2px 4px;">
                                {% for currency in currencies %}
-                                <option value="{{currency.code }}" {% if currency.code == selected_currency %}selected{% endif %} data-symbol="{{currency_symbol}}" >
+                                <option value="{{currency.code }}" {% if currency.code == selected_currency.code %}selected{% endif %} data-symbol="{{currency_symbol}}" >
                                     {{ currency.code }}
                                 </option>
                                 {% endfor %}
@@ -74,6 +75,15 @@
                 {% for product in products %}
                 <tr class="product-row" data-product-id="{{ product.pk }}" data-href="{% url 'products:detail' product.pk %}">
                     <td>{{ product.sku }}</td>
+                    <td class="product-image-cell">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-thumb">
+                        {% else %}
+                            <div class="placeholder-thumb">
+                                <i class="fas fa-image"></i>
+                            </div>
+                        {% endif %}
+                    </td>
                     <td><a href="" class="product-link" data-product-id="{{ product.pk }}">{{ product.name }}</a></td>
                     <td>{% if product.category %}{{ product.category.name }}{% else %}—{% endif %}</td>
                     <td>{{currency_symbol}}{{ product.converted_price }}</td>
