@@ -85,54 +85,101 @@
     <!-- Main Shell -->
     <div class="page-shell">
 
-        <header class="topbar">
-            <button class="menu-toggle" id="menuToggle">☰</button>
+    <header class="topbar">
 
-            <div class="brand-mark">
-                <span class="brand-symbol">R</span>
-                <div>
-                    <p class="brand-tagline">RevSource</p>
-                    <p class="brand-subtitle">Modern ERP product controls</p>
-                </div>
-            </div>
+    <button class="menu-toggle" id="menuToggle">☰</button>
 
-            <nav class="site-nav">
-                <a href="{% url 'index' %}">
-                    <i class="fa fa-home"></i>Home
-                </a>
-                <a href="{% url 'finance:overview' %}">
-                    <i class="fa fa-dollar-sign"></i>Finance
-                </a>
-                <a href="{% url 'dashboard:report' %}">
-                    <i class="fa fa-chart-line"></i>Report
-                </a>
-                <a href="{% url 'products:add' %}" class="nav-action">
-                    <i class="fa fa-plus-circle"></i>Add Product
-                </a>
-                <a href="{% url 'accounts:logout' %}">
-                    <i class="fa fa-sign-out-alt"></i>Logout
-                </a>
-            </nav>
-              <a href="{% url 'accounts:profile' %}" class="profile-link">
-     <div class="profile-box">
-            <div class="css-border">
-                <img src="{% if profile.profile_pic %}{{profile.profile_pic.url }}{% else %}{% static 'accounts/profile_pics/cs50duck.jpg' %}{% endif %}" alt="Profile Picture">
-                {% if user.is_authenticated %}
-                <p>Signed in as, {{ user.username }}!</p>
-                    <div class="status-indicator">
-        <span class="status-dot"></span>
-        <span class="status-text">Online</span>
+    <!-- Logo -->
+    <div class="brand-mark">
+        <span class="brand-symbol">R</span>
+        <div>
+            <p class="brand-tagline">RevSource</p>
+            <p class="brand-subtitle">Modern ERP product controls</p>
+        </div>
     </div>
-                <div class="profile-details">
-                    <div>Name: {{ user.first_name }} {{ user.last_name }}</div>
+
+    <!-- RIGHT SIDE -->
+    <div class="topbar-right">
+
+        <!-- Navigation -->
+        <nav class="site-nav">
+            <a href="{% url 'index' %}">
+                <i class="fa fa-home"></i> Home
+            </a>
+
+            <a href="{% url 'finance:overview' %}">
+                <i class="fa fa-dollar-sign"></i> Finance
+            </a>
+
+            <a href="{% url 'dashboard:report' %}">
+                <i class="fa fa-chart-line"></i> Report
+            </a>
+
+            <a href="{% url 'products:add' %}" class="nav-action">
+                <i class="fa fa-plus-circle"></i> Add Product
+            </a>
+        </nav>
+
+        <!-- USER SECTION -->
+        {% if user.is_authenticated %}
+
+        <div class="topbar-user">
+
+            <!-- Profile -->
+            <a href="{% url 'accounts:profile' %}" class="profile-link">
+
+                <div class="profile-box">
+
+                    <img
+                        src="{% if profile.profile_pic %}{{ profile.profile_pic.url }}{% else %}{% static 'accounts/profile_pics/cs50duck.jpg' %}{% endif %}"
+                        alt="Profile Picture"
+                        class="profile-avatar"
+                    >
+
+                    <div class="profile-info">
+                        <span class="profile-username">
+                            {{ user.username }}
+                        </span>
+
+                        <small>
+                            {{ user.first_name }} {{ user.last_name }}
+                        </small>
+                    </div>
+
                 </div>
-            </div>
-            </div>
-               </a>
-                {% endif %}
-        </header>
+
+            </a>
+
+            <!-- Logout -->
+            <a href="{% url 'accounts:logout' %}" class="logout-link">
+                <i class="fa fa-sign-out-alt">logout</i>
+            </a>
+
+        </div>
+
+        {% else %}
+
+        <a href="{% url 'accounts:login' %}" class="login-link nav-action">
+            <i class="fa fa-sign-in-alt"></i> Login
+        </a>
+
+        {% endif %}
+
+    </div>
+
+</header>
+    
 
         <main class="page-content">
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
 
             {% block hero %}
             <section class="hero-panel">
@@ -163,7 +210,8 @@
             </section>
             {% endblock %}
 
-            {% block content %}{% endblock %}
+            {% block content %}
+            {% endblock %}
 
         </main>
 

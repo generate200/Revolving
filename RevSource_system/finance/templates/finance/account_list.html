@@ -48,6 +48,7 @@
                     <th>Actions</th>
                 </tr>
             </thead>
+            <a href="{% url 'finance:account-grouping' %}" class="btn btn-outline">Group Accounts</a>
             <tbody>
                 {% for account in page_obj %}
                 <tr>

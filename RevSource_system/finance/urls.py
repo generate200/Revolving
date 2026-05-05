@@ -2,6 +2,7 @@ from django.urls import path
 from .views import (
     FinanceOverviewView,
     AccountListView,
+    accounting_grouping,
     AccountCreateView,
     CurrencyListView,
     CurrencyCreateView,
@@ -18,6 +19,7 @@ app_name = 'finance'
 urlpatterns = [
     path('', FinanceOverviewView.as_view(), name='overview'),
     path('accounts/', AccountListView.as_view(), name='account-list'),
+    path('accounts/grouping/', accounting_grouping, name='account-grouping'),
     path('accounts/add/', AccountCreateView.as_view(), name='account-create'),
     path('currencies/', CurrencyListView.as_view(), name='currency-list'),
     path('currencies/add/', CurrencyCreateView.as_view(), name='currency-create'),

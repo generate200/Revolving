@@ -593,7 +593,13 @@ body {
 .topbar {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 1rem;
+
+    padding: 1.2rem 2rem;
+
+    background: linear-gradient(135deg, var(--navy), var(--deep-blue));
+    color: white;
 }
 
 /* Menu toggle (hidden desktop) */
@@ -635,6 +641,96 @@ body {
     border-radius: 8px;
     border: 1px solid #e5e7eb;
     background: #fff;
+}
+/* RIGHT SIDE */
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+
+    margin-left: auto;
+}
+/* PROFILE LINK */
+.profile-link {
+    text-decoration: none;
+    color: white;
+}
+
+/* PROFILE BOX */
+.profile-box {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+
+    padding: 0.4rem 0.7rem;
+
+    border-radius: 999px;
+
+    transition: background 0.2s ease;
+}
+
+.profile-box:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+/* AVATAR */
+.profile-avatar {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+    object-fit: cover;
+
+    border: 2px solid rgba(255,255,255,0.2);
+
+    flex-shrink: 0;
+}
+
+/* PROFILE TEXT */
+.profile-info {
+    display: flex;
+    flex-direction: column;
+
+    line-height: 1.1;
+}
+
+.profile-username {
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.profile-info small {
+    font-size: 0.72rem;
+    opacity: 0.75;
+}
+/*Login Button*/
+.login-link {
+    padding: 0.5rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+/* LOGOUT BUTTON */
+.logout-link {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: rgb(182, 220, 15);
+    text-decoration: none;
+
+    transition: background 0.2s ease;
+}
+
+.logout-link:hover {
+    background: rgba(255,255,255,0.12);
 }
 /* ========================= */
 /* 📱 MOBILE */
@@ -931,83 +1027,4 @@ body {
         font-size: 1.2rem;
         bottom: 20px;
     }
-}
-/* Scoped ONLY to profile box */
-.profile-link {
-    position: flex; /* keeps it out of layout flow */
-    top: 20px;
-    right: 20px;
-    text-decoration: none;
-    z-index: 1000;
-}
-
-/* Card */
-.profile-link .profile-box {
-    width: 240px;
-    background: #ffffff;
-    border-radius: 14px;
-    padding: 16px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-    transition: all 0.25s ease;
-    border: 1px solid rgba(0,0,0,0.05);
-}
-
-/* Hover effect */
-.profile-link .profile-box:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-}
-
-/* Inner layout */
-.profile-link .css-border {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
-
-/* Profile image */
-.profile-link img {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 10px;
-    border: 3px solid #f1f1f1;
-}
-
-/* Username */
-.profile-link p {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 6px;
-}
-
-/* Name */
-.profile-link .profile-details div {
-    font-weight: 600;
-    font-size: 14px;
-    color: #222;
-}
-
-/* Optional subtle gradient accent */
-.profile-link .profile-box::before {
-    content: "";
-    top: 0;
-    left: 0;
-    height: 4px;
-    width: 100%;
-    border-radius: 14px 14px 0 0;
-    background: linear-gradient(90deg, #4facfe, #00f2fe);
-}
-.profile-link img::after {
-    content: "";
-    position: flex;
-    bottom: 5px;
-    right: 5px;
-    width: 10px;
-    height: 10px;
-    background: #28c76f;
-    border-radius: 50%;
-    border: 2px solid #fff;
 }

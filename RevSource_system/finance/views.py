@@ -10,6 +10,7 @@ from finance.utils.currency import CurrencyService
 from django.utils.decorators import method_decorator
 from core.exporters import DataExporter
 from django.contrib.auth.decorators import login_required
+from collections import OrderedDict
 
 
 
@@ -74,7 +75,67 @@ class FinanceOverviewView(TemplateView):
         context.update(currency.context())
 
         return context
-    
+ACCOUNT_TYPE_ORDER = [
+    ('asset', 'Assets'),
+    ('liability', 'Liabilities'),
+    ('equity', 'Equity'),
+    ('revenue', 'Revenue'),
+    ('expense', 'Expenses'),
+]
+def accounting_grouping(request):
+
+    grouped = OrderedDict()
+
+    accounts = Account.objects.filter(is_active=True).order_by('code')
+
+    # Currency conversion
+    base_currency = Currency.objects.filter(is_base=True).first()
+
+    selected_currency = Currency.objects.filter(
+        code=request.session.get('currency')
+    ).first()
+
+    needs_conversion = (
+        base_currency and
+        selected_currency and
+        base_currency != selected_currency
+    )
+
+    if needs_conversion:
+        rate = (
+            selected_currency.exchange_rate /
+            base_currency.exchange_rate
+        )
+    else:
+        rate = Decimal('1.00')
+
+    # Create groups
+    for type_code, type_name in ACCOUNT_TYPE_ORDER:
+
+        type_accounts = accounts.filter(type=type_code)
+
+        total = Decimal('0.00')
+
+        for account in type_accounts:
+            account.converted_balance = (
+                account.balance * rate
+            ).quantize(Decimal('0.01'))
+
+            total += account.converted_balance
+
+        grouped[type_name] = {
+            'accounts': type_accounts,
+            'total': total.quantize(Decimal('0.01'))
+        }
+
+    return render(
+        request,
+        'finance/account_grouping.html',
+        {
+            'grouped': grouped,
+            'selected_currency': selected_currency,
+        }
+    )
 
 class AccountListView(ListView):
     model = Account
@@ -151,6 +212,7 @@ class AccountListView(ListView):
         context['currency_symbol'] = selected_currency.symbol
 
         return context
+
 
 
 class AccountCreateView(CreateView):

@@ -1,0 +1,136 @@
+{% extends 'products/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'finance/css/grouped.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="section-panel">
+
+    <div class="section-header">
+        <div>
+            <p class="section-label">Financial Overview</p>
+            <h2>Chart of Accounts</h2>
+        </div>
+        <button class="btn" onclick="window.history.back()">back</button>
+    </div>
+
+    <!-- Summary -->
+    <div class="summary-grid">
+
+        {% for group_name, data in grouped.items %}
+
+        <div class="summary-card">
+            <div class="summary-left">
+                <span class="summary-label">{{ group_name }}</span>
+                <small>{{ data.accounts|length }} Accounts</small>
+            </div>
+
+            <div class="summary-amount">
+                {% if selected_currency %}
+                    {{ selected_currency.symbol }}
+                {% endif %}
+                {{ data.total }}
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- Account Groups -->
+    <div class="account-groups">
+
+        {% for group_name, data in grouped.items %}
+
+        <div class="group-card">
+
+            <!-- Header -->
+            <div class="group-header">
+
+                <div class="group-title">
+                    <div class="group-icon {{ group_name|lower }}">
+                        {% if group_name == 'Assets' %}
+                            <i class="fa fa-wallet"></i>
+                        {% elif group_name == 'Liabilities' %}
+                            <i class="fa fa-scale-balanced"></i>
+                        {% elif group_name == 'Equity' %}
+                            <i class="fa fa-chart-pie"></i>
+                        {% elif group_name == 'Revenue' %}
+                            <i class="fa fa-arrow-trend-up"></i>
+                        {% elif group_name == 'Expenses' %}
+                            <i class="fa fa-money-bill-wave"></i>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <h3>{{ group_name }}</h3>
+                        <span>{{ data.accounts|length }} Accounts</span>
+                    </div>
+                </div>
+
+                <div class="group-total">
+                    {% if selected_currency %}
+                        {{ selected_currency.symbol }}
+                    {% endif %}
+                    {{ data.total }}
+                </div>
+
+            </div>
+
+            <!-- Body -->
+            <div class="group-body">
+
+                {% for account in data.accounts %}
+
+                <div class="account-row">
+
+                    <div class="account-info">
+
+                        <div class="account-code">
+                            {{ account.code }}
+                        </div>
+
+                        <div>
+                            <strong>{{ account.name }}</strong>
+
+                            {% if account.description %}
+                            <p>{{ account.description|truncatechars:60 }}</p>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                    <div class="account-balance">
+
+                        {% if selected_currency %}
+                            {{ selected_currency.symbol }}
+                        {% endif %}
+
+                        {{ account.converted_balance }}
+
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <div class="empty-group">
+                    No accounts available
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}
