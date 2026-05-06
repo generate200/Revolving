@@ -1,6 +1,7 @@
 from django import forms
 from .models import User, profile
 from django.core.validators import FileExtensionValidator
+from django.contrib.auth.forms import PasswordResetForm
 
 MAX_FILE_SIZE_MB = 6
 class profileForm(forms.ModelForm):
@@ -18,3 +19,10 @@ class profileForm(forms.ModelForm):
         self.fields['profile_pic'].validators.append(
             FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])
                                                      )
+        
+
+class StyledPasswordResetForm(PasswordResetForm):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Enter your email'
+    }))

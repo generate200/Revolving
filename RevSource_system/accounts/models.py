@@ -7,7 +7,9 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
+    is_email_verified = models.BooleanField(default=False)
+
     ROLE_CHOICES = (
         ('admin', 'Admin'),
         ('manager', 'Manager'),
@@ -15,9 +17,11 @@ class User(AbstractUser):
         ('supplier', 'Supplier'),
     )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='staff')
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     def __str__(self):
-        return self.username
+        return self.email
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
