@@ -12,6 +12,7 @@ from django.utils.encoding import force_bytes
 from django.urls import reverse
 from django.core.mail import send_mail
 from .tokens import email_verification_token
+from django.conf import settings
 
 
 @require_http_methods(["GET", "POST"])
@@ -20,10 +21,10 @@ def login_view(request):
         return redirect('dashboard:report')
 
     if request.method == 'POST':
-        email = request.POST.get('email')
+        username = request.POST.get('username')
         password = request.POST.get('password')
 
-        user = authenticate(request, username=email, password=password)
+        user = authenticate(request, username=username, password=password)
 
         if user is not None:
             if not user.is_active:
@@ -129,14 +130,16 @@ def send_verification_email(request, user):
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     token = email_verification_token.make_token(user)
 
-    link = request.build_absolute_uri(
-        reverse('accounts:email_confirm', kwargs={'uidb64': uid, 'token': token})
-    )
+    path = reverse('accounts:email_confirm', kwargs={
+        'uidb64': uid,
+        'token': token
+    })
+    link = f"{settings.PROTOCOL}://{settings.DOMAIN}{path}"
 
     send_mail(
         'Verify your email',
         f'Click the link to verify your email: {link}',
-        'revolvingsourcesmail@gmail.com',
+        settings.DEFAULT_FROM_EMAIL,
         [user.email],
     )
 
@@ -148,7 +151,8 @@ def confirm_email(request, uidb64, token):
         user = None
 
     if user and email_verification_token.check_token(user, token):
-        user.is_active = True  # or custom field like is_verified
+        user.is_active = True
+        user.is_email_verified = True 
         user.save()
         return redirect('accounts:login')
     else:

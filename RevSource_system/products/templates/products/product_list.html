@@ -7,24 +7,32 @@
 <section class="section-panel">
     <div class="section-header">
         <nav class="site-nav" style="background: linear-gradient(to right, blue, teal); padding: 10px; border-radius: 15px;">
+            {% if user.is_authenticated %}
             <a href="{% url 'products:category-list' %}">Categories</a>
             <a href="{% url 'products:supplier-list' %}">Suppliers</a>
+            {% endif %}
         </nav>
         <div>
             <p class="section-label">Product catalogue</p>
             <h2>All items in the system</h2>
         </div>
+        {% if user.is_authenticated %}
+         <a href="{% url 'products:export' %}" class="btn btn-outline">Export List</a>
+        {% endif %}
         <div style="display: flex; gap: 10px; align-items: center;">
+            {% if user.is_authenticated %}
             <a href="{% url 'products:add' %}" class="btn btn-accent">Add new product</a>
-            
+            {% endif %}
             <!-- View Toggle -->
             <div class="view-toggle">
                 <button class="toggle-btn active" id="list-view-btn" title="List View">
                     <i class="fas fa-list"></i> List
                 </button>
+                {%if user.is_authenticated %}
                 <button class="toggle-btn" id="gallery-view-btn" title="Gallery View">
                     <i class="fas fa-th"></i> Gallery
                 </button>
+                {% endif %}
             </div>
         </div>
     </div>

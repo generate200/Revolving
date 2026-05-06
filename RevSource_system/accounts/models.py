@@ -17,11 +17,9 @@ class User(AbstractUser):
         ('supplier', 'Supplier'),
     )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='staff')
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
 
     def __str__(self):
-        return self.email
+        return self.username
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
