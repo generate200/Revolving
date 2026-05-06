@@ -63,14 +63,14 @@
 <span class="detail-label">Discounted Price</span>
 <span>{{ converted_price }}</span>
 </div>
-
+{% if user.is_authenticated %}
 <div class="detail-row">
 <span class="detail-label">Profit Margin</span>
 <span class="profit">
 {{ product.profit_margin|floatformat:2 }}%
 </span>
 </div>
-
+{% endif %}
 <div class="detail-row">
 <span class="detail-label">Currency</span>
 <span>{{ product.currency }}</span>
@@ -140,7 +140,7 @@
 </div>
 
 
-
+{% if user.is_authenticated %}
 <!-- Supplier -->
 <div class="card">
 <h3>Supplier Information</h3>
@@ -308,7 +308,7 @@ Inactive
 <p>No variants configured.</p>
 {% endif %}
 </div>
-
+{% endif %}
 <a href="{% url 'products:list' %}" class="back-btn">
 ← Back to Products
 </a>

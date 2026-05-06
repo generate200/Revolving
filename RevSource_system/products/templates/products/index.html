@@ -38,6 +38,7 @@
             <h3>Products</h3>
             <p>View and manage inventory with pricing, stock alerts, and product details.</p>
         </a>
+        {%if user.is_authenticated %}
         <a class="home-card" href="{% url 'finance:overview' %}">
             <h3>Finance</h3>
             <p>Open the finance workspace for budgets, costs, and revenue tracking.</p>
@@ -46,6 +47,7 @@
             <h3>Report</h3>
             <p>Access analytics and summary reports across your ERP system.</p>
         </a>
+        {% endif %}
     </div>
 </section>
 {% endblock %}

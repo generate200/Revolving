@@ -102,9 +102,11 @@
                             <span class="badge badge-muted">Inactive</span>
                         {% endif %}
                     </td>
+                    {% if user.is_authenticated %}
                     <td class="actions-col">
                         <a href="{% url 'products:delete' product.pk %}" class="btn btn-outline">Delete</a>
                     </td>
+                    {% endif %}
                 </tr>
                 {% empty %}
                 <tr>

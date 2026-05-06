@@ -40,6 +40,7 @@
                 <a href="{% url 'products:list' %}" data-label="Products">
                     <i class="fa fa-box"></i><span>Products</span>
                 </a>
+                {%if user.is_authenticated %}
                 <a href="{% url 'finance:account-list' %}" data-label="Accounts">
                     <i class="fa fa-user"></i><span>Accounts</span>
                 </a>
@@ -58,6 +59,7 @@
                 <a href="#" data-label="Online">
                     <i class="fa fa-globe"></i><span>Online Orders</span>
                 </a>
+                {% endif %}
                 <a href="{% url 'crm:customer_add' %}" data-label="Customers">
                     <i class="fa fa-users"></i><span>Customers</span>
                 </a>
@@ -65,6 +67,7 @@
                     <i class="fa fa-truck"></i><span>Suppliers</span>
                 </a>
             </nav>
+            {%if user.is_authenticated %}
 
             <!-- POS Quick Access Card -->
             <a href="{% url 'sales:create_invoice' %}" class="sidebar-sales-card" title="Quick POS">
@@ -72,6 +75,7 @@
                 <span class="card-title">Quick POS</span>
                 <span class="card-desc">Start new sale</span>
             </a>
+            {% endif %}
 
             <!-- Sidebar Toggle Button -->
             <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Collapse Sidebar">
@@ -106,6 +110,7 @@
             <a href="{% url 'index' %}">
                 <i class="fa fa-home"></i> Home
             </a>
+            {%if user.is_authenticated %}
 
             <a href="{% url 'finance:overview' %}">
                 <i class="fa fa-dollar-sign"></i> Finance
@@ -118,6 +123,7 @@
             <a href="{% url 'products:add' %}" class="nav-action">
                 <i class="fa fa-plus-circle"></i> Add Product
             </a>
+            {% endif %}
         </nav>
 
         <!-- USER SECTION -->
