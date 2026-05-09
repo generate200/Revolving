@@ -27,6 +27,23 @@
                 <label for="id_date">Date</label>
                 {{ form.date }}
             </div>
+              <div class="form-group">
+            <select name="currency" id="id_currency" class="form-select">
+                {%for currency in currencies%}
+                <option value="{{ currency.id }}"
+                        data-symbol="{{ currency.symbol }}"
+                        data-rate="{{ currency.exchange_rate }}"
+                        {% if form.currency.value == currency.id %}selected{% endif %}>
+                    {{ currency.code }} - {{ currency.name }}
+                </option>
+                 {% endfor %}
+            </select>
+    
+            </div>
+            <div class="form-group">
+                <label for="id_exchange_rate">Exchange Rate</label>
+                {{ form.exchange_rate }}
+            </div>
             <div class="form-group">
                 <label for="id_memo">Memo/Reference</label>
                 {{ form.memo }}

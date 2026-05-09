@@ -331,7 +331,11 @@ class JournalEntryCreateView(FormView):
         
         if formset.is_valid():
             # Save the journal entry first to get the primary key
-            journal_entry = form.save()
+            journal_entry = form.save(commit=False)
+            qar_currency = Currency.objects.get(code='QAR')
+            journal_entry.currency = qar_currency
+            journal_entry.exchange_rate = Decimal('1.000000')
+            journal_entry.save()
             
             # Now save each line with the journal entry reference
             for line_form in formset:
