@@ -1,0 +1,289 @@
+{% extends 'products/base.html' %}
+{% load static %}
+
+{% block hero %}
+<section class="hero-panel hero-panel--compact">
+    <div class="hero-copy">
+        <p class="eyebrow">Inventory management</p>
+        <h1>Stock levels, movements, and reports</h1>
+        <p class="hero-text">Track inventory value, low stock, movements, adjustments and transfers in one place.</p>
+    </div>
+    <div class="hero-visual">
+        <div class="hero-logo-card">
+            <div class="logo-mark">I</div>
+            <div class="logo-labels">
+                <span class="logo-rev">Stock</span>
+                <span class="logo-source">Levels</span>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="section-panel">
+    <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
+        <div>
+            <p class="section-label">Inventory overview</p>
+            <h2>Stock dashboard</h2>
+            <p style="color: var(--muted);">Use existing product and stock movement data to monitor inventory health.</p>
+        </div>
+    </div>
+
+    <div class="grid-card" style="display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:1rem;margin-bottom:1.5rem;">
+        <div class="stat-card">
+            <span class="stat-title">Total inventory value</span>
+            <strong class="stat-value">{{ currency_symbol }}{{ total_inventory_value|floatformat:2 }} {{ base_currency_code }}</strong>
+        </div>
+        <div class="stat-card">
+            <span class="stat-title">Available stock</span>
+            <strong class="stat-value">{{ available_stock }}</strong>
+        </div>
+        <div class="stat-card">
+            <span class="stat-title">Low stock products</span>
+            <strong class="stat-value">{{ low_stock_count }}</strong>
+        </div>
+        <div class="stat-card">
+            <span class="stat-title">Out of stock</span>
+            <strong class="stat-value">{{ out_of_stock_count }}</strong>
+        </div>
+        <div class="stat-card">
+            <span class="stat-title">Damaged stock</span>
+            <strong class="stat-value">{{ damaged_stock_quantity }}</strong>
+        </div>
+        <div class="stat-card">
+            <span class="stat-title">Pending transfers</span>
+            <strong class="stat-value">{{ pending_transfers }}</strong>
+        </div>
+    </div>
+
+    <div class="inventory-tabs" style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:2rem;">
+        <a href="#stock-levels" class="tab-link">Stock Levels</a>
+        <a href="#stock-movements" class="tab-link">Stock Movements</a>
+        <a href="#low-stock" class="tab-link">Low Stock</a>
+        <a href="#adjust-stock" class="tab-link">Adjust Stock</a>
+        <a href="#transfers" class="tab-link">Transfers</a>
+        <a href="#reports" class="tab-link">Reports</a>
+    </div>
+
+    <section id="stock-levels" style="margin-bottom:3rem;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+            <h3>Stock Levels</h3>
+            <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+                <a href="{% url 'products:list' %}" class="btn btn-outline">View products</a>
+            </div>
+        </div>
+        <div class="table-card" style="margin-top:1rem;overflow-x:auto;">
+            <table class="product-table" style="min-width: 920px;">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th>Available</th>
+                        <th>Reserved</th>
+                        <th>Warehouse</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.sku }}</td>
+                        <td>{{ product.available_stock }}</td>
+                        <td>0</td>
+                        <td>Main Warehouse</td>
+                        <td>
+                            {% if product.available_stock == 0 %}
+                                <span class="badge badge-danger">Out of stock</span>
+                            {% elif product.available_stock <= product.reorder_point %}
+                                <span class="badge badge-warning">Low stock</span>
+                            {% else %}
+                                <span class="badge badge-success">In stock</span>
+                            {% endif %}
+                        </td>
+                        <td style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                            <a href="{% url 'products:detail' product.pk %}" class="btn btn-sm btn-outline">History</a>
+                            <a href="{% url 'products:adjust-stock' product.pk %}" class="btn btn-sm btn-accent">Adjust</a>
+                            <a href="#" class="btn btn-sm btn-outline">Transfer</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="empty-state">No products available for inventory tracking.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="stock-movements" style="margin-bottom:3rem;">
+        <h3>Stock Movements</h3>
+        <p class="section-text">Inventory audit trail from purchases, sales, returns, and adjustments.</p>
+        <div class="table-card" style="margin-top:1rem;overflow-x:auto;">
+            <table class="product-table" style="min-width: 760px;">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Product</th>
+                        <th>Type</th>
+                        <th>Qty</th>
+                        <th>Reference</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for movement in stock_movements %}
+                    <tr>
+                        <td>{{ movement.created_at|date:'M d, Y' }}</td>
+                        <td>{{ movement.product.name }}</td>
+                        <td>{{ movement.get_movement_type_display }}</td>
+                        <td>{{ movement.quantity }}</td>
+                        <td>{{ movement.reference }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="empty-state">No stock movements recorded yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="low-stock" style="margin-bottom:3rem;">
+        <h3>Low Stock</h3>
+        <p class="section-text">Products close to or below reorder point.</p>
+        <div class="table-card" style="margin-top:1rem;overflow-x:auto;">
+            <table class="product-table" style="min-width: 720px;">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th>Available</th>
+                        <th>Reorder Point</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in low_stock_products %}
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.sku }}</td>
+                        <td>{{ product.available_stock }}</td>
+                        <td>{{ product.reorder_point }}</td>
+                        <td style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                            <a href="#" class="btn btn-sm btn-outline">Purchase Order</a>
+                            <a href="{% url 'products:adjust-stock' product.pk %}" class="btn btn-sm btn-accent">Restock</a>
+                            <a href="{% url 'products:detail' product.pk %}" class="btn btn-sm btn-outline">Notify Supplier</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="empty-state">No low stock products at the moment.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="adjust-stock" style="margin-bottom:3rem;">
+        <h3>Adjust Stock</h3>
+        <p class="section-text">Manual inventory adjustments for damaged, lost, or audit corrections.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start;">
+            <div class="table-card" style="padding:1.5rem;">
+                <form>
+                    <div class="form-group">
+                        <label>Product</label>
+                        <select class="form-select">
+                            {% for product in products|slice:":10" %}
+                                <option value="{{ product.pk }}">{{ product.name }} ({{ product.sku }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Current Stock</label>
+                        <input type="text" class="form-control" value="{{ products.0.available_stock|default:'0' }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Adjustment Type</label>
+                        <select class="form-select">
+                            <option value="purchase">Purchase</option>
+                            <option value="sale">Sale</option>
+                            <option value="return">Return</option>
+                            <option value="damage">Damage</option>
+                            <option value="adjustment">Manual correction</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="number" class="form-control" min="1" placeholder="Enter quantity">
+                    </div>
+                    <div class="form-group">
+                        <label>Reason</label>
+                        <textarea class="form-control" rows="3" placeholder="Damaged, lost, manual correction, audit difference"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-accent">Submit adjustment</button>
+                </form>
+            </div>
+            <div class="table-card" style="padding:1.5rem;">
+                <h4>Adjustment types</h4>
+                <ul style="margin:0;padding-left:1.25rem;color:var(--muted);">
+                    <li>Damaged</li>
+                    <li>Lost</li>
+                    <li>Manual correction</li>
+                    <li>Audit difference</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="transfers" style="margin-bottom:3rem;">
+        <h3>Transfers</h3>
+        <p class="section-text">Move stock between warehouses and track transfer status.</p>
+        <div class="table-card" style="margin-top:1rem;overflow-x:auto;">
+            <table class="product-table" style="min-width: 760px;">
+                <thead>
+                    <tr>
+                        <th>From Warehouse</th>
+                        <th>To Warehouse</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="5" class="empty-state">No transfer records available. Transfers are not tracked in current data.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section id="reports" style="margin-bottom:3rem;">
+        <h3>Inventory Reports</h3>
+        <p class="section-text">Fast moving products, dead stock, valuation, and stock aging based on current inventory data.</p>
+        <div class="grid-card" style="display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:1rem;">
+            <div class="stat-card">
+                <span class="stat-title">Fast moving products</span>
+                <p style="margin:0.75rem 0 0;color:var(--muted);">Based on recent sales and adjustments.</p>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Dead stock</span>
+                <p style="margin:0.75rem 0 0;color:var(--muted);">Items with no recent movement.</p>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Inventory valuation</span>
+                <p style="margin:0.75rem 0 0;color:var(--muted);">Value of stock at cost price.</p>
+            </div>
+            <div class="stat-card">
+                <span class="stat-title">Stock aging</span>
+                <p style="margin:0.75rem 0 0;color:var(--muted);">Age-based stock insights.</p>
+            </div>
+        </div>
+    </section>
+</section>
+{% endblock %}

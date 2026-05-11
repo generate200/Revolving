@@ -18,6 +18,81 @@ class IndexView(TemplateView):
     template_name = 'products/index.html'
 
 
+@method_decorator(login_required, name='dispatch')
+class InventoryView(TemplateView):
+    template_name = 'products/inventory.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        products = Product.objects.select_related('category', 'supplier').order_by('name')
+        stock_movements = StockMovement.objects.select_related('product').order_by('-created_at')[:25]
+
+        low_stock_products = [
+            p for p in products
+            if p.available_stock <= p.reorder_point
+        ]
+
+        total_inventory_value = sum(
+            (p.cost_price or 0) * p.available_stock
+            for p in products
+        )
+        available_stock = sum(p.available_stock for p in products)
+        out_of_stock_count = sum(1 for p in products if p.available_stock == 0)
+        damaged_stock = StockMovement.objects.filter(
+            movement_type='adjustment',
+            reference__icontains='damage'
+        ).aggregate(models.Sum('quantity'))['quantity__sum'] or 0
+
+        movement_summary_qs = StockMovement.objects.values('movement_type').annotate(
+            total_quantity=models.Sum('quantity')
+        ).order_by('-total_quantity')
+
+        movement_type_labels = dict(StockMovement.MOVEMENT_TYPES)
+        movement_summary = []
+        max_movement_qty = max((item['total_quantity'] or 0) for item in movement_summary_qs) if movement_summary_qs else 0
+        for item in movement_summary_qs:
+            qty = item['total_quantity'] or 0
+            percent = int((qty / max_movement_qty) * 100) if max_movement_qty > 0 else 0
+            movement_summary.append({
+                'type': item['movement_type'],
+                'label': movement_type_labels.get(item['movement_type'], item['movement_type'].title()),
+                'total_quantity': qty,
+                'percent': percent,
+            })
+
+        top_moving_products_qs = StockMovement.objects.values(
+            'product__name', 'product__sku'
+        ).annotate(total_quantity=models.Sum('quantity')).order_by('-total_quantity')[:6]
+        max_top_qty = max((item['total_quantity'] or 0) for item in top_moving_products_qs) if top_moving_products_qs else 0
+        top_moving_products = []
+        for item in top_moving_products_qs:
+            qty = item['total_quantity'] or 0
+            percent = int((qty / max_top_qty) * 100) if max_top_qty > 0 else 0
+            top_moving_products.append({
+                'label': f"{item['product__name']} ({item['product__sku']})",
+                'total_quantity': qty,
+                'percent': percent,
+            })
+
+        base_currency = Currency.objects.filter(is_base=True).first()
+        context.update({
+            'products': products,
+            'stock_movements': stock_movements,
+            'low_stock_products': low_stock_products,
+            'total_inventory_value': total_inventory_value,
+            'available_stock': available_stock,
+            'low_stock_count': len(low_stock_products),
+            'out_of_stock_count': out_of_stock_count,
+            'damaged_stock_quantity': damaged_stock,
+            'pending_transfers': 0,
+            'movement_summary': movement_summary,
+            'top_moving_products': top_moving_products,
+            'currency_symbol': base_currency.symbol if base_currency else '$',
+            'base_currency_code': base_currency.code if base_currency else 'USD',
+        })
+        return context
+
+
 class ProductListView(ListView):
     model = Product
     template_name = 'products/product_list.html'
