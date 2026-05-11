@@ -83,17 +83,54 @@ class Product(models.Model):
 
     @property
     def discounted_price_base_currency(self):
-        """Get the discounted price converted to base currency for currency conversion"""
+        """Get the discounted price converted to base currency.
+        
+        If the product's price is in a non-base currency, convert it to base currency
+        using the currency's current exchange rate.
+        
+        Example:
+            - Product price: 100 EUR
+            - EUR exchange rate: 1.1 (1 EUR = 1.1 USD)  
+            - Base currency: USD
+            - Result: 100 * 1.1 = 110 USD
+        """
         if not self.currency:
             return self.discounted_price
         
-        # Convert to base currency (assuming USD is base)
-        base_currency = self.currency.__class__.objects.filter(is_base=True).first()
+        from core.utils import convert_to_base_currency, get_base_currency
+        
+        base_currency = get_base_currency()
         if not base_currency or self.currency == base_currency:
             return self.discounted_price
         
-        # Convert: amount / exchange_rate gives base currency amount
-        return self.discounted_price / self.currency.exchange_rate
+        # Convert from product's currency to base currency
+        return convert_to_base_currency(
+            amount=self.discounted_price,
+            from_currency=self.currency
+        )
+    
+    def get_price_in_currency(self, target_currency):
+        """Get the discounted price converted to a specific currency.
+        
+        Args:
+            target_currency: Currency instance to convert to
+            
+        Returns:
+            Decimal: Price in target currency
+        """
+        from core.utils import convert_between_currencies
+        
+        if not self.currency or not target_currency:
+            return self.discounted_price
+        
+        if self.currency.id == target_currency.id:
+            return self.discounted_price
+        
+        return convert_between_currencies(
+            amount=self.discounted_price,
+            from_currency=self.currency,
+            to_currency=target_currency
+        )
 
     @property
     def is_low_stock(self):

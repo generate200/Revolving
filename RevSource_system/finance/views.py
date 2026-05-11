@@ -57,14 +57,24 @@ class FinanceOverviewView(TemplateView):
             total=Sum('balance')
         )['total'] or Decimal('0.00')
 
-        context['total_assets'] = currency.convert(total_assets)
+        # Convert from base currency to selected currency
+        context['total_assets'] = currency.convert_from_base(total_assets, currency.selected_currency)
 
         # Recent entries
         recent_entries = JournalEntry.objects.all()[:10]
 
         for entry in recent_entries:
-            entry.converted_debit = currency.convert(entry.get_total_debit())
-            entry.converted_credit = currency.convert(entry.get_total_credit())
+            # Convert entry totals from their currency to selected currency
+            entry.converted_debit = currency.convert(
+                entry.get_total_debit(),
+                from_currency=entry.currency,
+                to_currency=currency.selected_currency
+            )
+            entry.converted_credit = currency.convert(
+                entry.get_total_credit(),
+                from_currency=entry.currency,
+                to_currency=currency.selected_currency
+            )
 
         context['recent_entries'] = recent_entries
 
@@ -75,6 +85,7 @@ class FinanceOverviewView(TemplateView):
         context.update(currency.context())
 
         return context
+    
 ACCOUNT_TYPE_ORDER = [
     ('asset', 'Assets'),
     ('liability', 'Liabilities'),
@@ -88,26 +99,8 @@ def accounting_grouping(request):
 
     accounts = Account.objects.filter(is_active=True).order_by('code')
 
-    # Currency conversion
-    base_currency = Currency.objects.filter(is_base=True).first()
-
-    selected_currency = Currency.objects.filter(
-        code=request.session.get('currency')
-    ).first()
-
-    needs_conversion = (
-        base_currency and
-        selected_currency and
-        base_currency != selected_currency
-    )
-
-    if needs_conversion:
-        rate = (
-            selected_currency.exchange_rate /
-            base_currency.exchange_rate
-        )
-    else:
-        rate = Decimal('1.00')
+    # Currency conversion - use new CurrencyService
+    currency_service = CurrencyService(request)
 
     # Create groups
     for type_code, type_name in ACCOUNT_TYPE_ORDER:
@@ -117,10 +110,10 @@ def accounting_grouping(request):
         total = Decimal('0.00')
 
         for account in type_accounts:
-            account.converted_balance = (
-                account.balance * rate
-            ).quantize(Decimal('0.01'))
-
+            # Use new method to get balance in selected currency
+            account.converted_balance = account.get_balance_in_currency(
+                currency_service.selected_currency
+            )
             total += account.converted_balance
 
         grouped[type_name] = {
@@ -133,7 +126,7 @@ def accounting_grouping(request):
         'finance/account_grouping.html',
         {
             'grouped': grouped,
-            'selected_currency': selected_currency,
+            'selected_currency': currency_service.selected_currency,
         }
     )
 
@@ -154,7 +147,7 @@ class AccountListView(ListView):
 
         if currency_code:
             self.request.session['currency'] = currency_code
-        currency_code = self.request.session.get('currency', 'QAR')
+        currency_code = self.request.session.get('currency', 'USD')
 
         selected_currency = (
             Currency.objects.filter(code=currency_code).first()
@@ -167,13 +160,14 @@ class AccountListView(ListView):
         if not selected_currency:
             selected_currency = base_currency
 
-        # --- Conversion helper ---
-        def convert(amount):
-            if not amount or not base_currency or not selected_currency:
-                return Decimal('0.00')
+        # Use CurrencyService for proper conversion
+        currency_service = CurrencyService(self.request, selected_currency=selected_currency)
 
-            rate = selected_currency.exchange_rate / base_currency.exchange_rate
-            return (amount * rate).quantize(Decimal('0.01'))
+        # --- Conversion helper using new service ---
+        def convert(amount):
+            # Since we're dealing with account balances that are in base currency,
+            # we convert from base to selected
+            return currency_service.convert_from_base(amount, selected_currency)
 
         # --- Totals ---
         total_assets = Account.objects.filter(type='asset').aggregate(
@@ -310,6 +304,26 @@ class JournalEntryListView(ListView):
     def get_queryset(self):
         return JournalEntry.objects.order_by('-date', '-id')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        currency_service = CurrencyService(self.request)
+        entries = context.get('entries') or []
+
+        for entry in entries:
+            entry.converted_debit = currency_service.convert(
+                entry.get_total_debit(),
+                from_currency=entry.currency,
+                to_currency=currency_service.selected_currency
+            )
+            entry.converted_credit = currency_service.convert(
+                entry.get_total_credit(),
+                from_currency=entry.currency,
+                to_currency=currency_service.selected_currency
+            )
+
+        context.update(currency_service.context())
+        return context
+
 
 class JournalEntryCreateView(FormView):
     template_name = 'finance/journal_entry_form.html'
@@ -323,6 +337,7 @@ class JournalEntryCreateView(FormView):
         else:
             context['formset'] = JournalLineFormSet()
         context['accounts'] = Account.objects.filter(is_active=True)
+        context['currencies'] = Currency.objects.filter(is_active=True)
         return context
 
     def form_valid(self, form):
@@ -332,9 +347,11 @@ class JournalEntryCreateView(FormView):
         if formset.is_valid():
             # Save the journal entry first to get the primary key
             journal_entry = form.save(commit=False)
-            qar_currency = Currency.objects.get(code='QAR')
-            journal_entry.currency = qar_currency
-            journal_entry.exchange_rate = Decimal('1.000000')
+            if not journal_entry.currency:
+                journal_entry.currency = Currency.objects.filter(is_base=True).first()
+            if not journal_entry.exchange_rate or journal_entry.exchange_rate == Decimal('0.000000'):
+                journal_entry.exchange_rate = journal_entry.currency.exchange_rate
+            
             journal_entry.save()
             
             # Now save each line with the journal entry reference

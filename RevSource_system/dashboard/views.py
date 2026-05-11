@@ -30,7 +30,7 @@ class DashboardReportView(LoginRequiredMixin, TemplateView):
         currency_code = self.request.GET.get('currency')
         if currency_code:
             self.request.session['currency'] = currency_code
-        currency_code = self.request.session.get('currency', 'QAR')
+        currency_code = self.request.session.get('currency', 'USD')
         selected_currency = Currency.objects.filter(code=currency_code, is_active=True).first()
         
         if not selected_currency:

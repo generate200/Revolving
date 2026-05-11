@@ -34,8 +34,11 @@ class ProductListView(ListView):
         currency_service = self.get_currency_service()
 
         for product in queryset:
+            # Convert product price from its currency to selected currency
             product.converted_price = currency_service.convert(
-                product.discounted_price_base_currency
+                product.discounted_price,
+                from_currency=product.currency,
+                to_currency=currency_service.selected_currency
             )
 
         return queryset
@@ -57,7 +60,7 @@ class ProductListView(ListView):
         currency_code = self.request.GET.get('currency')
         if currency_code:
             self.request.session['currency'] = currency_code
-        currency_code = self.request.session.get('currency', 'QAR')
+        currency_code = self.request.session.get('currency', 'USD')
         selected_obj = currencies.filter(code=currency_code).first()
         if not selected_obj:
             selected_obj = base_currency
@@ -97,7 +100,9 @@ class ProductDetailView(TemplateView):
 
         currency_service = CurrencyService(self.request)
         context["converted_price"] = currency_service.convert(
-            product.discounted_price_base_currency
+            product.discounted_price,
+            from_currency=product.currency,
+            to_currency=currency_service.selected_currency
         )
 
         return context

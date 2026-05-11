@@ -6,7 +6,7 @@
         <div>
             <p class="section-label">Chart of accounts</p>
             <h2>All accounts</h2>
-            <p style="color: var(--muted); font-size: 0.95rem; margin-top: 0.5rem;">All balances are shown in base currency. Journal entries are automatically posted to update these balances.</p>
+            <p style="color: var(--muted); font-size: 0.95rem; margin-top: 0.5rem;">All balances are shown in the selected display currency. Journal entries are automatically posted and converted to the chosen currency.</p>
         </div>
         <a href="{% url 'finance:account-create' %}" class="btn btn-accent">New account</a>
     </div>
@@ -43,7 +43,7 @@
                     <th>Code</th>
                     <th>Name</th>
                     <th>Type</th>
-                    <th>Balance (USD)</th>
+                    <th>Balance ({{ selected_currency.code }})</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>

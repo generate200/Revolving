@@ -45,7 +45,10 @@ class Account(models.Model):
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=20, choices=ACCOUNT_TYPES)
     description = models.TextField(blank=True)
-    balance = models.DecimalField(max_digits=14, decimal_places=2, default=Decimal('0.00'),editable=False )
+    balance = models.DecimalField(max_digits=14, decimal_places=2, default=Decimal('0.00'), editable=False,
+                                 help_text="Balance in the account's currency")
+    currency = models.ForeignKey(Currency, on_delete=models.SET_NULL, null=True, blank=True,
+                                help_text="Currency in which this account's balance is stored. NULL means base currency.")
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -56,6 +59,38 @@ class Account(models.Model):
 
     def __str__(self):
         return f"{self.code} - {self.name}"
+    
+    def get_balance_in_currency(self, target_currency):
+        """Convert this account's balance to a target currency.
+        
+        Args:
+            target_currency: Currency instance to convert to
+            
+        Returns:
+            Balance converted to target currency
+        """
+        from core.utils import convert_between_currencies
+        
+        account_currency = self.currency or Currency.objects.filter(is_base=True).first()
+        if not account_currency or not target_currency:
+            return self.balance
+        
+        if account_currency.id == target_currency.id:
+            return self.balance
+        
+        return convert_between_currencies(
+            amount=self.balance,
+            from_currency=account_currency,
+            to_currency=target_currency
+        )
+    
+    def get_balance_in_base_currency(self):
+        """Convert this account's balance to base currency."""
+        base_currency = Currency.objects.filter(is_base=True).first()
+        if not base_currency:
+            return self.balance
+        
+        return self.get_balance_in_currency(base_currency)
 
 
 class JournalEntry(models.Model):
@@ -110,15 +145,35 @@ class JournalEntry(models.Model):
 
         for line in self.lines.all():
             account = line.account
-
-            # Apply accounting rules based on account type using base currency amounts
-            debit_base = line.get_debit_base()
-            credit_base = line.get_credit_base()
             
+            # Determine the account's currency (defaults to base currency)
+            account_currency = account.currency or Currency.objects.filter(is_base=True).first()
+            
+            # Get the debit/credit amounts in the journal entry's currency
+            debit_amount = line.debit
+            credit_amount = line.credit
+            
+            # Convert to account's currency if different from journal entry currency
+            if self.currency.id != account_currency.id:
+                from core.utils import convert_between_currencies
+                debit_amount = convert_between_currencies(
+                    amount=debit_amount,
+                    from_currency=self.currency,
+                    to_currency=account_currency,
+                    exchange_rate_snapshot=self.exchange_rate  # Use the rate from the entry date
+                )
+                credit_amount = convert_between_currencies(
+                    amount=credit_amount,
+                    from_currency=self.currency,
+                    to_currency=account_currency,
+                    exchange_rate_snapshot=self.exchange_rate
+                )
+
+            # Apply accounting rules based on account type
             if account.type in ['asset', 'expense']:
-                account.balance += (debit_base - credit_base)
+                account.balance += (debit_amount - credit_amount)
             else:
-                account.balance += (credit_base - debit_base)
+                account.balance += (credit_amount - debit_amount)
 
             account.save()
 
@@ -187,12 +242,30 @@ class JournalLine(models.Model):
         return f"{self.account.name} | Dr:{currency_symbol}{self.debit} Cr:{currency_symbol}{self.credit}"
 
     def get_debit_base(self):
-        """Get debit amount converted to base currency."""
-        return self.debit * self.journal.exchange_rate
+        """Get debit amount converted to base currency.
+        
+        Note: This converts from the journal entry's currency to the base currency
+        using the exchange rate stored on the entry (snapshot at transaction time).
+        """
+        from core.utils import convert_to_base_currency
+        return convert_to_base_currency(
+            amount=self.debit,
+            from_currency=self.journal.currency,
+            exchange_rate_snapshot=self.journal.exchange_rate
+        )
 
     def get_credit_base(self):
-        """Get credit amount converted to base currency."""
-        return self.credit * self.journal.exchange_rate
+        """Get credit amount converted to base currency.
+        
+        Note: This converts from the journal entry's currency to the base currency
+        using the exchange rate stored on the entry (snapshot at transaction time).
+        """
+        from core.utils import convert_to_base_currency
+        return convert_to_base_currency(
+            amount=self.credit,
+            from_currency=self.journal.currency,
+            exchange_rate_snapshot=self.journal.exchange_rate
+        )
 
     def clean(self):
         """Validate that only one of debit or credit is set."""

@@ -32,8 +32,18 @@
                     <td>{{ entry.date|date:"M d, Y" }}</td>
                     <td>{{ entry.description|truncatewords:6 }}</td>
                     <td>{{ entry.currency.code }} ({{ entry.currency.symbol }})</td>
-                    <td><span data-amount="{{ entry.get_total_debit }}" data-currency="{{ entry.currency.code }}">{{ entry.currency.symbol }}{{ entry.get_total_debit|floatformat:2 }}</span></td>
-                    <td><span data-amount="{{ entry.get_total_credit }}" data-currency="{{ entry.currency.code }}">{{ entry.currency.symbol }}{{ entry.get_total_credit|floatformat:2 }}</span></td>
+                    <td>
+                        <span data-amount="{{ entry.converted_debit }}" data-currency="{{ selected_currency.code }}">
+                            {{ currency_symbol }}{{ entry.converted_debit|floatformat:2 }} {{ selected_currency.code }}
+                        </span>
+                        <small class="text-muted">({{ entry.currency.symbol }}{{ entry.get_total_debit|floatformat:2 }})</small>
+                    </td>
+                    <td>
+                        <span data-amount="{{ entry.converted_credit }}" data-currency="{{ selected_currency.code }}">
+                            {{ currency_symbol }}{{ entry.converted_credit|floatformat:2 }} {{ selected_currency.code }}
+                        </span>
+                        <small class="text-muted">({{ entry.currency.symbol }}{{ entry.get_total_credit|floatformat:2 }})</small>
+                    </td>
                     <td>
                         {% if entry.posted %}
                             <span class="badge badge-success">Posted</span>
