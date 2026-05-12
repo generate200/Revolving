@@ -94,13 +94,39 @@ ACCOUNT_TYPE_ORDER = [
     ('expense', 'Expenses'),
 ]
 def accounting_grouping(request):
-
+    """Group accounts by type with proper currency conversion."""
+    
     grouped = OrderedDict()
 
-    accounts = Account.objects.filter(is_active=True).order_by('code')
+    # --- Currency selection (EXACT same logic as AccountListView) ---
+    currency_code = request.GET.get('currency')
 
-    # Currency conversion - use new CurrencyService
-    currency_service = CurrencyService(request)
+    if currency_code:
+        request.session['currency'] = currency_code
+    currency_code = request.session.get('currency', 'QAR')
+
+    selected_currency = (
+        Currency.objects.filter(code=currency_code).first()
+        if currency_code
+        else Currency.objects.filter(is_base=True).first()
+    )
+
+    base_currency = Currency.objects.filter(is_base=True).first()
+
+    if not selected_currency:
+        selected_currency = base_currency
+
+    # Use CurrencyService for proper conversion
+    currency_service = CurrencyService(request, selected_currency=selected_currency)
+
+    # --- Conversion helper using new service ---
+    def convert(amount):
+        # Since we're dealing with account balances that are in base currency,
+        # we convert from base to selected
+        return currency_service.convert_from_base(amount, selected_currency)
+
+    # Get all active accounts
+    accounts = Account.objects.filter(is_active=True).order_by('code')
 
     # Create groups
     for type_code, type_name in ACCOUNT_TYPE_ORDER:
@@ -110,10 +136,8 @@ def accounting_grouping(request):
         total = Decimal('0.00')
 
         for account in type_accounts:
-            # Use new method to get balance in selected currency
-            account.converted_balance = account.get_balance_in_currency(
-                currency_service.selected_currency
-            )
+            # Convert balance from base currency to selected currency
+            account.converted_balance = convert(account.balance)
             total += account.converted_balance
 
         grouped[type_name] = {
@@ -126,7 +150,9 @@ def accounting_grouping(request):
         'finance/account_grouping.html',
         {
             'grouped': grouped,
-            'selected_currency': currency_service.selected_currency,
+            'selected_currency': selected_currency,
+            'currencies': Currency.objects.filter(is_active=True),
+            'currency_symbol': selected_currency.symbol if selected_currency else '?',
         }
     )
 

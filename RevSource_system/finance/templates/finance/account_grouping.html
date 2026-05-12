@@ -13,9 +13,24 @@
         <div>
             <p class="section-label">Financial Overview</p>
             <h2>Chart of Accounts</h2>
+            <p style="color: var(--muted); font-size: 0.95rem; margin-top: 0.5rem;">All balances are shown in the selected display currency.</p>
         </div>
         <button class="btn" onclick="window.history.back()">back</button>
     </div>
+
+    <!-- Currency Selector -->
+    <form method="get" style="margin-bottom: 2rem; max-width: 300px;">
+        <div class="form-group">
+            <label for="currency-selector-grouping">Currency</label>
+            <select id="currency-selector-grouping" name="currency" class="form-control" onchange="this.form.submit()">
+                {% for currency in currencies %}
+                    <option value="{{ currency.code }}" {% if currency.code == selected_currency.code %}selected{% endif %}>
+                        {{ currency.code }} ({{ currency.symbol }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
 
     <!-- Summary -->
     <div class="summary-grid">
@@ -29,8 +44,8 @@
             </div>
 
             <div class="summary-amount">
-                {% if selected_currency %}
-                    {{ selected_currency.symbol }}
+                {% if currency_symbol %}
+                    {{ currency_symbol }}
                 {% endif %}
                 {{ data.total }}
             </div>
@@ -72,8 +87,8 @@
                 </div>
 
                 <div class="group-total">
-                    {% if selected_currency %}
-                        {{ selected_currency.symbol }}
+                    {% if currency_symbol %}
+                        {{ currency_symbol }}
                     {% endif %}
                     {{ data.total }}
                 </div>
@@ -105,8 +120,8 @@
 
                     <div class="account-balance">
 
-                        {% if selected_currency %}
-                            {{ selected_currency.symbol }}
+                        {% if currency_symbol %}
+                            {{ currency_symbol }}
                         {% endif %}
 
                         {{ account.converted_balance }}

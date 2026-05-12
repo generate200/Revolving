@@ -5,6 +5,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView, View
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from .models import Product, Category, Supplier, ProductVariant
 from .forms import ProductForm, CategoryForm, SupplierForm, ProductVariantForm, StockAdjustmentForm
@@ -42,6 +43,39 @@ class InventoryView(TemplateView):
             movement_type='adjustment',
             reference__icontains='damage'
         ).aggregate(models.Sum('quantity'))['quantity__sum'] or 0
+
+        # Fast moving products by movement quantity
+        fast_moving_qs = StockMovement.objects.values(
+            'product__name', 'product__sku'
+        ).annotate(total_quantity=models.Sum('quantity')).order_by('-total_quantity')[:3]
+        fast_moving_products = [
+            {
+                'label': f"{item['product__name']} ({item['product__sku']})",
+                'quantity': item['total_quantity'] or 0,
+            }
+            for item in fast_moving_qs
+        ]
+
+        # Dead stock: products with no movement or no recent movement
+        recent_cutoff = timezone.now() - timezone.timedelta(days=90)
+        active_product_ids = set(StockMovement.objects.filter(
+            created_at__gte=recent_cutoff
+        ).values_list('product_id', flat=True).distinct())
+
+        dead_stock_products = [
+            p for p in products
+            if p.id not in active_product_ids and p.available_stock > 0
+        ][:3]
+        dead_stock_count = len(dead_stock_products)
+
+        # Stock aging: products with older movement history
+        aging_cutoff = timezone.now() - timezone.timedelta(days=90)
+        aging_products_qs = [
+            p for p in products
+            if p.stock_movements.exists() and p.stock_movements.latest('created_at').created_at < aging_cutoff
+        ]
+        stock_aging_count = len(aging_products_qs)
+        stock_aging_products = aging_products_qs[:3]
 
         movement_summary_qs = StockMovement.objects.values('movement_type').annotate(
             total_quantity=models.Sum('quantity')
@@ -87,6 +121,11 @@ class InventoryView(TemplateView):
             'pending_transfers': 0,
             'movement_summary': movement_summary,
             'top_moving_products': top_moving_products,
+            'fast_moving_products': fast_moving_products,
+            'dead_stock_count': dead_stock_count,
+            'dead_stock_products': dead_stock_products,
+            'stock_aging_count': stock_aging_count,
+            'stock_aging_products': stock_aging_products,
             'currency_symbol': base_currency.symbol if base_currency else '$',
             'base_currency_code': base_currency.code if base_currency else 'USD',
         })

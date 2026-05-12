@@ -37,6 +37,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // =========================
+    // Bar chart helpers
+    // =========================
+    document.querySelectorAll('.dynamic-bar-fill').forEach(el => {
+        const fill = parseFloat(el.dataset.fill);
+        if (!isNaN(fill)) {
+            el.style.width = fill + '%';
+        }
+    });
+
     // Prevent JS crash if totals area missing
     if (!totalDebitEl || !totalCreditEl || !balanceStatus) {
         return;

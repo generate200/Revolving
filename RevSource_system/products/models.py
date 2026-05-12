@@ -152,6 +152,14 @@ class Product(models.Model):
         available = float(self.stock_quantity) + float(total_movements)
         return max(0, int(available))  # Never go below 0
 
+    @property
+    def latest_movement_date(self):
+        """Return the most recent stock movement timestamp for this product."""
+        from sales.models import StockMovement
+        return StockMovement.objects.filter(
+            product=self
+        ).order_by('-created_at').values_list('created_at', flat=True).first()
+
     class Meta:
         ordering = ['name']
 

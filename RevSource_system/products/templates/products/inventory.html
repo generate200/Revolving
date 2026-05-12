@@ -20,6 +20,28 @@
 </section>
 {% endblock %}
 
+{% block extra_css %}
+<style>
+.bar-track {
+    flex: 1;
+    background: #f3f4f6;
+    border-radius: 999px;
+    overflow: hidden;
+    height: 16px;
+}
+.bar-fill {
+    height: 100%;
+    border-radius: 999px;
+}
+.bar-fill.green {
+    background: #14b8a6;
+}
+.bar-fill.blue {
+    background: #2563eb;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <section class="section-panel">
     <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem;">
@@ -54,6 +76,52 @@
         <div class="stat-card">
             <span class="stat-title">Pending transfers</span>
             <strong class="stat-value">{{ pending_transfers }}</strong>
+        </div>
+    </div>
+
+    <div class="chart-panel" style="display:grid;grid-template-columns:repeat(2,minmax(260px,1fr));gap:1rem;margin-bottom:2rem;">
+        <div class="chart-card" style="padding:1.5rem;background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.05);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                <div>
+                    <p class="stat-title" style="margin-bottom:0.35rem;">Movement Types</p>
+                    <p style="margin:0;color:var(--muted);font-size:0.95rem;">Bar chart of inventory movement quantities.</p>
+                </div>
+            </div>
+            <div style="display:grid;gap:0.75rem;">
+                {% for item in movement_summary %}
+                <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <strong style="width:8rem;">{{ item.label }}</strong>
+                    <div class="bar-track">
+                        <div class="bar-fill green dynamic-bar-fill" data-fill="{{ item.percent }}"></div>
+                    </div>
+                    <span style="min-width:3.5rem;text-align:right;color:var(--muted);">{{ item.total_quantity }}</span>
+                </div>
+                {% empty %}
+                <p class="text-muted">No movement data available.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="chart-card" style="padding:1.5rem;background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.05);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                <div>
+                    <p class="stat-title" style="margin-bottom:0.35rem;">Top Moving Products</p>
+                    <p style="margin:0;color:var(--muted);font-size:0.95rem;">Most active inventory by quantity moved.</p>
+                </div>
+            </div>
+            <div style="display:grid;gap:0.75rem;">
+                {% for item in top_moving_products %}
+                <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <strong style="width:8rem;">{{ item.label }}</strong>
+                    <div class="bar-track">
+                        <div class="bar-fill blue dynamic-bar-fill" data-fill="{{ item.percent }}"></div>
+                    </div>
+                    <span style="min-width:3.5rem;text-align:right;color:var(--muted);">{{ item.total_quantity }}</span>
+                </div>
+                {% empty %}
+                <p class="text-muted">No top moving products to display.</p>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
@@ -269,20 +337,74 @@
         <div class="grid-card" style="display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));gap:1rem;">
             <div class="stat-card">
                 <span class="stat-title">Fast moving products</span>
-                <p style="margin:0.75rem 0 0;color:var(--muted);">Based on recent sales and adjustments.</p>
+                <strong class="stat-value">{{ fast_moving_products|length }}</strong>
+                <p style="margin:0.75rem 0 0;color:var(--muted);">Top products with the highest movement quantity.</p>
             </div>
             <div class="stat-card">
                 <span class="stat-title">Dead stock</span>
-                <p style="margin:0.75rem 0 0;color:var(--muted);">Items with no recent movement.</p>
+                <strong class="stat-value">{{ dead_stock_count }}</strong>
+                <p style="margin:0.75rem 0 0;color:var(--muted);">Products with no movement in the last 90 days.</p>
             </div>
             <div class="stat-card">
                 <span class="stat-title">Inventory valuation</span>
-                <p style="margin:0.75rem 0 0;color:var(--muted);">Value of stock at cost price.</p>
+                <strong class="stat-value">{{ currency_symbol }}{{ total_inventory_value|floatformat:2 }} {{ base_currency_code }}</strong>
+                <p style="margin:0.75rem 0 0;color:var(--muted);">Current inventory value based on cost price.</p>
             </div>
             <div class="stat-card">
                 <span class="stat-title">Stock aging</span>
-                <p style="margin:0.75rem 0 0;color:var(--muted);">Age-based stock insights.</p>
+                <strong class="stat-value">{{ stock_aging_count }}</strong>
+                <p style="margin:0.75rem 0 0;color:var(--muted);">Products with older movement history.</p>
             </div>
+        </div>
+
+        <div class="table-card" style="margin-top:1.5rem;overflow-x:auto;">
+            <h4 style="margin-bottom:1rem;">Top moving products</h4>
+            <table class="product-table" style="min-width: 720px;">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Qty moved</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in fast_moving_products %}
+                    <tr>
+                        <td>{{ item.label }}</td>
+                        <td>{{ item.quantity }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="2" class="empty-state">No fast moving products found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-card" style="margin-top:1.5rem;overflow-x:auto;">
+            <h4 style="margin-bottom:1rem;">Aging inventory</h4>
+            <table class="product-table" style="min-width: 720px;">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Available</th>
+                        <th>Last movement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in stock_aging_products %}
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.available_stock }}</td>
+                        <td>{{ product.latest_movement_date|date:'M d, Y' }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="empty-state">No aging stock items found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </section>
 </section>
