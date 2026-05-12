@@ -13,12 +13,37 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-
-# Load environment variables from .env file
-load_dotenv()
+import dj_database_url
+import json
+from google.oauth2 import service_account
+from decouple import config
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from .env file
+load_dotenv(BASE_DIR / '.env')
+
+
+def env_bool(value, default=False):
+    if isinstance(value, bool):
+        return value
+    text = str(value).strip().lower()
+    if text in {"true", "1", "yes", "y", "on"}:
+        return True
+    if text in {"false", "0", "no", "n", "off"}:
+        return False
+    return default
+
+
+def env_list(value):
+    if value is None:
+        return []
+    text = str(value).strip()
+    if text.startswith("[") and text.endswith("]"):
+        text = text[1:-1]
+    return [item.strip().strip('"').strip("'") for item in text.split(",") if item.strip()]
 
 
 # Quick-start development settings - unsuitable for production
@@ -26,13 +51,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise ValueError("The SECRET_KEY environment variable is not set.")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env_bool(os.getenv("DEBUG", "False"))
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+ALLOWED_HOSTS = env_list(os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost"))
 DOMAIN = os.getenv("DOMAIN", "127.0.0.1:8000")
 PROTOCOL = os.getenv("PROTOCOL", "http")
+
+CSRF_TRUSTED_ORIGINS = env_list(os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost:8000"))
+
+SECURE_SSL_REDIRECT = env_bool(os.getenv("SECURE_SSL_REDIRECT", "False"))
+SESSION_COOKIE_SECURE = env_bool(os.getenv("SESSION_COOKIE_SECURE", "False"))
+CSRF_COOKIE_SECURE = env_bool(os.getenv("CSRF_COOKIE_SECURE", "False"))
+SECURE_HSTS_SECONDS = int(os.getenv("SECURE_HSTS_SECONDS", "0"))
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env_bool(os.getenv("SECURE_HSTS_INCLUDE_SUBDOMAINS", "False"))
+SECURE_HSTS_PRELOAD = env_bool(os.getenv("SECURE_HSTS_PRELOAD", "False"))
+SECURE_BROWSER_XSS_FILTER = env_bool(os.getenv("SECURE_BROWSER_XSS_FILTER", "True"))
+SECURE_CONTENT_TYPE_NOSNIFF = env_bool(os.getenv("SECURE_CONTENT_TYPE_NOSNIFF", "True"))
+X_FRAME_OPTIONS = os.getenv("X_FRAME_OPTIONS", "DENY")
 
 # Application definition
 
@@ -43,6 +82,7 @@ INSTALLED_APPS = [
     'crm',
     'dashboard',
     'sales',
+    'storages',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -52,8 +92,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "core.middleware.ExceptionLoggingMiddleware",
     "core.middleware.DefaultCurrencyMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -91,14 +133,43 @@ WSGI_APPLICATION = "RevSource_system.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
+if os.getenv('DATABASE_URL'):
+    # Use DATABASE_URL when available (Railway environment)
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.getenv('DATABASE_URL'),
+            conn_max_age=600,
+            ssl_require=True
+        )
     }
-}
+else:
+    # Fallback to individual PG* environment variables
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('PGDATABASE', 'postgres'),
+            'USER': os.getenv('PGUSER', 'postgres'),
+            'PASSWORD': os.getenv('PGPASSWORD', ''),
+            'HOST': os.getenv('PGHOST', 'localhost'),
+            'PORT': os.getenv('PGPORT', '5432'),
+        }
+    }
 
+GS_BUCKET_NAME = os.getenv("GS_BUCKET_NAME")
 
+DEFAULT_FILE_STORAGE = ("storages.backends.gcloud.GoogleCloudStorage")
+GS_CREDENTIALS = service_account.Credentials.from_service_account_info(json.loads(config("GCS_CREDENTIALS_JSON"))
+)
+
+GS_DEFAULT_ACL = "publicRead"
+MEDIA_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/"
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -140,4 +211,63 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-STATIC_URL = "static/"
+
+if not DEBUG:
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+try:
+    os.makedirs(STATIC_ROOT, exist_ok=True)
+except OSError as e:
+    print(f"Error creating static root directory: {e}")
+try:
+    os.makedirs(MEDIA_ROOT, exist_ok=True)
+    if os.path.exists(MEDIA_ROOT):
+        print(f"Media root directory created at: {MEDIA_ROOT}")
+        os.chmod(MEDIA_ROOT, 0o755)
+except (PermissionError, OSError) as e:
+    print(f"Warning: Could not create media : {e}")
+
+# Logging configuration for the whole application
+LOG_LEVEL = os.getenv("DJANGO_LOG_LEVEL", "INFO")
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(name)s %(message)s",
+        },
+        "simple": {
+            "format": "%(levelname)s %(message)s",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": BASE_DIR / "django.log",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console", "file"],
+            "level": LOG_LEVEL,
+            "propagate": True,
+        },
+        "django.request": {
+            "handlers": ["console", "file"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "": {
+            "handlers": ["console", "file"],
+            "level": LOG_LEVEL,
+        },
+    },
+}

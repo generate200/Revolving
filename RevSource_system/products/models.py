@@ -17,6 +17,10 @@ class Category(models.Model):
 
     class Meta:
         verbose_name_plural = "Categories"
+        indexes = [
+            models.Index(fields=['is_active'], name='category_active_idx'),
+            models.Index(fields=['parent'], name='category_parent_idx'),
+        ]
 
 
 class Supplier(models.Model):
@@ -32,6 +36,12 @@ class Supplier(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['is_active'], name='supplier_active_idx'),
+            models.Index(fields=['email'], name='supplier_email_idx'),
+        ]
 
 
 class Product(models.Model):
@@ -67,6 +77,15 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.sku})"
+    
+    class Meta:
+        indexes = [
+            models.Index(fields=['sku'], name='product_sku_idx'),
+            models.Index(fields=['is_active'], name='product_active_idx'),
+            models.Index(fields=['category'], name='product_category_idx'),
+            models.Index(fields=['supplier'], name='product_supplier_idx'),
+            models.Index(fields=['stock_quantity'], name='product_stock_idx'),
+        ]
     
     @property
     def profit_margin(self):

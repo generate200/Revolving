@@ -18,6 +18,9 @@ class Sale(models.Model):
 
     class Meta:
         ordering = ['-date']
+        indexes = [
+            models.Index(fields=['date'], name='sale_date_idx'),
+        ]
 
 
 class SalesInvoice(models.Model):
@@ -57,6 +60,13 @@ class SalesInvoice(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['invoice_number'], name='salesinvoice_number_idx'),
+            models.Index(fields=['customer'], name='salesinvoice_customer_idx'),
+            models.Index(fields=['status'], name='salesinvoice_status_idx'),
+            models.Index(fields=['created_at'], name='salesinvoice_created_at_idx'),
+            models.Index(fields=['total_amount'], name='salesinvoice_total_idx'),
+        ]
 
     def calculate_totals(self):
         """Recalculate totals from line items"""
@@ -87,6 +97,10 @@ class SalesLine(models.Model):
 
     class Meta:
         ordering = ['id']
+        indexes = [
+            models.Index(fields=['product'], name='salesline_product_idx'),
+            models.Index(fields=['total_price'], name='salesline_total_price_idx'),
+        ]
 
     def save(self, *args, **kwargs):
         """Auto-calculate total price"""
@@ -117,6 +131,10 @@ class Payment(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['method'], name='payment_method_idx'),
+            models.Index(fields=['amount'], name='payment_amount_idx'),
+        ]
 
 
 class StockMovement(models.Model):
@@ -143,3 +161,8 @@ class StockMovement(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['movement_type'], name='stock_movement_type_idx'),
+            models.Index(fields=['created_at'], name='stock_movement_date_idx'),
+            models.Index(fields=['product'], name='stock_movement_product_idx'),
+        ]

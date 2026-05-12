@@ -1,0 +1,34 @@
+INFO 2026-05-12 18:39:47,912 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-12 18:39:47,912 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-12 18:39:56,048 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-12 18:39:56,048 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-12 18:39:58,825 django.server "GET /finance/ HTTP/1.1" 200 17838
+INFO 2026-05-12 18:39:58,825 django.server "GET /finance/ HTTP/1.1" 200 17838
+INFO 2026-05-12 18:53:19,241 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-12 18:53:19,241 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-12 18:53:25,675 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-12 18:53:25,675 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-12 18:53:25,850 django.server "GET /static/products/js/main.js HTTP/1.1" 304 0
+INFO 2026-05-12 18:53:25,850 django.server "GET /static/products/js/main.js HTTP/1.1" 304 0
+INFO 2026-05-12 18:53:27,853 django.server "GET /products/ HTTP/1.1" 200 18965
+INFO 2026-05-12 18:53:27,853 django.server "GET /products/ HTTP/1.1" 200 18965
+INFO 2026-05-12 18:53:27,968 django.server "GET /media/products/images/kaftan-7ddd5c7b.jpg HTTP/1.1" 200 244560
+INFO 2026-05-12 18:53:27,968 django.server "GET /media/products/images/kaftan-7ddd5c7b.jpg HTTP/1.1" 200 244560
+INFO 2026-05-12 18:53:28,143 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-12 18:53:28,143 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-12 18:53:28,151 django.server "GET /media/products/images/testing-6a237547.jpg HTTP/1.1" 200 200238
+INFO 2026-05-12 18:53:28,151 django.server "GET /media/products/images/testing-6a237547.jpg HTTP/1.1" 200 200238
+INFO 2026-05-12 18:53:33,462 django.server "GET /products/3/ HTTP/1.1" 200 12305
+INFO 2026-05-12 18:53:33,462 django.server "GET /products/3/ HTTP/1.1" 200 12305
+INFO 2026-05-12 18:53:46,889 django.server "GET /products/ HTTP/1.1" 200 18965
+INFO 2026-05-12 18:53:46,889 django.server "GET /products/ HTTP/1.1" 200 18965
+INFO 2026-05-12 18:53:47,531 django.server "GET /finance/accounts/ HTTP/1.1" 200 22380
+INFO 2026-05-12 18:53:47,531 django.server "GET /finance/accounts/ HTTP/1.1" 200 22380
+INFO 2026-05-12 18:53:48,032 django.server "GET /products/inventory/ HTTP/1.1" 200 26765
+INFO 2026-05-12 18:53:48,032 django.server "GET /products/inventory/ HTTP/1.1" 200 26765
+INFO 2026-05-12 18:53:48,557 django.server "GET /sales/ HTTP/1.1" 200 10331
+INFO 2026-05-12 18:53:48,557 django.server "GET /sales/ HTTP/1.1" 200 10331
+INFO 2026-05-12 18:53:49,113 django.server "GET /finance/currencies/ HTTP/1.1" 200 11455
+INFO 2026-05-12 18:53:49,113 django.server "GET /finance/currencies/ HTTP/1.1" 200 11455
+INFO 2026-05-12 19:10:36,278 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-12 19:10:36,278 django.utils.autoreload Watching for file changes with StatReloader

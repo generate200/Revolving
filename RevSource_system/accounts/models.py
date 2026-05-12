@@ -23,6 +23,12 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
+        indexes = [
+            models.Index(fields=['email'], name='user_email_idx'),
+            models.Index(fields=['role'], name='user_role_idx'),
+            models.Index(fields=['is_active'], name='user_active_idx'),
+            models.Index(fields=['is_email_verified'], name='user_email_verified_idx'),
+        ]
 
 class profile(models.Model):
     user=models.OneToOneField(User,on_delete=models.CASCADE,related_name="profile")

@@ -56,6 +56,10 @@ class Account(models.Model):
 
     class Meta:
         ordering = ['code']
+        indexes = [
+            models.Index(fields=['type', 'is_active'], name='account_type_active_idx'),
+            models.Index(fields=['is_active', 'code'], name='account_active_code_idx'),
+        ]
 
     def __str__(self):
         return f"{self.code} - {self.name}"
@@ -115,6 +119,11 @@ class JournalEntry(models.Model):
 
     class Meta:
         ordering = ['-date', '-id']
+        indexes = [
+            models.Index(fields=['date'], name='journalentry_date_idx'),
+            models.Index(fields=['created_by'], name='journalentry_created_by_idx'),
+            models.Index(fields=['posted'], name='journalentry_posted_idx'),
+        ]
 
     def __str__(self):
         return f"JE {self.id} - {self.date} ({self.currency.code})"
@@ -236,6 +245,9 @@ class JournalLine(models.Model):
 
     class Meta:
         ordering = ['id']
+        indexes = [
+            models.Index(fields=['account'], name='journalline_account_idx'),
+        ]
 
     def __str__(self):
         currency_symbol = self.journal.currency.symbol if hasattr(self, 'journal') and self.journal else '$'

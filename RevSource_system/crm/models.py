@@ -41,3 +41,11 @@ class Customer(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['email'], name='customer_email_idx'),
+            models.Index(fields=['customer_type'], name='customer_type_idx'),
+            models.Index(fields=['is_active'], name='customer_active_idx'),
+            models.Index(fields=['current_balance'], name='customer_balance_idx'),
+        ]
