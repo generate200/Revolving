@@ -9,6 +9,7 @@ django-filter==25.2
 django-storages==1.14.6
 djangorestframework==3.17.1
 et_xmlfile==2.0.0
+django-cors-headers
 google-api-core==2.30.3
 google-auth==2.52.0
 google-cloud-core==2.6.0
