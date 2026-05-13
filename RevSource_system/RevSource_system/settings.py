@@ -15,6 +15,7 @@ import os
 from dotenv import load_dotenv
 import dj_database_url
 import json
+from google.auth import default
 from google.oauth2 import service_account
 from decouple import config
 import dj_database_url
@@ -165,8 +166,7 @@ else:
 GS_BUCKET_NAME = os.getenv("GS_BUCKET_NAME")
 
 DEFAULT_FILE_STORAGE = ("storages.backends.gcloud.GoogleCloudStorage")
-GS_CREDENTIALS = service_account.Credentials.from_service_account_info(json.loads(config("GCS_CREDENTIALS_JSON"))
-)
+GS_CREDENTIALS, project_id = default()
 
 GS_DEFAULT_ACL = "publicRead"
 MEDIA_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/"
@@ -209,8 +209,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = BASE_DIR / 'media'
 
 if not DEBUG:
     MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
@@ -222,13 +222,13 @@ try:
     os.makedirs(STATIC_ROOT, exist_ok=True)
 except OSError as e:
     print(f"Error creating static root directory: {e}")
-try:
-    os.makedirs(MEDIA_ROOT, exist_ok=True)
-    if os.path.exists(MEDIA_ROOT):
-        print(f"Media root directory created at: {MEDIA_ROOT}")
-        os.chmod(MEDIA_ROOT, 0o755)
-except (PermissionError, OSError) as e:
-    print(f"Warning: Could not create media : {e}")
+# try:
+#     os.makedirs(MEDIA_ROOT, exist_ok=True)
+#     if os.path.exists(MEDIA_ROOT):
+#         print(f"Media root directory created at: {MEDIA_ROOT}")
+#         os.chmod(MEDIA_ROOT, 0o755)
+# except (PermissionError, OSError) as e:
+#     print(f"Warning: Could not create media : {e}")
 
 # Logging configuration for the whole application
 LOG_LEVEL = os.getenv("DJANGO_LOG_LEVEL", "INFO")
