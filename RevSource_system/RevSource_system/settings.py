@@ -142,7 +142,6 @@ WSGI_APPLICATION = "RevSource_system.wsgi.application"
 # }
 
 if os.getenv('DATABASE_URL'):
-    # Use DATABASE_URL when available (Railway environment)
     DATABASES = {
         'default': dj_database_url.config(
             default=os.getenv('DATABASE_URL'),
