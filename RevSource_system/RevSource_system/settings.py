@@ -51,9 +51,10 @@ def env_list(value):
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
-if not SECRET_KEY:
-    raise ValueError("The SECRET_KEY environment variable is not set.")
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    "django-insecure-temporary-build-key"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env_bool(os.getenv("DEBUG", "False"))
