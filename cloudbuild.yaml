@@ -1,6 +1,8 @@
 options:
   logging: CLOUD_LOGGING_ONLY
+
 steps:
+  # 1. Build image
   - name: 'gcr.io/cloud-builders/docker'
     args:
       [
@@ -12,5 +14,22 @@ steps:
         'RevSource_system'
       ]
 
+  # 2. Push image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/revsource']
+
+  # 3. Deploy to Cloud Run ✅ (THIS IS WHAT YOU MISSED)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      [
+        'run', 'deploy', 'reverp',
+        '--image', 'gcr.io/$PROJECT_ID/revsource',
+        '--region', 'me-central1',
+        '--platform', 'managed',
+        '--allow-unauthenticated'
+      ]
+
 images:
   - 'gcr.io/$PROJECT_ID/revsource'
+``
