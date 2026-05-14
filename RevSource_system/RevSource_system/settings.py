@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 import dj_database_url
 import json
 from google.auth import default
+from google.auth import default
 from google.oauth2 import service_account
 from decouple import config
 import dj_database_url
@@ -45,11 +46,8 @@ def env_list(value):
     if text.startswith("[") and text.endswith("]"):
         text = text[1:-1]
     return [item.strip().strip('"').strip("'") for item in text.split(",") if item.strip()]
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv(
     "SECRET_KEY",
@@ -136,14 +134,15 @@ WSGI_APPLICATION = "RevSource_system.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
-if os.getenv('DATABASE_URL'):
+elif os.getenv("DATABASE_URL"):
     DATABASES = {
         'default': dj_database_url.config(
             default=os.getenv('DATABASE_URL'),
@@ -151,6 +150,7 @@ if os.getenv('DATABASE_URL'):
             ssl_require=True
         )
     }
+
 else:
     # Fallback to individual PG* environment variables
     DATABASES = {
@@ -166,11 +166,18 @@ else:
 
 GS_BUCKET_NAME = os.getenv("GS_BUCKET_NAME")
 
-DEFAULT_FILE_STORAGE = ("storages.backends.gcloud.GoogleCloudStorage")
-GS_CREDENTIALS, project_id = default()
+if not DEBUG:
+    DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+    GS_CREDENTIALS, project_id = default()
 
-GS_DEFAULT_ACL = "publicRead"
-MEDIA_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/"
+    GS_DEFAULT_ACL = "publicRead"
+    MEDIA_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/"
+
+else:
+    # ✅ LOCAL DEVELOPMENT (VERY IMPORTANT)
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -208,11 +215,6 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
-# MEDIA_URL = '/media/'
-# MEDIA_ROOT = BASE_DIR / 'media'
-
 if not DEBUG:
     MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -223,13 +225,6 @@ try:
     os.makedirs(STATIC_ROOT, exist_ok=True)
 except OSError as e:
     print(f"Error creating static root directory: {e}")
-# try:
-#     os.makedirs(MEDIA_ROOT, exist_ok=True)
-#     if os.path.exists(MEDIA_ROOT):
-#         print(f"Media root directory created at: {MEDIA_ROOT}")
-#         os.chmod(MEDIA_ROOT, 0o755)
-# except (PermissionError, OSError) as e:
-#     print(f"Warning: Could not create media : {e}")
 
 # Logging configuration for the whole application
 LOG_LEVEL = os.getenv("DJANGO_LOG_LEVEL", "INFO")
