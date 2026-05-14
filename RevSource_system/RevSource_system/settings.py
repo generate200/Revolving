@@ -16,7 +16,6 @@ from dotenv import load_dotenv
 import dj_database_url
 import json
 from google.auth import default
-from google.auth import default
 from google.oauth2 import service_account
 from decouple import config
 import dj_database_url
@@ -169,7 +168,6 @@ GS_BUCKET_NAME = os.getenv("GS_BUCKET_NAME")
 USE_GCS = not DEBUG and GS_BUCKET_NAME
 
 if USE_GCS:
-    from google.auth import default
     GS_CREDENTIALS, project_id = default()
 
     GS_DEFAULT_ACL = "publicRead"
@@ -239,7 +237,6 @@ USE_TZ = True
 
 if not DEBUG:
     MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
