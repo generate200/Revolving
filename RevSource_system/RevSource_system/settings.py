@@ -166,17 +166,39 @@ else:
 
 GS_BUCKET_NAME = os.getenv("GS_BUCKET_NAME")
 
-if not DEBUG:
-    DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+USE_GCS = not DEBUG and GS_BUCKET_NAME
+
+if USE_GCS:
+    from google.auth import default
     GS_CREDENTIALS, project_id = default()
 
     GS_DEFAULT_ACL = "publicRead"
+    GS_FILE_OVERWRITE = False
+    GS_QUERYSTRING_AUTH = False
+
     MEDIA_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/"
 
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
+
 else:
-    # ✅ LOCAL DEVELOPMENT (VERY IMPORTANT)
     MEDIA_URL = "/media/"
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
