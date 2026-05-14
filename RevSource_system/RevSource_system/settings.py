@@ -166,14 +166,33 @@ else:
 GS_BUCKET_NAME = os.getenv("GS_BUCKET_NAME")
 
 if not DEBUG:
-    DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
+
     GS_CREDENTIALS, project_id = default()
 
     GS_DEFAULT_ACL = "publicRead"
+
     MEDIA_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/"
 
 else:
-    # ✅ LOCAL DEVELOPMENT (VERY IMPORTANT)
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+
     MEDIA_URL = "/media/"
     MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
