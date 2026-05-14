@@ -162,7 +162,7 @@ else:
             'PORT': os.getenv('PGPORT', '5432'),
         }
     }
-
+    
 GS_BUCKET_NAME = os.getenv("GS_BUCKET_NAME")
 
 if not DEBUG:
@@ -175,8 +175,12 @@ if not DEBUG:
             "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
         },
     }
+    try:
+        GS_CREDENTIALS, project_id = default()
+    except Exception:
+        GS_CREDENTIALS = None
 
-    GS_CREDENTIALS, project_id = default()
+    
 
     GS_DEFAULT_ACL = "publicRead"
 
