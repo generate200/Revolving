@@ -56,11 +56,11 @@ SECRET_KEY = os.getenv(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env_bool(os.getenv("DEBUG", "False"))
 
-ALLOWED_HOSTS = env_list(os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost"))
+ALLOWED_HOSTS = env_list(os.getenv("ALLOWED_HOSTS","cuddly-robot-g4ggrpv7w4q7275r-8000.app.github.dev"))
 DOMAIN = os.getenv("DOMAIN", "127.0.0.1:8000")
 PROTOCOL = os.getenv("PROTOCOL", "http")
 
-CSRF_TRUSTED_ORIGINS = env_list(os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost:8000"))
+CSRF_TRUSTED_ORIGINS = env_list(os.getenv("CSRF_TRUSTED_ORIGINS", "cuddly-robot-g4ggrpv7w4q7275r-8000.app.github.dev"))
 
 SECURE_SSL_REDIRECT = env_bool(os.getenv("SECURE_SSL_REDIRECT", "False"))
 SESSION_COOKIE_SECURE = env_bool(os.getenv("SESSION_COOKIE_SECURE", "False"))

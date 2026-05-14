@@ -13,6 +13,8 @@ from django.urls import reverse
 from django.core.mail import send_mail
 from .tokens import email_verification_token
 from django.conf import settings
+from django.contrib.sessions.models import Session
+from django.utils import timezone
 
 
 @require_http_methods(["GET", "POST"])
@@ -32,15 +34,17 @@ def login_view(request):
                 return render(request, 'accounts/login.html')
 
             login(request, user)
+            request.session.cycle_key()
+            logout_other_sessions(user)
             messages.success(request, 'Logged in successfully')
             return redirect('dashboard:report')
 
         else:
             # ✅ HANDLE INVALID LOGIN
             messages.error(request, 'Invalid email or password')
-
     # ✅ ALWAYS RETURN SOMETHING
     return render(request, 'accounts/login.html')
+
 
 
 @require_http_methods(["GET", "POST"])
@@ -50,6 +54,13 @@ def logout_view(request):
     messages.success(request, 'You have been logged out')
     return redirect('accounts:login')
 
+
+def logout_other_sessions(user):
+    sessions = Session.objects.filter(expire_date__gte=timezone.now())
+    for session in sessions:
+        data = session.get_decoded()
+        if data.get('_auth_user_id') == str(user.id):
+            session.delete()
 
 def register(request):
     if request.method == "POST":

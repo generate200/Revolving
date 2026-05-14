@@ -156,3 +156,47 @@ WARNING 2026-05-14 07:29:59,317 django.server "HEAD /.ssh/ HTTP/1.1" 404 0
 WARNING 2026-05-14 07:29:59,317 django.server "HEAD /.ssh/ HTTP/1.1" 404 0
 WARNING 2026-05-14 07:29:59,410 django.server "HEAD /.midway/ HTTP/1.1" 404 0
 WARNING 2026-05-14 07:29:59,410 django.server "HEAD /.midway/ HTTP/1.1" 404 0
+INFO 2026-05-14 10:40:22,096 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:40:22,096 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:41:45,580 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:41:45,580 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:41:59,501 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:41:59,501 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:42:07,735 django.server "GET / HTTP/1.1" 301 0
+INFO 2026-05-14 10:42:07,735 django.server "GET / HTTP/1.1" 301 0
+INFO 2026-05-14 10:42:15,739 django.server "GET / HTTP/1.1" 301 0
+INFO 2026-05-14 10:42:15,739 django.server "GET / HTTP/1.1" 301 0
+INFO 2026-05-14 10:43:11,681 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:43:11,681 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:44:37,080 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:44:37,080 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:45:16,485 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:45:16,485 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:47:04,127 django.utils.autoreload /workspaces/Revolving/RevSource_system/RevSource_system/settings.py changed, reloading.
+INFO 2026-05-14 10:47:04,127 django.utils.autoreload /workspaces/Revolving/RevSource_system/RevSource_system/settings.py changed, reloading.
+INFO 2026-05-14 10:47:04,744 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:47:04,744 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:47:08,986 django.utils.autoreload /workspaces/Revolving/RevSource_system/RevSource_system/settings.py changed, reloading.
+INFO 2026-05-14 10:47:08,986 django.utils.autoreload /workspaces/Revolving/RevSource_system/RevSource_system/settings.py changed, reloading.
+INFO 2026-05-14 10:47:09,532 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:47:09,532 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:49:02,578 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:49:02,578 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:49:39,535 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:49:39,535 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:50:51,273 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:50:51,273 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:51:31,726 django.utils.autoreload /workspaces/Revolving/RevSource_system/RevSource_system/settings.py changed, reloading.
+INFO 2026-05-14 10:51:31,726 django.utils.autoreload /workspaces/Revolving/RevSource_system/RevSource_system/settings.py changed, reloading.
+INFO 2026-05-14 10:51:47,939 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:51:47,939 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:52:52,993 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:52:52,993 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:53:28,699 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:53:28,699 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:54:16,276 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:54:16,276 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:54:58,701 django.utils.autoreload /workspaces/Revolving/RevSource_system/RevSource_system/settings.py changed, reloading.
+INFO 2026-05-14 10:54:58,701 django.utils.autoreload /workspaces/Revolving/RevSource_system/RevSource_system/settings.py changed, reloading.
+INFO 2026-05-14 10:55:23,049 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-14 10:55:23,049 django.utils.autoreload Watching for file changes with StatReloader
