@@ -182,7 +182,7 @@ if not DEBUG:
 
     
 
-    GS_DEFAULT_ACL = None
+    GS_DEFAULT_ACL ="publicRead"
 
     MEDIA_URL = f"https://storage.googleapis.com/{GS_BUCKET_NAME}/"
 
