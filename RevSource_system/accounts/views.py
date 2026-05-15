@@ -34,7 +34,6 @@ def login_view(request):
                 return render(request, 'accounts/login.html')
 
             login(request, user)
-            request.session.cycle_key()
             logout_other_sessions(user)
             messages.success(request, 'Logged in successfully')
             return redirect('dashboard:report')
