@@ -57,10 +57,12 @@ SECRET_KEY = os.getenv(
 DEBUG = env_bool(os.getenv("DEBUG", "False"))
 
 ALLOWED_HOSTS = env_list(os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost"))
+print("DEBUG =", DEBUG)
+print("ALLOWED_HOSTS =", ALLOWED_HOSTS)
 DOMAIN = os.getenv("DOMAIN", "127.0.0.1:8000")
 PROTOCOL = os.getenv("PROTOCOL", "http")
 
-CSRF_TRUSTED_ORIGINS = env_list(os.getenv("CSRF_TRUSTED_ORIGINS", "http://localhost:8000"))
+CSRF_TRUSTED_ORIGINS = env_list(os.getenv("CSRF_TRUSTED_ORIGINS", "https://localhost:8000"))
 
 SECURE_SSL_REDIRECT = env_bool(os.getenv("SECURE_SSL_REDIRECT", "False"))
 SESSION_COOKIE_SECURE = env_bool(os.getenv("SESSION_COOKIE_SECURE", "False"))
