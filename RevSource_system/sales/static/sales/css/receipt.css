@@ -317,32 +317,41 @@ body {
 
 /* PRINT */
 @media print {
-
+@page {
+        margin: 0;
+    }
     body {
-        background: white;
-        padding: 0;
+        margin: 0;
+        -webkit-print-color-adjust: exact;
     }
 
-    .print-btn {
-        display: none;
+    .invoice-wrapper {
+        width: 100%;
+        padding: 10px;
     }
 
     .invoice-box {
-        box-shadow: none;
-        border-radius: 0;
-    }
-
-    .top-header {
+        width: 100%;
+        max-width: 800px;
+        margin: auto;
+        page-break-after: avoid;
         page-break-inside: avoid;
     }
 
-    table {
-        page-break-inside: auto;
+    table, tr, td {
+        page-break-inside: avoid !important;
     }
 
-    tr {
-        page-break-inside: avoid;
+    .print-btn {
+        display: none; /* hide print button */
     }
+
+    /* shrink everything slightly to fit in one page */
+    body {
+        zoom: 0.85;
+        margin: 10mm;
+    }
+
 }
 
 /* MOBILE */
