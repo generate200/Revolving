@@ -108,7 +108,15 @@ class InventoryView(TemplateView):
                 'percent': percent,
             })
 
-        base_currency = Currency.objects.filter(is_base=True).first()
+        currencies = Currency.objects.filter(is_active=True)
+        base_currency = currencies.filter(is_base=True).first()
+        currency_code = self.request.GET.get('currency')
+        if currency_code:
+            self.request.session['currency'] = currency_code
+        currency_code = self.request.session.get('currency', 'USD')
+        selected_obj = currencies.filter(code=currency_code).first()
+        if not selected_obj:
+            selected_obj = base_currency
         context.update({
             'products': products,
             'stock_movements': stock_movements,
@@ -126,8 +134,10 @@ class InventoryView(TemplateView):
             'dead_stock_products': dead_stock_products,
             'stock_aging_count': stock_aging_count,
             'stock_aging_products': stock_aging_products,
-            'currency_symbol': base_currency.symbol if base_currency else '$',
-            'base_currency_code': base_currency.code if base_currency else 'USD',
+            'currency_symbol': selected_obj.symbol if selected_obj else '$',
+            'base_currency_code': selected_obj.code if selected_obj else 'USD',
+            'selected_currency': selected_obj,
+            'currencies': currencies,
         })
         return context
 
