@@ -4,7 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice</title>
+<title>
+    Receipt - 
+    {% if invoice.customer %}
+        {{ invoice.customer.name }}
+    {% else %}
+        Guest
+    {% endif %}
+    - {{ invoice.invoice_number }}
+</title>
 
     <link rel="stylesheet" href="{% static 'sales/css/receipt.css' %}">
     <link rel="stylesheet"
