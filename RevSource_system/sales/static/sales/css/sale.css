@@ -555,6 +555,59 @@
     color: white;
 }
 
+/* ✅ MOBILE RESPONSIVENESS */
+@media (max-width: 768px) {
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 70px;   /* 👈 small sidebar */
+        z-index: 1000;
+        padding: 10px 5px;
+        overflow-y: auto;
+    }
+
+    /* Hide text labels */
+    .sidebar .brand-mark div,
+    .sidebar-nav a span,
+    .sidebar-sales-card .card-title,
+    .sidebar-sales-card .card-desc {
+        display: none;
+    }
+
+    /* Center icons */
+    .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .sidebar-nav a {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Content spacing so it doesn’t hide under sidebar */
+    .page-shell {
+        margin-left: 70px;
+    }
+
+    /* Optional: hide toggle button on mobile */
+    .sidebar-toggle-btn {
+        display: none;
+    }
+
+    /* Optional: hide overlay */
+    .overlay {
+        display: none;
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
     .pos-container {
