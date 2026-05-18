@@ -13,6 +13,7 @@ from finance.models import Currency
 from finance.utils.currency import CurrencyService
 from sales.models import StockMovement
 from core.exporters import DataExporter
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class IndexView(TemplateView):
@@ -230,25 +231,29 @@ class ProductDetailView(TemplateView):
         )
 
         return context
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin,CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'products/product_form.html'
     success_url = reverse_lazy('products:list')
+    login_url = 'accounts:login'
 
     def form_invalid(self, form):
+        messages.success(self.request, "✅ Product created successfully")
         print(form.errors)  
         return super().form_invalid(form)
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin,UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'products/product_form.html'
     success_url = reverse_lazy('products:list')
+    login_url = 'accounts:login'
+    redirect_field_name = 'next'
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin,DeleteView):
     model = Product
     template_name = 'products/product_confirm_delete.html'
     success_url = reverse_lazy('products:list')
