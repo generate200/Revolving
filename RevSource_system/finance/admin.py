@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Account, JournalEntry, JournalLine, Currency
+from .models import Account, JournalEntry, JournalLine, Currency, SubAccountCategory
 
 
 @admin.register(Currency)
@@ -17,16 +17,26 @@ class CurrencyAdmin(admin.ModelAdmin):
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
-    list_display = ('code', 'name', 'type', 'balance', 'is_active')
+    list_display = ('code', 'name', 'type', 'subcategory', 'balance', 'is_active')
     list_filter = ('type', 'is_active')
     search_fields = ('code', 'name')
     readonly_fields = ('balance', 'created_at', 'updated_at')
     fieldsets = (
-        ('General', {'fields': ('code', 'name', 'type')}),
+        ('General', {'fields': ('code', 'name', 'type', 'subcategory')}),
         ('Description', {'fields': ('description',)}),
         ('Balance', {'fields': ('balance',)}),
         ('Status', {'fields': ('is_active',)}),
         ('Metadata', {'fields': ('created_at', 'updated_at'), 'classes': ('collapse',)}),
+    )
+
+
+@admin.register(SubAccountCategory)
+class SubAccountCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'account_type', 'financial_statement')
+    list_filter = ('account_type',)
+    search_fields = ('name',)
+    fieldsets = (
+        ('Category Info', {'fields': ('name', 'account_type', 'description')}),
     )
 
 

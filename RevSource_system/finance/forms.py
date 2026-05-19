@@ -2,7 +2,7 @@ from django import forms
 from django.forms import inlineformset_factory
 from decimal import Decimal
 from django.core.exceptions import ValidationError
-from .models import JournalEntry, JournalLine, Account, Currency
+from .models import JournalEntry, JournalLine, Account, Currency, SubAccountCategory
 
 
 class JournalEntryForm(forms.ModelForm):
@@ -104,7 +104,7 @@ JournalLineFormSet = inlineformset_factory(
 class AccountForm(forms.ModelForm):
     class Meta:
         model = Account
-        fields = ['code', 'name', 'type', 'description', 'is_active']
+        fields = ['code', 'name', 'type', 'subcategory', 'description', 'is_active']
         widgets = {
             'code': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -118,6 +118,9 @@ class AccountForm(forms.ModelForm):
             'type': forms.Select(attrs={
                 'class': 'form-select'
             }),
+            'subcategory': forms.Select(attrs={
+                'class': 'form-select'
+            }),
             'description': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 3,
@@ -127,6 +130,93 @@ class AccountForm(forms.ModelForm):
                 'class': 'form-check-input'
             }),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        code = cleaned_data.get('code')
+        name = cleaned_data.get('name')
+
+        # Check for duplicate account code
+        if code:
+            code = code.strip().upper()
+            cleaned_data['code'] = code
+            
+            existing_code = Account.objects.filter(code__iexact=code).first()
+            if existing_code:
+                raise ValidationError(
+                    f"Account code '{code}' already exists. "
+                    f"Account: {existing_code.name} ({existing_code.get_type_display()}). "
+                    f"Use a different code or edit the existing account."
+                )
+
+        # Check for similar account names (case-insensitive)
+        if name:
+            name = name.strip()
+            cleaned_data['name'] = name
+            
+            existing_name = Account.objects.filter(name__iexact=name).first()
+            if existing_name:
+                raise ValidationError(
+                    f"Account name '{name}' already exists ({existing_name.code}). "
+                    f"Choose a different name."
+                )
+
+        return cleaned_data
+
+    def clean_code(self):
+        """Clean and validate account code format."""
+        code = self.cleaned_data.get('code')
+        if code:
+            code = code.strip().upper()
+            if not code:
+                raise ValidationError("Account code cannot be empty")
+            if len(code) < 2:
+                raise ValidationError("Account code must be at least 2 characters")
+        return code
+
+    def clean_name(self):
+        """Clean account name."""
+        name = self.cleaned_data.get('name')
+        if name:
+            name = name.strip()
+            if not name:
+                raise ValidationError("Account name cannot be empty")
+        return name
+
+
+class SubAccountCategoryForm(forms.ModelForm):
+    class Meta:
+        model = SubAccountCategory
+        fields = ['name', 'account_type', 'description']
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Current Assets'
+            }),
+            'account_type': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Optional description for this subcategory'
+            }),
+        }
+
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if name:
+            name = name.strip()
+            if SubAccountCategory.objects.filter(name__iexact=name).exists():
+                raise ValidationError("A sub-account category with this name already exists.")
+        return name
+
+    def clean(self):
+        cleaned_data = super().clean()
+        name = cleaned_data.get('name')
+        if name:
+            cleaned_data['name'] = name.strip()
+        return cleaned_data
 
     def clean(self):
         """Validate account code and name uniqueness."""

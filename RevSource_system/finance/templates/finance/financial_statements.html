@@ -1,0 +1,122 @@
+{% extends 'products/base.html' %}
+
+{% block hero %}
+<section class="hero-panel hero-panel--compact">
+    <div class="hero-copy">
+        <p class="eyebrow">Financial reports</p>
+        <h1>Balance sheet, income statement, and trial balance</h1>
+        <p class="hero-text">Automatic reporting using posted transactions and your active currency.</p>
+    </div>
+</section>
+{% endblock %}
+
+{% block content %}
+<section class="section-panel card-card">
+    <div class="section-header">
+        <div>
+            <p class="section-label">Financial reporting</p>
+            <h2>Statement generation</h2>
+        </div>
+        <a href="{% url 'finance:overview' %}" class="btn btn-outline">Back to dashboard</a>
+    </div>
+
+    <form method="get" class="form-grid" style="gap: 1rem 1.5rem; margin-bottom: 1.5rem;">
+        <div class="form-group">
+            <label for="id_start_date">Start date</label>
+            <input type="date" id="id_start_date" name="start_date" value="{{ start_date }}" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="id_end_date">End date</label>
+            <input type="date" id="id_end_date" name="end_date" value="{{ end_date }}" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="id_currency">Currency</label>
+            <select id="id_currency" name="currency" class="form-select">
+                {% for currency in currencies %}
+                <option value="{{ currency.code }}" {% if selected_currency and selected_currency.code == currency.code %}selected{% endif %}>
+                    {{ currency.code }} - {{ currency.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group form-group--full" style="align-self: end;">
+            <button type="submit" class="btn btn-accent">Filter range</button>
+            <a href="?export=csv{% if start_date %}&start_date={{ start_date }}{% endif %}{% if end_date %}&end_date={{ end_date }}{% endif %}{% if selected_currency %}&currency={{ selected_currency.code }}{% endif %}" class="btn btn-outline">Download CSV</a>
+        </div>
+    </form>
+
+    <div class="grid-columns">
+        <div class="card-card" style="padding: 1.5rem;">
+            <h3>Balance Sheet</h3>
+            <p>Currency: {{ currency_symbol }}</p>
+            <dl>
+                <dt>Assets</dt>
+                <dd>{{ balance_sheet.assets|floatformat:2 }}</dd>
+                <dt>Liabilities</dt>
+                <dd>{{ balance_sheet.liabilities|floatformat:2 }}</dd>
+                <dt>Equity</dt>
+                <dd>{{ balance_sheet.equity|floatformat:2 }}</dd>
+                <dt>Net income</dt>
+                <dd>{{ balance_sheet.net_income|floatformat:2 }}</dd>
+                <dt>Total equity (including net income)</dt>
+                <dd>{{ balance_sheet.total_equity_including_net_income|floatformat:2 }}</dd>
+                <dt>Balanced</dt>
+                <dd>{{ balance_sheet.balanced|yesno:"Yes,No" }}</dd>
+            </dl>
+        </div>
+        <div class="card-card" style="padding: 1.5rem;">
+            <h3>Income Statement</h3>
+            <p>Currency: {{ currency_symbol }}</p>
+            <dl>
+                <dt>Revenue</dt>
+                <dd>{{ income_statement.revenue|floatformat:2 }}</dd>
+                <dt>Expense</dt>
+                <dd>{{ income_statement.expense|floatformat:2 }}</dd>
+                <dt>Net income</dt>
+                <dd>{{ income_statement.net_income|floatformat:2 }}</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="section-panel" style="margin-top: 1.5rem; padding: 1.5rem;">
+        <div class="section-header">
+            <div>
+                <p class="section-label">Trial Balance</p>
+                <h2>Account balances</h2>
+            </div>
+        </div>
+        <table class="table table-striped" style="width:100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Subcategory</th>
+                    <th>Debit</th>
+                    <th>Credit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for account in trial_balance.accounts %}
+                <tr>
+                    <td>{{ account.code }}</td>
+                    <td>{{ account.name }}</td>
+                    <td>{{ account.type }}</td>
+                    <td>{{ account.subcategory }}</td>
+                    <td>{{ account.debit|floatformat:2 }}</td>
+                    <td>{{ account.credit|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th colspan="4">Totals</th>
+                    <th>{{ trial_balance.total_debit|floatformat:2 }}</th>
+                    <th>{{ trial_balance.total_credit|floatformat:2 }}</th>
+                </tr>
+            </tfoot>
+        </table>
+        <p><strong>Balanced:</strong> {{ trial_balance.balanced|yesno:"Yes,No" }}</p>
+    </div>
+</section>
+{% endblock %}

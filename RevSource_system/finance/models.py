@@ -4,6 +4,20 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 
+DEBIT_NATURAL_TYPES = ['asset', 'expense']
+CREDIT_NATURAL_TYPES = ['liability', 'equity', 'revenue']
+
+
+def normalize_natural_balance(account_type, amount):
+    """Normalize a balance to its natural accounting direction.
+
+    Assets and expenses are naturally debit balances; liabilities, equity and revenue are naturally credit.
+    """
+    if account_type in CREDIT_NATURAL_TYPES:
+        return -amount
+    return amount
+
+
 class Currency(models.Model):
     """Currency definitions for multi-currency support."""
     
@@ -44,6 +58,10 @@ class Account(models.Model):
     code = models.CharField(max_length=20, unique=True, help_text="Account code (e.g., E1000, L2000,X003)")
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=20, choices=ACCOUNT_TYPES)
+    # Optional sub-category to group individual accounts (e.g., Current Assets -> Bank Accounts)
+    subcategory = models.ForeignKey(
+        'SubAccountCategory', on_delete=models.PROTECT, null=True, blank=True, related_name='accounts'
+    )
     description = models.TextField(blank=True)
     balance = models.DecimalField(max_digits=14, decimal_places=2, default=Decimal('0.00'), editable=False,
                                  help_text="Balance in the account's currency")
@@ -95,6 +113,43 @@ class Account(models.Model):
             return self.balance
         
         return self.get_balance_in_currency(base_currency)
+
+    @property
+    def financial_statement(self):
+        """Return the financial statement category for this account."""
+        if self.subcategory:
+            return self.subcategory.financial_statement
+        if self.type in ['asset', 'liability', 'equity']:
+            return 'balance_sheet'
+        return 'income_statement'
+
+    def clean(self):
+        super().clean()
+
+        # Ensure account type matches subcategory's account_type when a subcategory is set
+        if self.subcategory and self.type != self.subcategory.account_type:
+            raise ValidationError(
+                f"Account type '{self.type}' does not match its subcategory type '{self.subcategory.account_type}'."
+            )
+
+        prefix_map = {
+            'asset': 'A',
+            'liability': 'L',
+            'equity': 'E',
+            'revenue': 'R',
+            'expense': 'X',
+        }
+
+        expected_prefix = prefix_map.get(self.type)
+
+        if (
+            self.code and
+            expected_prefix and
+            not self.code.upper().startswith(expected_prefix)
+        ):
+            raise ValidationError(
+                f"{self.type.title()} accounts must start with '{expected_prefix}'"
+            )
 
 
 class JournalEntry(models.Model):
@@ -231,6 +286,144 @@ class JournalEntry(models.Model):
             credit=credit,
             comment=comment
         )
+
+
+class SubAccountCategory(models.Model):
+    """An intermediate grouping between account type and individual accounts.
+
+    Example: Account Type = 'asset' -> SubAccountCategory = 'Current Assets' -> Account = 'Bank'
+    """
+
+    CATEGORY_TYPES = [
+        ('asset', 'Asset'),
+        ('liability', 'Liability'),
+        ('equity', 'Equity'),
+        ('revenue', 'Revenue'),
+        ('expense', 'Expense'),
+    ]
+
+    STATEMENT_TYPES = [
+        ('balance_sheet', 'Balance Sheet'),
+        ('income_statement', 'Income Statement'),
+    ]
+
+    name = models.CharField(max_length=255)
+    account_type = models.CharField(max_length=20, choices=CATEGORY_TYPES)
+    description = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return f"{self.name} ({self.account_type})"
+
+    @property
+    def financial_statement(self):
+        if self.account_type in ['asset', 'liability', 'equity']:
+            return 'balance_sheet'
+        return 'income_statement'
+
+    def clean(self):
+        super().clean()
+        if self.account_type not in [choice[0] for choice in self.CATEGORY_TYPES]:
+            raise ValidationError("Invalid account type for subcategory.")
+
+
+def generate_trial_balance(target_currency=None):
+    """Return a trial balance mapping of accounts and their balances in the target currency.
+
+    Returns dict: { 'accounts': [{ 'code','name','type','debit','credit' }], 'total_debit', 'total_credit' }
+    """
+    target_currency = target_currency or Currency.objects.filter(is_base=True).first()
+    accounts = Account.objects.filter(is_active=True).order_by('code')
+
+    rows = []
+    total_debit = Decimal('0.00')
+    total_credit = Decimal('0.00')
+
+    for acc in accounts:
+        bal = acc.get_balance_in_currency(target_currency) or Decimal('0.00')
+        normalized = normalize_natural_balance(acc.type, bal)
+
+        if acc.type in DEBIT_NATURAL_TYPES:
+            debit = normalized if normalized >= 0 else Decimal('0.00')
+            credit = -normalized if normalized < 0 else Decimal('0.00')
+        else:
+            credit = normalized if normalized >= 0 else Decimal('0.00')
+            debit = -normalized if normalized < 0 else Decimal('0.00')
+
+        total_debit += debit
+        total_credit += credit
+
+        rows.append({
+            'code': acc.code,
+            'name': acc.name,
+            'type': acc.type,
+            'subcategory': acc.subcategory.name if acc.subcategory else None,
+            'debit': debit,
+            'credit': credit,
+        })
+
+    return {
+        'accounts': rows,
+        'total_debit': total_debit,
+        'total_credit': total_credit,
+        'balanced': total_debit == total_credit,
+        'currency': target_currency.code if target_currency else None,
+    }
+
+
+def generate_financial_statements(target_currency=None):
+    """Return balance sheet and income statement aggregates normalized for account nature."""
+    target_currency = target_currency or Currency.objects.filter(is_base=True).first()
+
+    balance_sheet = {
+        'assets': Decimal('0.00'),
+        'liabilities': Decimal('0.00'),
+        'equity': Decimal('0.00'),
+    }
+    income_statement = {
+        'revenue': Decimal('0.00'),
+        'expense': Decimal('0.00'),
+    }
+
+    accounts = Account.objects.filter(is_active=True)
+    for acc in accounts:
+        bal = acc.get_balance_in_currency(target_currency) or Decimal('0.00')
+        normalized = normalize_natural_balance(acc.type, bal)
+
+        if acc.type == 'asset':
+            balance_sheet['assets'] += normalized
+        elif acc.type == 'liability':
+            balance_sheet['liabilities'] += normalized
+        elif acc.type == 'equity':
+            balance_sheet['equity'] += normalized
+        elif acc.type == 'revenue':
+            income_statement['revenue'] += normalized
+        elif acc.type == 'expense':
+            income_statement['expense'] += normalized
+
+    net_income = income_statement['revenue'] - income_statement['expense']
+    total_equity = balance_sheet['equity'] + net_income
+    balance_sheet_balanced = balance_sheet['assets'] == (balance_sheet['liabilities'] + total_equity)
+
+    return {
+        'balance_sheet': {
+            'assets': balance_sheet['assets'],
+            'liabilities': balance_sheet['liabilities'],
+            'equity': balance_sheet['equity'],
+            'net_income': net_income,
+            'total_equity_including_net_income': total_equity,
+            'balanced': balance_sheet_balanced,
+            'currency': target_currency.code if target_currency else None,
+        },
+        'income_statement': {
+            'revenue': income_statement['revenue'],
+            'expense': income_statement['expense'],
+            'net_income': net_income,
+            'currency': target_currency.code if target_currency else None,
+        }
+    }
 
 
 class JournalLine(models.Model):
