@@ -264,17 +264,42 @@
             <div class="table-card" style="padding:1.5rem;">
                 <form>
                     <div class="form-group">
-                        <label>Product</label>
-                        <select class="form-select">
-                            {% for product in products|slice:":10" %}
-                                <option value="{{ product.pk }}">{{ product.name }} ({{ product.sku }})</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Current Stock</label>
-                        <input type="text" class="form-control" value="{{ products.0.available_stock|default:'0' }}" readonly>
-                    </div>
+    <label>Product</label>
+
+    <input
+        type="text"
+        id="product-search"
+        class="form-control"
+        placeholder="Search product..."
+        style="margin-bottom:10px;"
+    >
+
+    <select
+        class="form-select"
+        id="product-select"
+        size="10"
+        style="height:300px; overflow-y:auto;"
+    >
+        {% for product in products %}
+            <option
+                value="{{ product.pk }}"
+                data-stock="{{ product.available_stock }}"
+            >
+                {{ product.name }} ({{ product.sku }})
+            </option>
+        {% endfor %}
+    </select>
+</div>
+                   <div class="form-group">
+    <label>Current Stock</label>
+    <input
+        type="text"
+        id="current-stock"
+        class="form-control"
+        readonly
+        value="0"
+    >
+</div>
                     <div class="form-group">
                         <label>Adjustment Type</label>
                         <select class="form-select">
@@ -408,4 +433,42 @@
         </div>
     </section>
 </section>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const select = document.getElementById("product-select");
+    const stockField = document.getElementById("current-stock");
+    const searchInput = document.getElementById("product-search");
+
+    function updateStock() {
+        const selectedOption =
+            select.options[select.selectedIndex];
+
+        if (selectedOption) {
+            stockField.value =
+                selectedOption.dataset.stock || 0;
+        }
+    }
+
+    updateStock();
+
+    select.addEventListener("change", updateStock);
+
+    searchInput.addEventListener("keyup", function () {
+        const search =
+            this.value.toLowerCase();
+
+        for (let option of select.options) {
+            const text =
+                option.text.toLowerCase();
+
+            option.style.display =
+                text.includes(search)
+                    ? ""
+                    : "none";
+        }
+    });
+
+});
+</script>
 {% endblock %}
