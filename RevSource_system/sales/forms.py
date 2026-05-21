@@ -5,7 +5,7 @@ from products.models import Product
 
 
 class SalesLineForm(forms.ModelForm):
-    """Form for individual line items in an invoice"""
+    """Form for individual line items in an invoice - validates available inventory"""
     class Meta:
         model = SalesLine
         fields = ['product', 'variant', 'quantity', 'unit_price', 'discount', 'tax']
@@ -14,7 +14,7 @@ class SalesLineForm(forms.ModelForm):
             'variant': forms.Select(attrs={'class': 'form-control'}),
             'quantity': forms.NumberInput(attrs={
                 'class': 'form-control',
-                'step': '0.01',
+                'step': '1',
                 'min': '0.01'
             }),
             'unit_price': forms.NumberInput(attrs={
@@ -33,6 +33,22 @@ class SalesLineForm(forms.ModelForm):
                 'min': '0'
             }),
         }
+    
+    def clean(self):
+        """Validate that requested quantity doesn't exceed available stock"""
+        cleaned_data = super().clean()
+        product = cleaned_data.get('product')
+        quantity = cleaned_data.get('quantity')
+        
+        if product and quantity:
+            available = product.available_stock
+            if quantity > available:
+                raise forms.ValidationError(
+                    f'Insufficient inventory for {product.name}. '
+                    f'Available: {available}, Requested: {quantity}'
+                )
+        
+        return cleaned_data
 
 
 SalesLineFormSet = modelformset_factory(

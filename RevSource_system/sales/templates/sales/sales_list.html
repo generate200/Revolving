@@ -23,7 +23,9 @@
                     <td>{{ sale.id }}</td>
                     <td>{{ sale.product.name }}</td>
                     <td>{{ sale.quantity }}</td>
-                    <td>${{ sale.total_price }}</td>
+                    <td>{% if sale.currency %}
+                      {{ sale.currency.code }}
+                       {% endif %}{{ sale.total_price }}</td>
                     <td>{{ sale.date|date:"Y-m-d H:i" }}</td>
                 </tr>
                 {% empty %}

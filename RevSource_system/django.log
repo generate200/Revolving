@@ -172,3 +172,593 @@ INFO 2026-05-19 09:53:06,792 django.server "GET /?id=b4935d63-ec9a-426e-83ca-a15
 INFO 2026-05-19 09:53:06,792 django.server "GET /?id=b4935d63-ec9a-426e-83ca-a1551fecd5f6&vscodeBrowserReqId=1779183671951 HTTP/1.1" 200 7500
 INFO 2026-05-19 09:53:34,932 django.server "GET /?id=b4935d63-ec9a-426e-83ca-a1551fecd5f6&vscodeBrowserReqId=1779183729388 HTTP/1.1" 200 7500
 INFO 2026-05-19 09:53:34,932 django.server "GET /?id=b4935d63-ec9a-426e-83ca-a1551fecd5f6&vscodeBrowserReqId=1779183729388 HTTP/1.1" 200 7500
+INFO 2026-05-21 14:00:46,550 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:00:46,550 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:01:10,234 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:01:10,234 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:01:18,907 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 14:01:18,907 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 14:01:19,561 django.server "GET /static/dashboard/css/dashboard.css HTTP/1.1" 304 0
+INFO 2026-05-21 14:01:19,561 django.server "GET /static/dashboard/css/dashboard.css HTTP/1.1" 304 0
+INFO 2026-05-21 14:01:19,564 django.server "GET /static/products/css/product.css HTTP/1.1" 304 0
+INFO 2026-05-21 14:01:19,564 django.server "GET /static/products/css/product.css HTTP/1.1" 304 0
+INFO 2026-05-21 14:01:19,576 django.server "GET /static/accounts/profile_pics/cs50duck.jpg HTTP/1.1" 304 0
+INFO 2026-05-21 14:01:19,576 django.server "GET /static/accounts/profile_pics/cs50duck.jpg HTTP/1.1" 304 0
+INFO 2026-05-21 14:01:19,594 django.server "GET /static/sales/js/sidebar.js HTTP/1.1" 304 0
+INFO 2026-05-21 14:01:19,594 django.server "GET /static/sales/js/sidebar.js HTTP/1.1" 304 0
+INFO 2026-05-21 14:01:19,616 django.server "GET /static/products/js/main.js HTTP/1.1" 200 4741
+INFO 2026-05-21 14:01:19,616 django.server "GET /static/products/js/main.js HTTP/1.1" 200 4741
+INFO 2026-05-21 14:01:19,619 django.server "GET /static/sales/css/sale.css HTTP/1.1" 200 11912
+INFO 2026-05-21 14:01:19,619 django.server "GET /static/sales/css/sale.css HTTP/1.1" 200 11912
+WARNING 2026-05-21 14:01:19,848 django.server "GET /favicon.ico HTTP/1.1" 404 3446
+WARNING 2026-05-21 14:01:19,848 django.server "GET /favicon.ico HTTP/1.1" 404 3446
+INFO 2026-05-21 14:01:33,432 django.server "GET /products/ HTTP/1.1" 200 19002
+INFO 2026-05-21 14:01:33,432 django.server "GET /products/ HTTP/1.1" 200 19002
+INFO 2026-05-21 14:01:33,561 django.server "GET /static/products/css/gallery.css HTTP/1.1" 304 0
+INFO 2026-05-21 14:01:33,561 django.server "GET /static/products/css/gallery.css HTTP/1.1" 304 0
+INFO 2026-05-21 14:01:33,574 django.server "GET /static/products/js/product_gallery.js HTTP/1.1" 304 0
+INFO 2026-05-21 14:01:33,574 django.server "GET /static/products/js/product_gallery.js HTTP/1.1" 304 0
+INFO 2026-05-21 14:01:33,719 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-21 14:01:33,719 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-21 14:01:33,723 django.server "GET /media/products/images/testing-6a237547.jpg HTTP/1.1" 200 200238
+INFO 2026-05-21 14:01:33,723 django.server "GET /media/products/images/testing-6a237547.jpg HTTP/1.1" 200 200238
+INFO 2026-05-21 14:01:33,770 django.server "GET /media/products/images/kaftan-7ddd5c7b.jpg HTTP/1.1" 200 244560
+INFO 2026-05-21 14:01:33,770 django.server "GET /media/products/images/kaftan-7ddd5c7b.jpg HTTP/1.1" 200 244560
+INFO 2026-05-21 14:01:44,226 django.server "GET /sales/ HTTP/1.1" 200 10331
+INFO 2026-05-21 14:01:44,226 django.server "GET /sales/ HTTP/1.1" 200 10331
+INFO 2026-05-21 14:01:46,355 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 14:01:46,355 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 14:01:48,850 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 14:01:48,850 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 14:01:48,978 django.server "GET /sales/invoice/34/cart/ HTTP/1.1" 200 13569
+INFO 2026-05-21 14:01:48,978 django.server "GET /sales/invoice/34/cart/ HTTP/1.1" 200 13569
+INFO 2026-05-21 14:01:49,112 django.server "GET /static/sales/js/pos_cart.js HTTP/1.1" 200 15511
+INFO 2026-05-21 14:01:49,112 django.server "GET /static/sales/js/pos_cart.js HTTP/1.1" 200 15511
+INFO 2026-05-21 14:01:52,979 django.server "GET /sales/api/products/search/?q=ka HTTP/1.1" 200 190
+INFO 2026-05-21 14:01:52,979 django.server "GET /sales/api/products/search/?q=ka HTTP/1.1" 200 190
+INFO 2026-05-21 14:01:53,571 django.server "GET /sales/api/products/search/?q=kaft HTTP/1.1" 200 190
+INFO 2026-05-21 14:01:53,571 django.server "GET /sales/api/products/search/?q=kaft HTTP/1.1" 200 190
+INFO 2026-05-21 14:01:55,837 django.server "POST /sales/api/invoice/34/add/ HTTP/1.1" 200 87
+INFO 2026-05-21 14:01:55,837 django.server "POST /sales/api/invoice/34/add/ HTTP/1.1" 200 87
+INFO 2026-05-21 14:01:56,118 django.server "GET /sales/invoice/34/cart/ HTTP/1.1" 200 14538
+INFO 2026-05-21 14:01:56,118 django.server "GET /sales/invoice/34/cart/ HTTP/1.1" 200 14538
+INFO 2026-05-21 14:02:00,883 django.server "GET /sales/invoice/34/cart/?currency=QAR HTTP/1.1" 200 14538
+INFO 2026-05-21 14:02:00,883 django.server "GET /sales/invoice/34/cart/?currency=QAR HTTP/1.1" 200 14538
+INFO 2026-05-21 14:02:13,592 django.server "GET /products/ HTTP/1.1" 200 19002
+INFO 2026-05-21 14:02:13,592 django.server "GET /products/ HTTP/1.1" 200 19002
+INFO 2026-05-21 14:02:19,243 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 14:02:19,243 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 14:02:24,713 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 14:02:24,713 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 14:02:24,788 django.server "GET /sales/invoice/35/cart/ HTTP/1.1" 200 13569
+INFO 2026-05-21 14:02:24,788 django.server "GET /sales/invoice/35/cart/ HTTP/1.1" 200 13569
+INFO 2026-05-21 14:02:29,082 django.server "GET /sales/invoice/35/cart/?currency=QAR HTTP/1.1" 200 13569
+INFO 2026-05-21 14:02:29,082 django.server "GET /sales/invoice/35/cart/?currency=QAR HTTP/1.1" 200 13569
+INFO 2026-05-21 14:02:33,289 django.server "GET /sales/api/products/search/?q=KFT-XL-BLU HTTP/1.1" 200 105
+INFO 2026-05-21 14:02:33,289 django.server "GET /sales/api/products/search/?q=KFT-XL-BLU HTTP/1.1" 200 105
+INFO 2026-05-21 14:02:34,347 django.server "POST /sales/api/invoice/35/add/ HTTP/1.1" 200 87
+INFO 2026-05-21 14:02:34,347 django.server "POST /sales/api/invoice/35/add/ HTTP/1.1" 200 87
+INFO 2026-05-21 14:02:34,472 django.server "GET /sales/invoice/35/cart/?currency=QAR HTTP/1.1" 200 14538
+INFO 2026-05-21 14:02:34,472 django.server "GET /sales/invoice/35/cart/?currency=QAR HTTP/1.1" 200 14538
+INFO 2026-05-21 14:02:37,613 django.server "POST /sales/api/invoice/35/line/7/update/ HTTP/1.1" 200 82
+INFO 2026-05-21 14:02:37,613 django.server "POST /sales/api/invoice/35/line/7/update/ HTTP/1.1" 200 82
+INFO 2026-05-21 14:02:41,768 django.server "POST /sales/api/invoice/35/line/7/update/ HTTP/1.1" 200 83
+INFO 2026-05-21 14:02:41,768 django.server "POST /sales/api/invoice/35/line/7/update/ HTTP/1.1" 200 83
+INFO 2026-05-21 14:02:58,724 django.server "POST /sales/api/invoice/35/payment/ HTTP/1.1" 200 113
+INFO 2026-05-21 14:02:58,724 django.server "POST /sales/api/invoice/35/payment/ HTTP/1.1" 200 113
+INFO 2026-05-21 14:03:00,387 django.server "GET /sales/invoice/35/ HTTP/1.1" 200 12886
+INFO 2026-05-21 14:03:00,387 django.server "GET /sales/invoice/35/ HTTP/1.1" 200 12886
+INFO 2026-05-21 14:03:04,943 django.server "GET /products/ HTTP/1.1" 200 19002
+INFO 2026-05-21 14:03:04,943 django.server "GET /products/ HTTP/1.1" 200 19002
+INFO 2026-05-21 14:03:09,322 django.server "GET /products/inventory/ HTTP/1.1" 200 27354
+INFO 2026-05-21 14:03:09,322 django.server "GET /products/inventory/ HTTP/1.1" 200 27354
+INFO 2026-05-21 14:03:20,216 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 14:03:20,216 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 14:03:22,359 django.server "GET /products/inventory/ HTTP/1.1" 200 27354
+INFO 2026-05-21 14:03:22,359 django.server "GET /products/inventory/ HTTP/1.1" 200 27354
+INFO 2026-05-21 14:03:25,077 django.server "GET /report/ HTTP/1.1" 200 24933
+INFO 2026-05-21 14:03:25,077 django.server "GET /report/ HTTP/1.1" 200 24933
+INFO 2026-05-21 14:03:30,758 django.server "GET /report/ HTTP/1.1" 200 24933
+INFO 2026-05-21 14:03:30,758 django.server "GET /report/ HTTP/1.1" 200 24933
+INFO 2026-05-21 14:03:42,417 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 14:03:42,417 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 14:03:44,029 django.server "GET /sales/invoices/ HTTP/1.1" 200 76548
+INFO 2026-05-21 14:03:44,029 django.server "GET /sales/invoices/ HTTP/1.1" 200 76548
+INFO 2026-05-21 14:04:13,526 django.server "GET /report/ HTTP/1.1" 200 24933
+INFO 2026-05-21 14:04:13,526 django.server "GET /report/ HTTP/1.1" 200 24933
+INFO 2026-05-21 14:04:21,140 django.server "GET /products/inventory/ HTTP/1.1" 200 27354
+INFO 2026-05-21 14:04:21,140 django.server "GET /products/inventory/ HTTP/1.1" 200 27354
+INFO 2026-05-21 14:04:32,568 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 14:04:32,568 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 14:19:57,660 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:19:57,660 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:23:41,366 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:23:41,366 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:27:05,912 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:27:05,912 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:27:10,233 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 14:27:10,233 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 14:27:13,231 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 14:27:13,231 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 14:32:38,353 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 14:32:38,353 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 14:32:44,934 django.server "GET /report/ HTTP/1.1" 200 24933
+INFO 2026-05-21 14:32:44,934 django.server "GET /report/ HTTP/1.1" 200 24933
+INFO 2026-05-21 14:33:36,868 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 14:33:36,868 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 14:33:39,029 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 14:33:39,029 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 14:35:00,770 django.server "GET /report/ HTTP/1.1" 200 24933
+INFO 2026-05-21 14:35:00,770 django.server "GET /report/ HTTP/1.1" 200 24933
+INFO 2026-05-21 14:35:44,178 django.utils.autoreload /workspaces/Revolving/RevSource_system/dashboard/views.py changed, reloading.
+INFO 2026-05-21 14:35:44,178 django.utils.autoreload /workspaces/Revolving/RevSource_system/dashboard/views.py changed, reloading.
+INFO 2026-05-21 14:35:45,739 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:35:45,739 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:35:49,483 django.utils.autoreload /workspaces/Revolving/RevSource_system/dashboard/views.py changed, reloading.
+INFO 2026-05-21 14:35:49,483 django.utils.autoreload /workspaces/Revolving/RevSource_system/dashboard/views.py changed, reloading.
+INFO 2026-05-21 14:35:50,008 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:35:50,008 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:40:00,267 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:40:00,267 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:40:06,659 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 14:40:06,659 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 14:40:39,620 django.server "GET /products/ HTTP/1.1" 200 19002
+INFO 2026-05-21 14:40:39,620 django.server "GET /products/ HTTP/1.1" 200 19002
+INFO 2026-05-21 14:40:39,971 django.server "GET /media/products/images/kaftan-7ddd5c7b.jpg HTTP/1.1" 200 244560
+INFO 2026-05-21 14:40:39,971 django.server "GET /media/products/images/kaftan-7ddd5c7b.jpg HTTP/1.1" 200 244560
+INFO 2026-05-21 14:40:40,012 django.server "GET /media/products/images/testing-6a237547.jpg HTTP/1.1" 200 200238
+INFO 2026-05-21 14:40:40,012 django.server "GET /media/products/images/testing-6a237547.jpg HTTP/1.1" 200 200238
+INFO 2026-05-21 14:40:40,040 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-21 14:40:40,040 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-21 14:40:42,739 django.server "GET /report/ HTTP/1.1" 200 24933
+INFO 2026-05-21 14:40:42,739 django.server "GET /report/ HTTP/1.1" 200 24933
+INFO 2026-05-21 14:41:03,721 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 14:41:03,721 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 14:41:09,540 django.server "GET /sales/invoices/ HTTP/1.1" 200 76548
+INFO 2026-05-21 14:41:09,540 django.server "GET /sales/invoices/ HTTP/1.1" 200 76548
+INFO 2026-05-21 14:41:45,931 django.server "GET /sales/invoices/ HTTP/1.1" 200 76548
+INFO 2026-05-21 14:41:45,931 django.server "GET /sales/invoices/ HTTP/1.1" 200 76548
+INFO 2026-05-21 14:42:31,923 django.server "GET /products/ HTTP/1.1" 200 19002
+INFO 2026-05-21 14:42:31,923 django.server "GET /products/ HTTP/1.1" 200 19002
+INFO 2026-05-21 14:42:32,489 django.server "GET /report/ HTTP/1.1" 200 24933
+INFO 2026-05-21 14:42:32,489 django.server "GET /report/ HTTP/1.1" 200 24933
+INFO 2026-05-21 14:52:38,518 django.utils.autoreload /workspaces/Revolving/RevSource_system/dashboard/views.py changed, reloading.
+INFO 2026-05-21 14:52:38,518 django.utils.autoreload /workspaces/Revolving/RevSource_system/dashboard/views.py changed, reloading.
+INFO 2026-05-21 14:52:39,268 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:52:39,268 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:54:11,894 django.utils.autoreload /workspaces/Revolving/RevSource_system/dashboard/views.py changed, reloading.
+INFO 2026-05-21 14:54:11,894 django.utils.autoreload /workspaces/Revolving/RevSource_system/dashboard/views.py changed, reloading.
+INFO 2026-05-21 14:54:12,472 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 14:54:12,472 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 15:02:15,347 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 15:02:15,347 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 15:02:20,130 django.server "GET /report/ HTTP/1.1" 200 24933
+INFO 2026-05-21 15:02:20,130 django.server "GET /report/ HTTP/1.1" 200 24933
+INFO 2026-05-21 15:02:23,404 django.server "GET /products/suppliers/ HTTP/1.1" 200 8622
+INFO 2026-05-21 15:02:23,404 django.server "GET /products/suppliers/ HTTP/1.1" 200 8622
+INFO 2026-05-21 15:02:32,107 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 15:02:32,107 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 15:02:34,633 django.server "GET /sales/sales-history/ HTTP/1.1" 200 9095
+INFO 2026-05-21 15:02:34,633 django.server "GET /sales/sales-history/ HTTP/1.1" 200 9095
+INFO 2026-05-21 15:16:50,916 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 15:16:50,916 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 15:16:53,854 django.server "GET /sales/sales-history/ HTTP/1.1" 200 9089
+INFO 2026-05-21 15:16:53,854 django.server "GET /sales/sales-history/ HTTP/1.1" 200 9089
+INFO 2026-05-21 15:16:58,968 django.server "GET /finance/currencies/ HTTP/1.1" 200 11455
+INFO 2026-05-21 15:16:58,968 django.server "GET /finance/currencies/ HTTP/1.1" 200 11455
+INFO 2026-05-21 15:17:00,372 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 15:17:00,372 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 15:17:02,719 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 15:17:02,719 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 15:17:04,823 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 15:17:04,823 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 15:17:04,921 django.server "GET /sales/invoice/36/cart/ HTTP/1.1" 200 13569
+INFO 2026-05-21 15:17:04,921 django.server "GET /sales/invoice/36/cart/ HTTP/1.1" 200 13569
+INFO 2026-05-21 15:17:08,961 django.server "GET /sales/api/products/search/?q=pl HTTP/1.1" 200 105
+INFO 2026-05-21 15:17:08,961 django.server "GET /sales/api/products/search/?q=pl HTTP/1.1" 200 105
+INFO 2026-05-21 15:17:12,234 django.server "GET /sales/api/products/search/?q=de HTTP/1.1" 200 16
+INFO 2026-05-21 15:17:12,234 django.server "GET /sales/api/products/search/?q=de HTTP/1.1" 200 16
+INFO 2026-05-21 15:17:16,040 django.server "GET /products/ HTTP/1.1" 200 19002
+INFO 2026-05-21 15:17:16,040 django.server "GET /products/ HTTP/1.1" 200 19002
+INFO 2026-05-21 15:17:16,132 django.server "GET /media/products/images/kaftan-7ddd5c7b.jpg HTTP/1.1" 200 244560
+INFO 2026-05-21 15:17:16,132 django.server "GET /media/products/images/kaftan-7ddd5c7b.jpg HTTP/1.1" 200 244560
+INFO 2026-05-21 15:17:16,169 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-21 15:17:16,169 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-21 15:17:16,179 django.server "GET /media/products/images/testing-6a237547.jpg HTTP/1.1" 200 200238
+INFO 2026-05-21 15:17:16,179 django.server "GET /media/products/images/testing-6a237547.jpg HTTP/1.1" 200 200238
+INFO 2026-05-21 15:17:23,527 django.server "GET /products/ HTTP/1.1" 200 19002
+INFO 2026-05-21 15:17:23,527 django.server "GET /products/ HTTP/1.1" 200 19002
+INFO 2026-05-21 15:17:27,556 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 15:17:27,556 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 15:17:28,733 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 15:17:28,733 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 15:17:28,810 django.server "GET /sales/invoice/37/cart/ HTTP/1.1" 200 13569
+INFO 2026-05-21 15:17:28,810 django.server "GET /sales/invoice/37/cart/ HTTP/1.1" 200 13569
+INFO 2026-05-21 15:17:32,499 django.server "GET /sales/api/products/search/?q=kft HTTP/1.1" 200 190
+INFO 2026-05-21 15:17:32,499 django.server "GET /sales/api/products/search/?q=kft HTTP/1.1" 200 190
+INFO 2026-05-21 15:17:34,705 django.server "POST /sales/api/invoice/37/add/ HTTP/1.1" 200 87
+INFO 2026-05-21 15:17:34,705 django.server "POST /sales/api/invoice/37/add/ HTTP/1.1" 200 87
+INFO 2026-05-21 15:17:34,824 django.server "GET /sales/invoice/37/cart/ HTTP/1.1" 200 14532
+INFO 2026-05-21 15:17:34,824 django.server "GET /sales/invoice/37/cart/ HTTP/1.1" 200 14532
+INFO 2026-05-21 15:17:38,647 django.server "GET /sales/invoice/37/cart/?currency=QAR HTTP/1.1" 200 14532
+INFO 2026-05-21 15:17:38,647 django.server "GET /sales/invoice/37/cart/?currency=QAR HTTP/1.1" 200 14532
+INFO 2026-05-21 15:17:42,575 django.server "POST /sales/api/invoice/37/line/8/update/ HTTP/1.1" 200 82
+INFO 2026-05-21 15:17:42,575 django.server "POST /sales/api/invoice/37/line/8/update/ HTTP/1.1" 200 82
+INFO 2026-05-21 15:17:44,628 django.server "POST /sales/api/invoice/37/line/8/update/ HTTP/1.1" 200 82
+INFO 2026-05-21 15:17:44,628 django.server "POST /sales/api/invoice/37/line/8/update/ HTTP/1.1" 200 82
+INFO 2026-05-21 15:17:45,797 django.server "POST /sales/api/invoice/37/line/8/update/ HTTP/1.1" 200 82
+INFO 2026-05-21 15:17:45,797 django.server "POST /sales/api/invoice/37/line/8/update/ HTTP/1.1" 200 82
+INFO 2026-05-21 15:17:50,028 django.server "POST /sales/api/invoice/37/line/8/update/ HTTP/1.1" 200 83
+INFO 2026-05-21 15:17:50,028 django.server "POST /sales/api/invoice/37/line/8/update/ HTTP/1.1" 200 83
+INFO 2026-05-21 15:17:56,616 django.server "POST /sales/api/invoice/37/payment/ HTTP/1.1" 200 113
+INFO 2026-05-21 15:17:56,616 django.server "POST /sales/api/invoice/37/payment/ HTTP/1.1" 200 113
+INFO 2026-05-21 15:17:58,235 django.server "GET /sales/invoice/37/ HTTP/1.1" 200 12880
+INFO 2026-05-21 15:17:58,235 django.server "GET /sales/invoice/37/ HTTP/1.1" 200 12880
+INFO 2026-05-21 15:18:58,919 django.server "GET /sales/invoice/37/print/ HTTP/1.1" 200 5879
+INFO 2026-05-21 15:18:58,919 django.server "GET /sales/invoice/37/print/ HTTP/1.1" 200 5879
+INFO 2026-05-21 15:18:59,017 django.server "GET /static/sales/css/receipt.css HTTP/1.1" 200 5871
+INFO 2026-05-21 15:18:59,017 django.server "GET /static/sales/css/receipt.css HTTP/1.1" 200 5871
+INFO 2026-05-21 15:18:59,114 django.server "GET /static/sales/images/logo.png HTTP/1.1" 200 92937
+INFO 2026-05-21 15:18:59,114 django.server "GET /static/sales/images/logo.png HTTP/1.1" 200 92937
+INFO 2026-05-21 15:33:36,858 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 15:33:36,858 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 15:33:42,000 django.server "GET /products/ HTTP/1.1" 200 19000
+INFO 2026-05-21 15:33:42,000 django.server "GET /products/ HTTP/1.1" 200 19000
+INFO 2026-05-21 15:33:42,399 django.server "GET /media/products/images/kaftan-7ddd5c7b.jpg HTTP/1.1" 200 244560
+INFO 2026-05-21 15:33:42,399 django.server "GET /media/products/images/kaftan-7ddd5c7b.jpg HTTP/1.1" 200 244560
+INFO 2026-05-21 15:33:42,426 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-21 15:33:42,426 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-21 15:33:42,453 django.server "GET /media/products/images/testing-6a237547.jpg HTTP/1.1" 200 200238
+INFO 2026-05-21 15:33:42,453 django.server "GET /media/products/images/testing-6a237547.jpg HTTP/1.1" 200 200238
+INFO 2026-05-21 15:33:45,767 django.server "GET /products/2/ HTTP/1.1" 200 12581
+INFO 2026-05-21 15:33:45,767 django.server "GET /products/2/ HTTP/1.1" 200 12581
+INFO 2026-05-21 15:33:45,849 django.server "GET /static/products/css/productdetail.css HTTP/1.1" 200 3037
+INFO 2026-05-21 15:33:45,849 django.server "GET /static/products/css/productdetail.css HTTP/1.1" 200 3037
+INFO 2026-05-21 15:34:28,295 django.server "POST /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 15:34:28,295 django.server "POST /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 15:34:28,480 django.server "GET /products/2/ HTTP/1.1" 200 13223
+INFO 2026-05-21 15:34:28,480 django.server "GET /products/2/ HTTP/1.1" 200 13223
+INFO 2026-05-21 15:37:31,555 django.server "POST /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 15:37:31,555 django.server "POST /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 15:37:31,757 django.server "GET /products/2/ HTTP/1.1" 200 13576
+INFO 2026-05-21 15:37:31,757 django.server "GET /products/2/ HTTP/1.1" 200 13576
+INFO 2026-05-21 15:37:42,284 django.server "GET /products/ HTTP/1.1" 200 19000
+INFO 2026-05-21 15:37:42,284 django.server "GET /products/ HTTP/1.1" 200 19000
+INFO 2026-05-21 15:37:42,677 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-21 15:37:42,677 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-21 15:37:42,702 django.server "GET /media/products/images/testing-6a237547.jpg HTTP/1.1" 200 200238
+INFO 2026-05-21 15:37:42,702 django.server "GET /media/products/images/testing-6a237547.jpg HTTP/1.1" 200 200238
+INFO 2026-05-21 15:37:46,355 django.server "GET /report/ HTTP/1.1" 200 24932
+INFO 2026-05-21 15:37:46,355 django.server "GET /report/ HTTP/1.1" 200 24932
+INFO 2026-05-21 15:37:59,851 django.server "GET /products/inventory/ HTTP/1.1" 200 28678
+INFO 2026-05-21 15:37:59,851 django.server "GET /products/inventory/ HTTP/1.1" 200 28678
+INFO 2026-05-21 15:41:23,307 django.server "GET /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 15:41:23,307 django.server "GET /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 15:41:23,500 django.server "GET /products/2/ HTTP/1.1" 200 13292
+INFO 2026-05-21 15:41:23,500 django.server "GET /products/2/ HTTP/1.1" 200 13292
+INFO 2026-05-21 15:54:54,565 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 15:54:54,565 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 15:54:57,944 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 15:54:57,944 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 15:55:02,166 django.server "GET /products/ HTTP/1.1" 200 19000
+INFO 2026-05-21 15:55:02,166 django.server "GET /products/ HTTP/1.1" 200 19000
+INFO 2026-05-21 15:55:02,541 django.server "GET /media/products/images/kaftan-7ddd5c7b.jpg HTTP/1.1" 200 244560
+INFO 2026-05-21 15:55:02,541 django.server "GET /media/products/images/kaftan-7ddd5c7b.jpg HTTP/1.1" 200 244560
+INFO 2026-05-21 15:55:02,595 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-21 15:55:02,595 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-21 15:55:02,607 django.server "GET /media/products/images/testing-6a237547.jpg HTTP/1.1" 200 200238
+INFO 2026-05-21 15:55:02,607 django.server "GET /media/products/images/testing-6a237547.jpg HTTP/1.1" 200 200238
+INFO 2026-05-21 15:55:05,100 django.server "GET /products/inventory/ HTTP/1.1" 200 29256
+INFO 2026-05-21 15:55:05,100 django.server "GET /products/inventory/ HTTP/1.1" 200 29256
+INFO 2026-05-21 15:55:31,123 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/views.py changed, reloading.
+INFO 2026-05-21 15:55:31,123 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/views.py changed, reloading.
+INFO 2026-05-21 15:55:31,699 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 15:55:31,699 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 15:56:14,468 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/views.py changed, reloading.
+INFO 2026-05-21 15:56:14,468 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/views.py changed, reloading.
+INFO 2026-05-21 15:56:15,037 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 15:56:15,037 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 15:56:18,234 django.server "GET /products/inventory/ HTTP/1.1" 200 29256
+INFO 2026-05-21 15:56:18,234 django.server "GET /products/inventory/ HTTP/1.1" 200 29256
+INFO 2026-05-21 15:57:07,286 django.server "GET /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 15:57:07,286 django.server "GET /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 15:57:07,477 django.server "GET /products/2/ HTTP/1.1" 200 13292
+INFO 2026-05-21 15:57:07,477 django.server "GET /products/2/ HTTP/1.1" 200 13292
+INFO 2026-05-21 15:58:36,601 django.server "GET /products/2/ HTTP/1.1" 200 13292
+INFO 2026-05-21 15:58:36,601 django.server "GET /products/2/ HTTP/1.1" 200 13292
+INFO 2026-05-21 15:59:09,892 django.server "POST /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 15:59:09,892 django.server "POST /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 15:59:10,080 django.server "GET /products/2/ HTTP/1.1" 200 13920
+INFO 2026-05-21 15:59:10,080 django.server "GET /products/2/ HTTP/1.1" 200 13920
+INFO 2026-05-21 15:59:45,522 django.server "POST /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 15:59:45,522 django.server "POST /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 15:59:45,705 django.server "GET /products/2/ HTTP/1.1" 200 14263
+INFO 2026-05-21 15:59:45,705 django.server "GET /products/2/ HTTP/1.1" 200 14263
+INFO 2026-05-21 16:00:00,873 django.server "POST /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:00:00,873 django.server "POST /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:00:00,946 django.server "GET /products/2/ HTTP/1.1" 200 14602
+INFO 2026-05-21 16:00:00,946 django.server "GET /products/2/ HTTP/1.1" 200 14602
+INFO 2026-05-21 16:00:10,709 django.server "POST /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:00:10,709 django.server "POST /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:00:10,793 django.server "GET /products/2/ HTTP/1.1" 200 14946
+INFO 2026-05-21 16:00:10,793 django.server "GET /products/2/ HTTP/1.1" 200 14946
+INFO 2026-05-21 16:00:25,793 django.server "POST /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:00:25,793 django.server "POST /products/2/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:00:25,871 django.server "GET /products/2/ HTTP/1.1" 200 15290
+INFO 2026-05-21 16:00:25,871 django.server "GET /products/2/ HTTP/1.1" 200 15290
+INFO 2026-05-21 16:01:26,632 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:01:26,632 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:01:30,526 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 16:01:30,526 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 16:01:35,892 django.server "GET /products/inventory/ HTTP/1.1" 200 31128
+INFO 2026-05-21 16:01:35,892 django.server "GET /products/inventory/ HTTP/1.1" 200 31128
+INFO 2026-05-21 16:02:01,992 django.server "GET /products/3/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:02:01,992 django.server "GET /products/3/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:02:02,108 django.server "GET /products/3/ HTTP/1.1" 200 12995
+INFO 2026-05-21 16:02:02,108 django.server "GET /products/3/ HTTP/1.1" 200 12995
+INFO 2026-05-21 16:02:02,245 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-21 16:02:02,245 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-21 16:02:13,002 django.server "POST /products/3/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:02:13,002 django.server "POST /products/3/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:02:13,078 django.server "GET /products/3/ HTTP/1.1" 200 13260
+INFO 2026-05-21 16:02:13,078 django.server "GET /products/3/ HTTP/1.1" 200 13260
+INFO 2026-05-21 16:02:23,123 django.server "POST /products/3/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:02:23,123 django.server "POST /products/3/adjust-stock/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:02:23,276 django.server "GET /products/3/ HTTP/1.1" 200 13260
+INFO 2026-05-21 16:02:23,276 django.server "GET /products/3/ HTTP/1.1" 200 13260
+INFO 2026-05-21 16:02:48,423 django.server "GET /products/inventory/ HTTP/1.1" 200 31128
+INFO 2026-05-21 16:02:48,423 django.server "GET /products/inventory/ HTTP/1.1" 200 31128
+INFO 2026-05-21 16:09:15,939 django.server "GET /products/inventory/ HTTP/1.1" 200 32438
+INFO 2026-05-21 16:09:15,939 django.server "GET /products/inventory/ HTTP/1.1" 200 32438
+INFO 2026-05-21 16:09:17,101 django.server "GET /products/inventory/ HTTP/1.1" 200 32438
+INFO 2026-05-21 16:09:17,101 django.server "GET /products/inventory/ HTTP/1.1" 200 32438
+INFO 2026-05-21 16:09:42,534 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:09:42,534 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:09:47,913 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 16:09:47,913 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 16:09:56,857 django.server "GET /products/inventory/ HTTP/1.1" 200 32438
+INFO 2026-05-21 16:09:56,857 django.server "GET /products/inventory/ HTTP/1.1" 200 32438
+INFO 2026-05-21 16:11:24,520 django.server "GET /products/inventory/ HTTP/1.1" 200 32099
+INFO 2026-05-21 16:11:24,520 django.server "GET /products/inventory/ HTTP/1.1" 200 32099
+INFO 2026-05-21 16:11:39,959 django.server "GET /products/inventory/ HTTP/1.1" 200 32099
+INFO 2026-05-21 16:11:39,959 django.server "GET /products/inventory/ HTTP/1.1" 200 32099
+INFO 2026-05-21 16:12:52,808 django.server "GET /products/inventory/ HTTP/1.1" 200 32825
+INFO 2026-05-21 16:12:52,808 django.server "GET /products/inventory/ HTTP/1.1" 200 32825
+INFO 2026-05-21 16:15:12,244 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:15:12,244 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:15:15,617 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 16:15:15,617 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 16:15:18,827 django.server "GET /products/inventory/ HTTP/1.1" 200 32825
+INFO 2026-05-21 16:15:18,827 django.server "GET /products/inventory/ HTTP/1.1" 200 32825
+INFO 2026-05-21 16:17:01,138 django.server "GET /products/inventory/ HTTP/1.1" 200 31853
+INFO 2026-05-21 16:17:01,138 django.server "GET /products/inventory/ HTTP/1.1" 200 31853
+INFO 2026-05-21 16:19:18,156 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 16:19:18,156 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 16:19:22,051 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:19:22,051 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:19:22,225 django.server "GET /sales/invoice/38/cart/ HTTP/1.1" 200 13841
+INFO 2026-05-21 16:19:22,225 django.server "GET /sales/invoice/38/cart/ HTTP/1.1" 200 13841
+INFO 2026-05-21 16:19:31,630 django.server "GET /sales/api/products/search/?q=bl HTTP/1.1" 200 343
+INFO 2026-05-21 16:19:31,630 django.server "GET /sales/api/products/search/?q=bl HTTP/1.1" 200 343
+WARNING 2026-05-21 16:19:34,174 django.server "POST /sales/api/invoice/38/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:19:34,174 django.server "POST /sales/api/invoice/38/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:19:37,174 django.server "POST /sales/api/invoice/38/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:19:37,174 django.server "POST /sales/api/invoice/38/add/ HTTP/1.1" 400 57
+INFO 2026-05-21 16:21:21,359 django.server "POST /sales/api/invoice/38/add/ HTTP/1.1" 200 111
+INFO 2026-05-21 16:21:21,359 django.server "POST /sales/api/invoice/38/add/ HTTP/1.1" 200 111
+INFO 2026-05-21 16:21:21,480 django.server "GET /sales/invoice/38/cart/ HTTP/1.1" 200 14809
+INFO 2026-05-21 16:21:21,480 django.server "GET /sales/invoice/38/cart/ HTTP/1.1" 200 14809
+INFO 2026-05-21 16:21:44,577 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 16:21:44,577 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 16:21:46,924 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:21:46,924 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:21:47,116 django.server "GET /sales/invoice/39/cart/ HTTP/1.1" 200 13841
+INFO 2026-05-21 16:21:47,116 django.server "GET /sales/invoice/39/cart/ HTTP/1.1" 200 13841
+INFO 2026-05-21 16:21:50,834 django.server "GET /sales/api/products/search/?q=blk HTTP/1.1" 200 121
+INFO 2026-05-21 16:21:50,834 django.server "GET /sales/api/products/search/?q=blk HTTP/1.1" 200 121
+INFO 2026-05-21 16:21:51,859 django.server "POST /sales/api/invoice/39/add/ HTTP/1.1" 200 111
+INFO 2026-05-21 16:21:51,859 django.server "POST /sales/api/invoice/39/add/ HTTP/1.1" 200 111
+INFO 2026-05-21 16:21:52,013 django.server "GET /sales/invoice/39/cart/ HTTP/1.1" 200 14814
+INFO 2026-05-21 16:21:52,013 django.server "GET /sales/invoice/39/cart/ HTTP/1.1" 200 14814
+INFO 2026-05-21 16:22:08,653 django.server "POST /sales/api/invoice/39/line/10/update/ HTTP/1.1" 200 83
+INFO 2026-05-21 16:22:08,653 django.server "POST /sales/api/invoice/39/line/10/update/ HTTP/1.1" 200 83
+ERROR 2026-05-21 16:24:05,331 django.security.DisallowedHost Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/workspaces/Revolving/env/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/Revolving/env/lib/python3.12/site-packages/django/utils/deprecation.py", line 308, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/Revolving/env/lib/python3.12/site-packages/django/middleware/security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/Revolving/env/lib/python3.12/site-packages/django/http/request.py", line 206, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+ERROR 2026-05-21 16:24:05,331 django.security.DisallowedHost Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/workspaces/Revolving/env/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/Revolving/env/lib/python3.12/site-packages/django/utils/deprecation.py", line 308, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspaces/Revolving/env/lib/python3.12/site-packages/django/middleware/security.py", line 28, in process_request
+    host = self.redirect_host or request.get_host()
+                                 ^^^^^^^^^^^^^^^^^^
+  File "/workspaces/Revolving/env/lib/python3.12/site-packages/django/http/request.py", line 206, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: 'testserver'. You may need to add 'testserver' to ALLOWED_HOSTS.
+INFO 2026-05-21 16:24:24,508 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:24:24,508 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:24:30,780 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 16:24:30,780 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 16:24:34,607 django.server "GET /finance/accounts/ HTTP/1.1" 200 23494
+INFO 2026-05-21 16:24:34,607 django.server "GET /finance/accounts/ HTTP/1.1" 200 23494
+INFO 2026-05-21 16:24:35,302 django.server "GET /products/inventory/ HTTP/1.1" 200 31853
+INFO 2026-05-21 16:24:35,302 django.server "GET /products/inventory/ HTTP/1.1" 200 31853
+INFO 2026-05-21 16:25:03,005 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 16:25:03,005 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 16:25:09,096 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 16:25:09,096 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 16:25:14,412 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:25:14,412 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:25:14,498 django.server "GET /sales/invoice/40/cart/ HTTP/1.1" 200 13841
+INFO 2026-05-21 16:25:14,498 django.server "GET /sales/invoice/40/cart/ HTTP/1.1" 200 13841
+INFO 2026-05-21 16:25:19,300 django.server "GET /sales/api/products/search/?q=bl HTTP/1.1" 200 343
+INFO 2026-05-21 16:25:19,300 django.server "GET /sales/api/products/search/?q=bl HTTP/1.1" 200 343
+INFO 2026-05-21 16:25:21,596 django.server "POST /sales/api/invoice/40/add/ HTTP/1.1" 200 112
+INFO 2026-05-21 16:25:21,596 django.server "POST /sales/api/invoice/40/add/ HTTP/1.1" 200 112
+INFO 2026-05-21 16:25:21,721 django.server "GET /sales/invoice/40/cart/ HTTP/1.1" 200 14813
+INFO 2026-05-21 16:25:21,721 django.server "GET /sales/invoice/40/cart/ HTTP/1.1" 200 14813
+INFO 2026-05-21 16:25:24,484 django.server "POST /sales/api/invoice/40/line/11/update/ HTTP/1.1" 200 82
+INFO 2026-05-21 16:25:24,484 django.server "POST /sales/api/invoice/40/line/11/update/ HTTP/1.1" 200 82
+INFO 2026-05-21 16:25:28,796 django.server "POST /sales/api/invoice/40/line/11/update/ HTTP/1.1" 200 83
+INFO 2026-05-21 16:25:28,796 django.server "POST /sales/api/invoice/40/line/11/update/ HTTP/1.1" 200 83
+INFO 2026-05-21 16:25:54,126 django.server "POST /sales/api/invoice/40/payment/ HTTP/1.1" 200 113
+INFO 2026-05-21 16:25:54,126 django.server "POST /sales/api/invoice/40/payment/ HTTP/1.1" 200 113
+INFO 2026-05-21 16:25:55,869 django.server "GET /sales/invoice/40/ HTTP/1.1" 200 12902
+INFO 2026-05-21 16:25:55,869 django.server "GET /sales/invoice/40/ HTTP/1.1" 200 12902
+INFO 2026-05-21 16:26:53,205 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:26:53,205 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:26:56,809 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 16:26:56,809 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 16:27:00,338 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 16:27:00,338 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 16:27:03,889 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 16:27:03,889 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 16:27:06,994 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 16:27:06,994 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 16:27:08,540 django.server "GET /sales/invoices/ HTTP/1.1" 200 86152
+INFO 2026-05-21 16:27:08,540 django.server "GET /sales/invoices/ HTTP/1.1" 200 86152
+INFO 2026-05-21 16:27:10,785 django.server "GET /sales/invoice/40/print/ HTTP/1.1" 200 5879
+INFO 2026-05-21 16:27:10,785 django.server "GET /sales/invoice/40/print/ HTTP/1.1" 200 5879
+INFO 2026-05-21 16:32:00,785 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:32:00,785 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:32:05,369 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 16:32:05,369 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 16:32:07,855 django.server "GET /products/ HTTP/1.1" 200 19000
+INFO 2026-05-21 16:32:07,855 django.server "GET /products/ HTTP/1.1" 200 19000
+INFO 2026-05-21 16:32:08,157 django.server "GET /media/products/images/testing-6a237547.jpg HTTP/1.1" 200 200238
+INFO 2026-05-21 16:32:08,157 django.server "GET /media/products/images/testing-6a237547.jpg HTTP/1.1" 200 200238
+INFO 2026-05-21 16:32:08,177 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-21 16:32:08,177 django.server "GET /media/products/images/kaftan-plain-9ebc27d0.jpg HTTP/1.1" 200 1600401
+INFO 2026-05-21 16:32:08,217 django.server "GET /media/products/images/kaftan-7ddd5c7b.jpg HTTP/1.1" 200 244560
+INFO 2026-05-21 16:32:08,217 django.server "GET /media/products/images/kaftan-7ddd5c7b.jpg HTTP/1.1" 200 244560
+INFO 2026-05-21 16:32:15,243 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 16:32:15,243 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 16:32:19,208 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:32:19,208 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:32:19,393 django.server "GET /sales/invoice/41/cart/ HTTP/1.1" 200 13813
+INFO 2026-05-21 16:32:19,393 django.server "GET /sales/invoice/41/cart/ HTTP/1.1" 200 13813
+INFO 2026-05-21 16:32:21,995 django.server "GET /sales/invoice/41/cart/?currency=QAR HTTP/1.1" 200 13841
+INFO 2026-05-21 16:32:21,995 django.server "GET /sales/invoice/41/cart/?currency=QAR HTTP/1.1" 200 13841
+INFO 2026-05-21 16:32:24,550 django.server "GET /sales/api/products/search/?q=KFT-XL-BLU HTTP/1.1" 200 127
+INFO 2026-05-21 16:32:24,550 django.server "GET /sales/api/products/search/?q=KFT-XL-BLU HTTP/1.1" 200 127
+WARNING 2026-05-21 16:32:25,721 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:32:25,721 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:32:27,511 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:32:27,511 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:32:27,914 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:32:27,914 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:32:28,164 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:32:28,164 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:32:28,370 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:32:28,370 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:32:28,619 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:32:28,619 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+INFO 2026-05-21 16:32:36,847 django.server "GET /sales/invoice/41/cart/?currency=QAR HTTP/1.1" 200 13841
+INFO 2026-05-21 16:32:36,847 django.server "GET /sales/invoice/41/cart/?currency=QAR HTTP/1.1" 200 13841
+INFO 2026-05-21 16:32:40,698 django.server "GET /sales/api/products/search/?q=KFT-XL-BLU HTTP/1.1" 200 127
+INFO 2026-05-21 16:32:40,698 django.server "GET /sales/api/products/search/?q=KFT-XL-BLU HTTP/1.1" 200 127
+WARNING 2026-05-21 16:32:41,883 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:32:41,883 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:32:45,029 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:32:45,029 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:32:52,899 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+WARNING 2026-05-21 16:32:52,899 django.server "POST /sales/api/invoice/41/add/ HTTP/1.1" 400 57
+INFO 2026-05-21 16:33:20,979 django.server "GET /products/ HTTP/1.1" 200 19000
+INFO 2026-05-21 16:33:20,979 django.server "GET /products/ HTTP/1.1" 200 19000
+INFO 2026-05-21 16:35:05,969 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/forms.py changed, reloading.
+INFO 2026-05-21 16:35:05,969 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/forms.py changed, reloading.
+INFO 2026-05-21 16:35:06,732 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:35:06,732 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:35:11,395 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/forms.py changed, reloading.
+INFO 2026-05-21 16:35:11,395 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/forms.py changed, reloading.
+INFO 2026-05-21 16:35:11,982 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:35:11,982 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:35:17,047 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/forms.py changed, reloading.
+INFO 2026-05-21 16:35:17,047 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/forms.py changed, reloading.
+INFO 2026-05-21 16:35:17,869 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:35:17,869 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:35:20,713 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/forms.py changed, reloading.
+INFO 2026-05-21 16:35:20,713 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/forms.py changed, reloading.
+INFO 2026-05-21 16:35:21,489 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:35:21,489 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:35:25,457 django.server "GET /products/ HTTP/1.1" 200 19000
+INFO 2026-05-21 16:35:25,457 django.server "GET /products/ HTTP/1.1" 200 19000
+INFO 2026-05-21 16:35:26,737 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 16:35:26,737 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 16:35:58,280 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 16:35:58,280 django.server "GET /sales/ HTTP/1.1" 200 10333
+INFO 2026-05-21 16:36:00,052 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 16:36:00,052 django.server "GET /sales/invoice/create/ HTTP/1.1" 200 10753
+INFO 2026-05-21 16:36:01,504 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:36:01,504 django.server "POST /sales/invoice/create/ HTTP/1.1" 302 0
+INFO 2026-05-21 16:36:01,669 django.server "GET /sales/invoice/42/cart/ HTTP/1.1" 200 13813
+INFO 2026-05-21 16:36:01,669 django.server "GET /sales/invoice/42/cart/ HTTP/1.1" 200 13813
+INFO 2026-05-21 16:36:07,355 django.server "GET /sales/api/products/search/?q=bl HTTP/1.1" 200 343
+INFO 2026-05-21 16:36:07,355 django.server "GET /sales/api/products/search/?q=bl HTTP/1.1" 200 343
+INFO 2026-05-21 16:36:08,710 django.server "POST /sales/api/invoice/42/add/ HTTP/1.1" 200 112
+INFO 2026-05-21 16:36:08,710 django.server "POST /sales/api/invoice/42/add/ HTTP/1.1" 200 112
+INFO 2026-05-21 16:36:08,814 django.server "GET /sales/invoice/42/cart/ HTTP/1.1" 200 14781
+INFO 2026-05-21 16:36:08,814 django.server "GET /sales/invoice/42/cart/ HTTP/1.1" 200 14781
+INFO 2026-05-21 16:36:11,333 django.server "POST /sales/api/invoice/42/line/12/update/ HTTP/1.1" 200 82
+INFO 2026-05-21 16:36:11,333 django.server "POST /sales/api/invoice/42/line/12/update/ HTTP/1.1" 200 82
+INFO 2026-05-21 16:36:22,997 django.server "GET /sales/invoice/42/cart/?currency=QAR HTTP/1.1" 200 14813
+INFO 2026-05-21 16:36:22,997 django.server "GET /sales/invoice/42/cart/?currency=QAR HTTP/1.1" 200 14813
+INFO 2026-05-21 16:36:57,104 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/forms.py changed, reloading.
+INFO 2026-05-21 16:36:57,104 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/forms.py changed, reloading.
+INFO 2026-05-21 16:36:57,667 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:36:57,667 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:37:01,452 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/forms.py changed, reloading.
+INFO 2026-05-21 16:37:01,452 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/forms.py changed, reloading.
+INFO 2026-05-21 16:37:02,033 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:37:02,033 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:37:05,775 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/forms.py changed, reloading.
+INFO 2026-05-21 16:37:05,775 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/forms.py changed, reloading.
+INFO 2026-05-21 16:37:06,507 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:37:06,507 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:37:09,512 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/forms.py changed, reloading.
+INFO 2026-05-21 16:37:09,512 django.utils.autoreload /workspaces/Revolving/RevSource_system/sales/forms.py changed, reloading.
+INFO 2026-05-21 16:37:10,161 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:37:10,161 django.utils.autoreload Watching for file changes with StatReloader
+INFO 2026-05-21 16:37:13,520 django.server "GET /sales/invoice/42/cart/?currency=QAR HTTP/1.1" 200 14813
+INFO 2026-05-21 16:37:13,520 django.server "GET /sales/invoice/42/cart/?currency=QAR HTTP/1.1" 200 14813
+INFO 2026-05-21 16:37:17,438 django.server "POST /sales/api/invoice/42/line/12/update/ HTTP/1.1" 200 82
+INFO 2026-05-21 16:37:17,438 django.server "POST /sales/api/invoice/42/line/12/update/ HTTP/1.1" 200 82
+INFO 2026-05-21 16:37:18,441 django.server "POST /sales/api/invoice/42/line/12/update/ HTTP/1.1" 200 82
+INFO 2026-05-21 16:37:18,441 django.server "POST /sales/api/invoice/42/line/12/update/ HTTP/1.1" 200 82
+INFO 2026-05-21 16:37:23,720 django.server "POST /sales/api/invoice/42/line/12/update/ HTTP/1.1" 200 79
+INFO 2026-05-21 16:37:23,720 django.server "POST /sales/api/invoice/42/line/12/update/ HTTP/1.1" 200 79
+INFO 2026-05-21 16:40:10,609 django.server "GET /sales/invoice/42/cart/?currency=QAR HTTP/1.1" 200 14808
+INFO 2026-05-21 16:40:10,609 django.server "GET /sales/invoice/42/cart/?currency=QAR HTTP/1.1" 200 14808
+INFO 2026-05-21 16:40:17,858 django.server "POST /sales/api/invoice/42/line/12/update/ HTTP/1.1" 200 83
+INFO 2026-05-21 16:40:17,858 django.server "POST /sales/api/invoice/42/line/12/update/ HTTP/1.1" 200 83
+INFO 2026-05-21 16:40:24,063 django.server "GET /sales/invoice/42/cart/?currency=QAR HTTP/1.1" 200 14818
+INFO 2026-05-21 16:40:24,063 django.server "GET /sales/invoice/42/cart/?currency=QAR HTTP/1.1" 200 14818
+INFO 2026-05-21 16:40:28,320 django.server "POST /sales/api/invoice/42/line/12/update/ HTTP/1.1" 200 85
+INFO 2026-05-21 16:40:28,320 django.server "POST /sales/api/invoice/42/line/12/update/ HTTP/1.1" 200 85
+INFO 2026-05-21 16:40:30,660 django.server "POST /sales/api/invoice/42/line/12/update/ HTTP/1.1" 200 85
+INFO 2026-05-21 16:40:30,660 django.server "POST /sales/api/invoice/42/line/12/update/ HTTP/1.1" 200 85
+INFO 2026-05-21 16:40:33,160 django.server "GET /sales/invoice/42/cart/?currency=QAR HTTP/1.1" 200 14818
+INFO 2026-05-21 16:40:33,160 django.server "GET /sales/invoice/42/cart/?currency=QAR HTTP/1.1" 200 14818
+INFO 2026-05-21 16:40:38,787 django.server "POST /sales/api/invoice/42/line/12/update/ HTTP/1.1" 200 86
+INFO 2026-05-21 16:40:38,787 django.server "POST /sales/api/invoice/42/line/12/update/ HTTP/1.1" 200 86
+INFO 2026-05-21 16:40:54,866 django.server "GET /sales/invoice/42/cart/?currency=QAR HTTP/1.1" 200 14824
+INFO 2026-05-21 16:40:54,866 django.server "GET /sales/invoice/42/cart/?currency=QAR HTTP/1.1" 200 14824
+INFO 2026-05-21 16:41:03,629 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 16:41:03,629 django.server "GET / HTTP/1.1" 200 7500
+INFO 2026-05-21 16:41:10,513 django.server "GET /finance/ HTTP/1.1" 200 19043
+INFO 2026-05-21 16:41:10,513 django.server "GET /finance/ HTTP/1.1" 200 19043

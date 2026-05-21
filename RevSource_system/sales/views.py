@@ -73,13 +73,23 @@ def create_invoice(request):
 
 @login_required
 def pos_cart(request, invoice_id):
-    """Main POS cart interface with multiple input methods"""
+    """Main POS cart interface with currency selection"""
     invoice = get_object_or_404(SalesInvoice, id=invoice_id)
     
     # Check access
     if invoice.status != 'draft':
         messages.error(request, 'Cannot modify completed invoice')
         return redirect('sales:pos_dashboard')
+    
+    # Handle currency change
+    currency_code = request.GET.get('currency')
+    if currency_code:
+        try:
+            currency = Currency.objects.get(code=currency_code, is_active=True)
+            invoice.currency = currency
+            invoice.save(update_fields=['currency'])
+        except Currency.DoesNotExist:
+            pass
     
     search_form = QuickProductSearchForm()
     currency_service = CurrencyService(request)
@@ -97,7 +107,7 @@ def pos_cart(request, invoice_id):
 @login_required
 @require_http_methods(["POST"])
 def add_to_cart(request, invoice_id):
-    """AJAX endpoint to add product to cart"""
+    """AJAX endpoint to add product to cart with inventory validation"""
     try:
         invoice = get_object_or_404(SalesInvoice, id=invoice_id)
         
@@ -118,6 +128,14 @@ def add_to_cart(request, invoice_id):
         if variant_id:
             variant = get_object_or_404(ProductVariant, id=variant_id)
         
+        # Check available inventory
+        available_stock = product.available_stock
+        if available_stock == 0:
+            return JsonResponse({
+                'error': f'{product.name} is out of stock',
+                'available': available_stock
+            }, status=400)
+        
         # Get or create line
         line = SalesLine.objects.filter(
             invoice=invoice,
@@ -126,8 +144,23 @@ def add_to_cart(request, invoice_id):
         ).first()
         
         if line:
+            # Check if adding more would exceed available stock
+            new_quantity = line.quantity + quantity
+            if new_quantity > available_stock:
+                return JsonResponse({
+                    'error': f'Not enough stock for {product.name}. Available: {available_stock}, Total after: {new_quantity}',
+                    'available': available_stock,
+                    'current_in_cart': line.quantity
+                }, status=400)
             line.quantity += quantity
         else:
+            # Check if requested quantity exceeds available stock
+            if quantity > available_stock:
+                return JsonResponse({
+                    'error': f'Not enough stock for {product.name}. Available: {available_stock}, Requested: {quantity}',
+                    'available': available_stock
+                }, status=400)
+            
             line = SalesLine(
                 invoice=invoice,
                 product=product,
@@ -144,7 +177,8 @@ def add_to_cart(request, invoice_id):
             'line_id': line.id,
             'subtotal': str(invoice.subtotal),
             'total': str(invoice.total_amount),
-            'cart_count': invoice.lines.count()
+            'cart_count': invoice.lines.count(),
+            'available_stock': available_stock
         })
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
@@ -231,13 +265,14 @@ def search_products(request):
         'sku': p.sku,
         'barcode': p.barcode,
         'price': str(p.selling_price),
+        'available_stock': p.available_stock,
     } for p in products[:20]]
 
     return JsonResponse({'products': data})
     
 @login_required
 @require_http_methods(["POST"])
-def process_payment(request, invoice_id):
+def  process_payment(request, invoice_id):
     """Process payment and complete invoice"""
     try:
         invoice = get_object_or_404(SalesInvoice, id=invoice_id)
@@ -327,13 +362,15 @@ def invoice_list(request):
 
 @login_required
 def invoice_detail(request, invoice_id):
-    """View invoice details and receipt"""
+    """View invoice details and receipt with selected currency"""
     invoice = get_object_or_404(SalesInvoice, id=invoice_id)
     
     context = {
         'invoice': invoice,
         'lines': invoice.lines.all(),
         'payments': invoice.payments.all(),
+        'currency_symbol': invoice.currency.symbol if invoice.currency else '$',
+        'currency_code': invoice.currency.code if invoice.currency else 'USD',
     }
     return render(request, 'sales/invoice_detail.html', context)
 

@@ -11,6 +11,7 @@ class Sale(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='sales_records')
     quantity = models.IntegerField(validators=[MinValueValidator(1)])
     total_price = models.DecimalField(max_digits=12, decimal_places=2)
+    currency=models.ForeignKey(Currency,on_delete=models.SET_NULL,null=True,blank=True)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

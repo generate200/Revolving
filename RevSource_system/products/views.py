@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import F
+from django.db.models import F, Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView, View
@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.core.paginator import Paginator
 from .models import Product, Category, Supplier, ProductVariant
 from .forms import ProductForm, CategoryForm, SupplierForm, ProductVariantForm, StockAdjustmentForm
 from finance.models import Currency
@@ -27,7 +28,24 @@ class InventoryView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         products = Product.objects.select_related('category', 'supplier').order_by('name')
-        stock_movements = StockMovement.objects.select_related('product').order_by('-created_at')[:25]
+        
+        # Get search query for stock movements
+        search_query = self.request.GET.get('search_movements', '').strip()
+        movements_qs = StockMovement.objects.select_related('product').order_by('-created_at')
+        
+        # Apply search filter if provided
+        if search_query:
+            movements_qs = movements_qs.filter(
+                Q(product__name__icontains=search_query) |
+                Q(product__sku__icontains=search_query) |
+                Q(reference__icontains=search_query) |
+                Q(movement_type__icontains=search_query)
+            )
+        
+        # Pagination for stock movements
+        paginator = Paginator(movements_qs, 25)  # Show 25 movements per page
+        page_number = self.request.GET.get('page', 1)
+        stock_movements_page = paginator.get_page(page_number)
 
         low_stock_products = [
             p for p in products
@@ -120,7 +138,10 @@ class InventoryView(TemplateView):
             selected_obj = base_currency
         context.update({
             'products': products,
-            'stock_movements': stock_movements,
+            'stock_movements': stock_movements_page,
+            'stock_movements_paginator': paginator,
+            'stock_movements_page_number': page_number,
+            'search_movements': search_query,
             'low_stock_products': low_stock_products,
             'total_inventory_value': total_inventory_value,
             'available_stock': available_stock,
@@ -341,7 +362,7 @@ def supplier_update_view(request, pk):
     return render(request, 'products/supplier_form.html', {'form': form, 'supplier': supplier})
 @method_decorator(login_required, name='dispatch')
 class StockAdjustmentView(View):
-    """Handle manual stock adjustments and create StockMovement records"""
+    """Handle manual stock adjustments and create StockMovement records - supports both add and remove"""
     
     def get(self, request, product_id):
         product = get_object_or_404(Product, pk=product_id)
@@ -368,25 +389,37 @@ class StockAdjustmentView(View):
             
             # Map adjustment types to stock movement types
             movement_type_map = {
+                'add': 'adjustment',
+                'remove': 'adjustment',
                 'adjustment': 'adjustment',
                 'purchase': 'purchase',
                 'return': 'return',
-                'damage': 'adjustment',  # damage treated as adjustment
+                'damage': 'adjustment',
             }
             
-            # For purchases, returns, and damage - quantity is positive
-            # For adjustments with negative qty, that means we're reducing stock
-            movement_quantity = quantity if adjustment_type in ['purchase', 'return'] else quantity
+            # Handle positive/negative quantities:
+            # - add/purchase/return: use positive values
+            # - remove/damage: use negative values
+            if adjustment_type in ['add', 'purchase', 'return']:
+                movement_quantity = abs(quantity) if quantity > 0 else quantity
+            elif adjustment_type in ['remove', 'damage']:
+                movement_quantity = -abs(quantity) if quantity != 0 else 0
+            else:
+                movement_quantity = quantity
             
-            # Create stock movement
-            StockMovement.objects.create(
-                product=product,
-                quantity=movement_quantity,
-                movement_type=movement_type_map[adjustment_type],
-                reference=f'Manual {adjustment_type}: {notes}' if notes else f'Manual {adjustment_type}'
-            )
-            
-            messages.success(request, f'Stock adjusted successfully. Available stock: {product.available_stock}')
+            # Prevent zero quantity movements
+            if movement_quantity == 0:
+                messages.error(request, 'Quantity cannot be zero.')
+            else:
+                # Create stock movement
+                StockMovement.objects.create(
+                    product=product,
+                    quantity=movement_quantity,
+                    movement_type=movement_type_map[adjustment_type],
+                    reference=f'Manual {adjustment_type}: {notes}' if notes else f'Manual {adjustment_type}'
+                )
+                
+                messages.success(request, f'Stock adjusted successfully. Available stock: {product.available_stock}')
         else:
             messages.error(request, 'Please correct the errors below.')
         

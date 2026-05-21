@@ -51,8 +51,8 @@
             <label class="form-label" style="margin-bottom: 8px; font-weight: 600;">Currency</label>
             <select class="form-select" id="currencySelect" onchange="changeCurrency()">
                 {% for currency in currencies %}
-                    <option value="{{ currency.code }}" {% if currency.id == selected_currency.id %}selected{% endif %}>
-                        {{ currency.code }} - {{ currency.name }} (Rate: {{ currency.exchange_rate }})
+                    <option value="{{ currency.code }}" {% if currency.id == invoice.currency.id %}selected{% endif %}>
+                        {{ currency.symbol }} {{ currency.code }} - {{ currency.name }} (Rate: {{ currency.exchange_rate }})
                     </option>
                 {% endfor %}
             </select>
@@ -79,7 +79,7 @@
                             >
                         </div>
                         <div class="item-price" data-line-total="{{ line.id }}">
-                            {{ line.total_price|floatformat:2 }}
+                            {{ invoice.currency.symbol }}{{ line.total_price|floatformat:2 }}
                         </div>
                         <div class="remove-btn">
                             <button type="button" class="btn btn-sm btn-danger remove-line" data-line-id="{{ line.id }}">
@@ -101,21 +101,24 @@
     <div class="summary-panel">
         <!-- Order Summary -->
         <div class="summary-box">
+            <div class="summary-header" style="margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid #e0e0e0;">
+                <span style="font-weight:600;">{{ invoice.currency.code }} - Summary</span>
+            </div>
             <div class="summary-row">
                 <span>Subtotal:</span>
-                <span id="subtotalDisplay">{{ invoice.subtotal|floatformat:2 }}</span>
+                <span id="subtotalDisplay">{{ invoice.currency.symbol }}{{ invoice.subtotal|floatformat:2 }}</span>
             </div>
             <div class="summary-row">
                 <span>Tax:</span>
-                <span id="taxDisplay">{{ invoice.tax_total|floatformat:2 }}</span>
+                <span id="taxDisplay">{{ invoice.currency.symbol }}{{ invoice.tax_total|floatformat:2 }}</span>
             </div>
             <div class="summary-row">
                 <span>Discount:</span>
-                <span id="discountDisplay">{{ invoice.discount_total|floatformat:2 }}</span>
+                <span id="discountDisplay">{{ invoice.currency.symbol }}{{ invoice.discount_total|floatformat:2 }}</span>
             </div>
             <div class="summary-row total">
                 <span>Total:</span>
-                <span id="totalDisplay">{{ invoice.total_amount|floatformat:2 }}</span>
+                <span id="totalDisplay">{{ invoice.currency.symbol }}{{ invoice.total_amount|floatformat:2 }}</span>
             </div>
         </div>
 
@@ -125,7 +128,7 @@
             <div class="mb-3">
                 <label class="form-label">Amount to Charge</label>
                 <div class="input-group input-group-lg">
-                    <span class="input-group-text" id="currencySymbol">{{ selected_currency.code }}</span>
+                    <span class="input-group-text" id="currencySymbol">{{ invoice.currency.symbol }}</span>
                     <input 
                         type="number" 
                         class="form-control" 
@@ -162,7 +165,7 @@
             <div class="summary-box">
                 <div class="summary-row">
                     <span>Change:</span>
-                    <span id="changeDisplay">0.00</span>
+                    <span id="changeDisplay">{{ invoice.currency.symbol }}0.00</span>
                 </div>
             </div>
 
@@ -189,7 +192,8 @@ initializeConfig(
     Number('{{ invoice.total_amount }}'),
     JSON.parse(document.getElementById('paymentMethodsData').textContent),
     '{{ csrf_token }}',
-    '{{ selected_currency.code }}'
+    '{{ invoice.currency.code }}',
+    '{{ invoice.currency.symbol }}'
 );
 </script>
 

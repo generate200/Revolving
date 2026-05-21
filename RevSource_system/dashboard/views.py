@@ -5,7 +5,6 @@ from django.db.models.functions import Coalesce, TruncDate
 from django.utils import timezone
 from decimal import Decimal
 from datetime import timedelta
-
 from products.models import Product, Supplier, Category
 from finance.models import Currency, Account, JournalEntry, JournalLine
 from accounts.models import User
@@ -68,6 +67,7 @@ class DashboardReportView(LoginRequiredMixin, TemplateView):
         today = timezone.now().date()
         last_30_days = today - timedelta(days=30)
         current_month_start = today.replace(day=1)
+        
         
         # Revenue entries (from JournalLine lines)
         revenue_accounts = Account.objects.filter(type='revenue')

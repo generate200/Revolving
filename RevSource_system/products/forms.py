@@ -154,9 +154,10 @@ class ProductVariantForm(forms.ModelForm):
 
 
 class StockAdjustmentForm(forms.Form):
-    """Form for manual stock adjustments"""
+    """Form for manual stock adjustments - supports both positive (add) and negative (remove) quantities"""
     ADJUSTMENT_TYPE_CHOICES = [
-        ('adjustment', 'Inventory Adjustment'),
+        ('add', 'Add Stock (Purchase/Return)'),
+        ('remove', 'Remove Stock (Damage/Loss)'),
         ('purchase', 'Purchase/Restock'),
         ('return', 'Product Return'),
         ('damage', 'Damaged/Loss'),
@@ -168,12 +169,10 @@ class StockAdjustmentForm(forms.Form):
         label='Adjustment Type'
     )
     quantity = forms.IntegerField(
-        min_value=1,
-        help_text='Number of units to adjust',
+        help_text='Positive: add stock | Negative: deduct stock | Use negative values to remove items',
         widget=forms.NumberInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Enter quantity',
-            'min': '1'
+            'placeholder': 'Enter quantity (+ to add, - to remove)',
         })
     )
     notes = forms.CharField(

@@ -5,13 +5,15 @@ const config = {
     totalPrice: null,
     paymentMethods: [],
     csrfToken: '',
-    selectedCurrency: ''
+    selectedCurrency: '',
+    currencySymbol: '$'
 };
 
 // Initialize config from template
-function initializeConfig(invoiceId, totalPrice, paymentMethods, csrfToken, selectedCurrency) {
+function initializeConfig(invoiceId, totalPrice, paymentMethods, csrfToken, selectedCurrency, currencySymbol = '$') {
     config.invoiceId = invoiceId;
     config.totalPrice = totalPrice;
+    config.currencySymbol = currencySymbol || '$';
     
     if (typeof paymentMethods === 'string') {
         try {
@@ -232,7 +234,7 @@ function searchProduct(query) {
 }
 
 /**
- * Display search results
+ * Display search results with available stock information
  */
 function displaySearchResults(products) {
     const resultsList = document.getElementById('productsList');
@@ -256,10 +258,17 @@ function displaySearchResults(products) {
         const item = document.createElement('button');
         item.type = 'button';
         item.className = 'list-group-item list-group-item-action';
+        
+        // Determine if product is in stock
+        const inStock = product.available_stock > 0;
+        const stockBadge = inStock 
+            ? `<span class="badge bg-success ms-2">Stock: ${product.available_stock}</span>`
+            : `<span class="badge bg-danger ms-2">Out of Stock</span>`;
+        
         item.innerHTML = `
-            <div style="display: flex; justify-content: space-between;">
+            <div style="display: flex; justify-content: space-between; align-items: start;">
                 <div>
-                    <strong>${product.name}</strong><br>
+                    <strong>${product.name}</strong>${stockBadge}<br>
                     <small class="text-muted">SKU: ${product.sku}${product.barcode ? ` | Barcode: ${product.barcode}` : ''}</small>
                 </div>
                 <div style="text-align: right;">
@@ -267,7 +276,16 @@ function displaySearchResults(products) {
                 </div>
             </div>
         `;
-        item.onclick = () => addProductToCart(product);
+        
+        // Disable button if out of stock
+        if (!inStock) {
+            item.disabled = true;
+            item.style.cursor = 'not-allowed';
+            item.style.opacity = '0.6';
+        } else {
+            item.onclick = () => addProductToCart(product);
+        }
+        
         resultsList.appendChild(item);
     });
 
@@ -300,7 +318,15 @@ function addProductToCart(product) {
             document.getElementById('searchResults').style.display = 'none';
             showAlert(`Added ${product.name}`, 'success');
         } else {
-            showAlert(data.error || 'Error adding product', 'danger');
+            // Enhanced error message with inventory info
+            let errorMsg = data.error || 'Error adding product';
+            if (data.available !== undefined) {
+                errorMsg += ` (Available: ${data.available})`;
+                if (data.current_in_cart !== undefined) {
+                    errorMsg += ` (Current in cart: ${data.current_in_cart})`;
+                }
+            }
+            showAlert(errorMsg, 'warning');
         }
     })
     .catch(err => {
@@ -378,9 +404,9 @@ function removeLineItem(lineId) {
  */
 function updateTotals(data) {
     document.getElementById('subtotalDisplay').textContent = 
-        parseFloat(data.subtotal).toFixed(2);
+        config.currencySymbol + parseFloat(data.subtotal).toFixed(2);
     document.getElementById('totalDisplay').textContent = 
-        parseFloat(data.total).toFixed(2);
+        config.currencySymbol + parseFloat(data.total).toFixed(2);
     
     cart.subtotal = parseFloat(data.subtotal);
     cart.total = parseFloat(data.total);
@@ -412,11 +438,13 @@ function selectPaymentMethod(method) {
  */
 function calculateChange() {
     const amountPaid = parseFloat(document.getElementById('amountPaid').value) || 0;
-    const total = parseFloat(document.getElementById('totalDisplay').textContent);
+    const totalText = document.getElementById('totalDisplay').textContent;
+    // Extract numeric value from display (remove currency symbol if present)
+    const total = parseFloat(totalText.replace(config.currencySymbol, ''));
     const change = amountPaid - total;
 
     document.getElementById('changeDisplay').textContent = 
-        change.toFixed(2);
+        config.currencySymbol + change.toFixed(2);
     
     // Enable payment button if amount is sufficient
     const completeBtn = document.getElementById('completePayment');
@@ -428,7 +456,9 @@ function calculateChange() {
  */
 function processPayment() {
     const amountPaid = parseFloat(document.getElementById('amountPaid').value);
-    const total = parseFloat(document.getElementById('totalDisplay').textContent);
+    const totalText = document.getElementById('totalDisplay').textContent;
+    // Extract numeric value from display (remove currency symbol if present)
+    const total = parseFloat(totalText.replace(config.currencySymbol, ''));
     const methodBtn = document.querySelector('.payment-method-btn.active');
 
     if (!methodBtn) {

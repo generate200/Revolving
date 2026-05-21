@@ -161,7 +161,6 @@ class Product(models.Model):
         """Calculate available stock from all movements"""
         from sales.models import StockMovement
         from django.db.models import Sum
-        
         # Sum all movements (already signed: negative for sales, positive for returns)
         total_movements = StockMovement.objects.filter(
             product=self
